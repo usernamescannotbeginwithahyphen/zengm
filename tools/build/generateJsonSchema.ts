@@ -1784,6 +1784,25 @@ export const generateJsonSchema = (sport: Sport | "test") => {
 							type: "array",
 							items: zodJsonSchema(playerAwardSchema),
 						},
+						footballForm: {
+							type: "object",
+							properties: {
+								tid: { type: "integer" },
+								season: { type: "integer" },
+								roles: {
+									type: "object",
+									additionalProperties: {
+										type: "object",
+										properties: {
+											score: { type: "number", minimum: -15, maximum: 15 },
+											samples: { type: "number", minimum: 0, maximum: 8 },
+										},
+										required: ["score", "samples"],
+									},
+								},
+							},
+							required: ["tid", "season", "roles"],
+						},
 						born: {
 							type: "object",
 							properties: {

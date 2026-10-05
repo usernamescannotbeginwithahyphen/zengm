@@ -85,6 +85,38 @@ $env:SPORT = "football"
 node --run dev
 ```
 
+### Hidden football Starter Score
+
+Football AI teams use one hidden **0–100 Starter Score per player and role**
+for depth charts and roster decisions. It combines scouted role ability,
+age and potential, current and prior-season performance, recent form,
+contract and draft investment, incumbent continuity, and team direction.
+A losing rebuilding team gives more weight to a young successor; a winning
+team is more inclined to retain a productive veteran. Rookie patience fades
+with time and can be overcome by a substantial improvement.
+
+Drafting, free agency, trades, cuts, and re-signing compare the same scores
+across each position group. Starting slots receive full weight, backups less,
+and surplus depth very little. Positional value weights those improvements;
+kickers and punters receive an additional draft discount. Salary caps,
+contract affordability, and trade market prices still apply. Scores are
+computed for the evaluating team, so another team's investment does not
+automatically become the buyer's investment.
+
+The feature is automatic for football AI teams, with no visible rating or
+new setting. User-controlled depth charts retain their existing behavior.
+Existing leagues work immediately using their recorded stats; subsequent
+games also save a small recent-form history in `footballForm`. DNPs do not
+count as poor performance, and small samples receive less weight. The final
+Starter Score is recalculated rather than saved, keeping it current after
+transactions and changes in team goals.
+
+Behavior tests cover veteran continuity, breakouts, rookie patience,
+benching and recovery, succession, roster depth, positional draft value,
+duplicate free-agent signings, and trades. Defensive performance evidence is
+deliberately modest because the game lacks coverage-target data. The weights
+are initial tuning, not a guarantee of any particular historical outcome.
+
 ## Other dev info
 
 ### Tests

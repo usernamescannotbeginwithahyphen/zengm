@@ -10,6 +10,7 @@ import getWinner from "../../../common/getWinner.ts";
 import { bySport } from "../../../common/sportFunctions.ts";
 import { randInt } from "../../../common/random.ts";
 import { processPlayerStats } from "../../util/processPlayerStats.ts";
+import { updateFootballForm } from "../team/starterScore.football.ts";
 
 export const P_FATIGUE_DAILY_REDUCTION = 20;
 
@@ -442,6 +443,14 @@ const writePlayerStats = async (
 					// Update stats
 					const playedInGame = p.stat.gp > 0;
 					if (playedInGame) {
+						if (__SPORT === "football") {
+							updateFootballForm(
+								p2,
+								p.stat,
+								g.get("season"),
+								g.get("fieldLength"),
+							);
+						}
 						// Too many other parts of the codebase use "min", so put a dummy value there
 						if (__SPORT === "baseball") {
 							p.stat.min = 1;

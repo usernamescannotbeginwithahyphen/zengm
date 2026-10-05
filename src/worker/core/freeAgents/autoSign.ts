@@ -5,6 +5,7 @@ import { idb } from "../../db/index.ts";
 import { g, local } from "../../util/index.ts";
 import { orderBy } from "../../../common/utils.ts";
 import { shuffle } from "../../../common/random.ts";
+import { getStarterContext } from "../team/starterScore.football.ts";
 
 /**
  * AI teams sign free agents.
@@ -72,7 +73,9 @@ const autoSign = async () => {
 
 		// Ignore roster size, will drop bad player if necessary in checkRosterSizes, and getBest won't sign min contract player unless under the roster limit
 		const payroll = await team.getPayroll(t.tid);
-		const p = getBest(playersOnRoster, playersSorted, payroll);
+		const starterContext =
+			__SPORT === "football" ? await getStarterContext(t.tid) : undefined;
+		const p = getBest(playersOnRoster, playersSorted, payroll, starterContext);
 		if (p) {
 			// Remove from list of free agents
 			playersSorted = playersSorted.filter((p2) => p2 !== p);

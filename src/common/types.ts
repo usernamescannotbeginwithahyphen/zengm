@@ -1309,6 +1309,18 @@ export type PlayerWithoutKey<PlayerRatings = MinimalPlayerRatings> = {
 
 	// Only for baseball pitchers
 	pFatigue?: number;
+
+	// Hidden recent football performance. Starter Scores are recomputed for each team/role.
+	footballForm?: {
+		tid: number;
+		season: number;
+		roles: Partial<
+			Record<
+				import("./types.football.ts").Position,
+				{ score: number; samples: number }
+			>
+		>;
+	};
 };
 
 export type Player<PlayerRatings = MinimalPlayerRatings> = {

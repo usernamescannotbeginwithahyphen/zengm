@@ -9,11 +9,16 @@ import {
 } from "../index.ts";
 import { idb } from "../../db/index.ts";
 import { g, helpers, local, logEvent } from "../../util/index.ts";
-import type { Conditions, PhaseReturn } from "../../../common/types.ts";
+import type { Conditions, PhaseReturn, Player } from "../../../common/types.ts";
 import { last, orderBy } from "../../../common/utils.ts";
 import { getNumPlayersTradedAwayNormalizedAll } from "../player/getNumPlayersTradedAwayNormalized.ts";
 import { bySport } from "../../../common/sportFunctions.ts";
 import { ValueChangeCalculator } from "../team/ValueChangeCalculator.ts";
+import {
+	getStarterContext,
+	getFootballRosterContributions,
+	prepareFootballRoster,
+} from "../team/starterScore.football.ts";
 
 export const FREE_AGENCY_DAYS = 30;
 
@@ -65,6 +70,19 @@ const newPhaseResignPlayers = async (
 		0,
 		Infinity,
 	]);
+	const footballRetention = new Map<number, number>();
+	if (__SPORT === "football") {
+		for (const [tid, roster] of Map.groupBy(players, (p) => p.tid)) {
+			const scores = getFootballRosterContributions(
+				roster,
+				await getStarterContext(tid),
+			);
+			for (const p of roster) {
+				footballRetention.set(p.pid, scores.get(p)!);
+			}
+		}
+	}
+	const retentionValue = (p: Player) => footballRetention.get(p.pid) ?? p.value;
 
 	// Figure out how many players are needed at each position, beyond who is already signed
 	type PositionInfo = Record<
@@ -99,8 +117,8 @@ const newPhaseResignPlayers = async (
 
 			if (positionInfo !== undefined && positionInfo[pos] !== undefined) {
 				positionInfo[pos].count -= 1;
-				if (p.value > positionInfo[pos].maxValue) {
-					positionInfo[pos].maxValue = p.value;
+				if (retentionValue(p) > positionInfo[pos].maxValue) {
+					positionInfo[pos].maxValue = retentionValue(p);
 				}
 			}
 		}
@@ -125,7 +143,7 @@ const newPhaseResignPlayers = async (
 			(p) => {
 				return p.draft.year === g.get("season") ? 1 : -1;
 			},
-			"value",
+			retentionValue,
 		],
 		["asc", "desc", "desc"],
 	).map((p) => p.pid);
@@ -148,7 +166,11 @@ const newPhaseResignPlayers = async (
 	await contractNegotiation.cancelAll();
 
 	const valueChangeCalculator = new ValueChangeCalculator();
+	// Normalization replaces expirations with requested deal lengths, so the
+	// expiration alone cannot identify who has actually re-signed.
+	const pendingRenewals = new Set(expiringPids);
 	for (const pid of expiringPids) {
+		pendingRenewals.delete(pid);
 		// Re-fetch players, because normalizeContractDemands might have changed some objects
 		const p = await idb.cache.players.get(pid);
 		if (!p) {
@@ -208,6 +230,22 @@ const newPhaseResignPlayers = async (
 
 			const positionInfo = positionInfoByTid.get(p.tid);
 			const pos = last(p.ratings).pos;
+			if (__SPORT === "football" && !draftPick) {
+				// Earlier renewals count immediately; other expiring players don't
+				// falsely make this player's position look covered.
+				const signedRoster = (
+					await idb.cache.players.indexGetAll("playersByTid", p.tid)
+				).filter(
+					(other) => other.pid !== p.pid && !pendingRenewals.has(other.pid),
+				);
+				const fit = prepareFootballRoster(
+					signedRoster,
+					await getStarterContext(p.tid),
+				)(p, "freeAgent");
+				if (!fit.affordableRole || (!fit.fillsNeed && fit.value < 0.25)) {
+					reSignPlayer = false;
+				}
+			}
 
 			if (g.get("salaryCapType") === "hard") {
 				if (payroll === undefined) {
@@ -230,7 +268,7 @@ const newPhaseResignPlayers = async (
 					positionInfo !== undefined &&
 					positionInfo[pos] !== undefined &&
 					positionInfo[pos].count <= 0 &&
-					positionInfo[pos].maxValue > p.value
+					positionInfo[pos].maxValue > retentionValue(p)
 				) {
 					reSignPlayer = false;
 				}
@@ -276,8 +314,8 @@ const newPhaseResignPlayers = async (
 
 						if (positionInfo !== undefined && positionInfo[pos] !== undefined) {
 							positionInfo[pos].count -= 1;
-							if (p.value > positionInfo[pos].maxValue) {
-								positionInfo[pos].maxValue = p.value;
+							if (retentionValue(p) > positionInfo[pos].maxValue) {
+								positionInfo[pos].maxValue = retentionValue(p);
 							}
 						}
 

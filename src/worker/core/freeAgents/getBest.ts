@@ -4,6 +4,10 @@ import { DRAFT_BY_TEAM_OVR } from "../../../common/constants.ts";
 import { getTeamOvrDiffs } from "../draft/runPicks.ts";
 import { last, orderBy } from "../../../common/utils.ts";
 import { bySport } from "../../../common/sportFunctions.ts";
+import {
+	prepareFootballRoster,
+	type StarterContext,
+} from "../team/starterScore.football.ts";
 
 // In some sports, extra check for certain important rare positions in case the only one was traded away. These should only be positions with weird unique skills, where you can't replace them easily with another position. Value is the number of players that should be at each position.
 export const KEY_POSITIONS_NEEDED = bySport<Record<string, number> | undefined>(
@@ -22,18 +26,27 @@ const getBest = <T extends PlayerWithoutKey>(
 	playersOnRoster: T[],
 	playersAvailable: T[],
 	payroll?: number,
+	starterContext?: StarterContext,
 ): T | void => {
 	const maxRosterSize = g.get("maxRosterSize");
 	const minContract = g.get("minContract");
 	const salaryCap = g.get("salaryCap");
 	const salaryCapType = g.get("salaryCapType");
 	const numActiveTeams = g.get("numActiveTeams");
+	const footballFit =
+		__SPORT === "football" && starterContext
+			? prepareFootballRoster(playersOnRoster, starterContext)
+			: undefined;
 
 	let playersSorted: T[];
 	if (DRAFT_BY_TEAM_OVR) {
 		// playersAvailable is sorted by value. So if we hit a player at a minimum contract at a position, no player with lower value needs to be considered
 		const seenMinContractAtPos = new Set();
 		const playersAvailableFiltered = playersAvailable.filter((p) => {
+			// Market value ordering does not imply Starter Score ordering.
+			if (footballFit) {
+				return true;
+			}
 			const pos = last(p.ratings).pos;
 			if (seenMinContractAtPos.has(pos)) {
 				return false;
@@ -46,10 +59,9 @@ const getBest = <T extends PlayerWithoutKey>(
 			return true;
 		});
 
-		const teamOvrDiffs = getTeamOvrDiffs(
-			playersOnRoster,
-			playersAvailableFiltered,
-		);
+		const teamOvrDiffs = footballFit
+			? playersAvailableFiltered.map((p) => footballFit(p, "freeAgent").value)
+			: getTeamOvrDiffs(playersOnRoster, playersAvailableFiltered);
 		const wrapper = playersAvailableFiltered.map((p, i) => ({
 			p,
 			teamOvrDiff: teamOvrDiffs[i]!,
@@ -109,6 +121,18 @@ const getBest = <T extends PlayerWithoutKey>(
 	};
 
 	for (const p of playersSorted) {
+		const fit = footballFit?.(p, "freeAgent");
+		if (fit) {
+			// Cap space alone isn't a reason to add a redundant, expensive player.
+			if (
+				(!fit.affordableRole && p.contract.amount > minContract) ||
+				(playersOnRoster.length >= g.get("minRosterSize") &&
+					!fit.fillsNeed &&
+					fit.value < 0.25)
+			) {
+				continue;
+			}
+		}
 		const salaryCapCheck =
 			payroll === undefined ||
 			skipSalaryCapCheck ||
@@ -119,7 +143,8 @@ const getBest = <T extends PlayerWithoutKey>(
 			salaryCapCheck && p.contract.amount > minContract;
 		const shouldAddPlayerMinContract =
 			p.contract.amount <= minContract &&
-			playersOnRoster.length < maxRosterSize - 2;
+			(playersOnRoster.length < maxRosterSize - 2 ||
+				(footballFit && playersOnRoster.length < g.get("minRosterSize")));
 
 		// If none of the other checks were true and we can afford this player and it's at a position we have nobody at (like hockey goalie), go for it
 		const shouldAddPlayerPosition =

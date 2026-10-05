@@ -7,6 +7,10 @@ import type { Player } from "../../../common/types.ts";
 import { KEY_POSITIONS_NEEDED } from "../freeAgents/getBest.ts";
 import { bySport } from "../../../common/sportFunctions.ts";
 import { last } from "../../../common/utils.ts";
+import {
+	getStarterContext,
+	getFootballRosterContributions,
+} from "./starterScore.football.ts";
 
 export const dropPlayers = async (players: Player[], numToDrop: number) => {
 	// Automatically drop lowest value players until we reach g.get("maxRosterSize")
@@ -64,10 +68,26 @@ export const dropPlayers = async (players: Player[], numToDrop: number) => {
 		}
 	}
 
-	players.sort((a, b) => a.value - b.value); // Lowest first
+	const starterContext =
+		__SPORT === "football" && players.length > 0
+			? await getStarterContext(players[0]!.tid)
+			: undefined;
+	players.sort((a, b) => a.value - b.value);
 
-	const releasedPIDs = [];
-	for (const p of players) {
+	const releasedPIDs: number[] = [];
+	const candidates = [...players];
+	while (candidates.length > 0 && releasedPIDs.length < numToDrop) {
+		if (starterContext) {
+			// Re-evaluate after each cut: several interchangeable backups can
+			// each look expendable, but cutting all of them creates a new hole.
+			const remaining = players.filter((p) => !releasedPIDs.includes(p.pid));
+			const retention = getFootballRosterContributions(
+				remaining,
+				starterContext,
+			);
+			candidates.sort((a, b) => retention.get(a)! - retention.get(b)!);
+		}
+		const p = candidates.shift()!;
 		if (
 			counts &&
 			bySport({
@@ -96,7 +116,10 @@ export const dropPlayers = async (players: Player[], numToDrop: number) => {
 
 			counts[pos]! -= 1;
 
-			if (countsHealthyKey?.[pos] !== undefined) {
+			if (
+				countsHealthyKey?.[pos] !== undefined &&
+				p.injury.gamesRemaining === 0
+			) {
 				countsHealthyKey[pos] -= 1;
 			}
 		}
@@ -182,9 +205,21 @@ const checkRosterSizes = async (
 				)}/yr contracts, even if you're over the cap!`;
 			} else {
 				// Auto-add players
+				const starterContext =
+					__SPORT === "football" ? await getStarterContext(tid) : undefined;
 				while (numPlayersOnRoster < g.get("minRosterSize")) {
 					// See also core.phase
-					let p = minFreeAgents.shift();
+					let p = starterContext
+						? freeAgents.getBest(
+								players,
+								minFreeAgents,
+								undefined,
+								starterContext,
+							)
+						: minFreeAgents[0];
+					if (p) {
+						minFreeAgents.splice(minFreeAgents.indexOf(p), 1);
+					}
 
 					if (!p) {
 						p = await player.genRandomFreeAgent();
@@ -192,6 +227,7 @@ const checkRosterSizes = async (
 
 					await player.sign(p, tid, p.contract, g.get("phase"));
 					await idb.cache.players.put(p);
+					players.push(p);
 					numPlayersOnRoster += 1;
 				}
 			}

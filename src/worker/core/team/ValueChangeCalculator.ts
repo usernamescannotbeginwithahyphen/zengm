@@ -7,10 +7,16 @@ import type {
 	PlayerContract,
 	PlayerInjury,
 	DraftPick,
+	Player,
 } from "../../../common/types.ts";
 import { getNumPicksPerRound } from "../trade/getPickValues.ts";
 import { bySport } from "../../../common/sportFunctions.ts";
 import { groupByUnique, last } from "../../../common/utils.ts";
+import {
+	getStarterContext,
+	getFootballRosterContributions,
+	prepareFootballRoster,
+} from "./starterScore.football.ts";
 
 type Asset =
 	| {
@@ -117,9 +123,25 @@ const getPlayers = async ({
 
 	// Get roster and players to remove
 	const players = await idb.cache.players.indexGetAll("playersByTid", tid);
+	const starterContext =
+		__SPORT === "football" ? await getStarterContext(tid) : undefined;
+	const retention = starterContext
+		? getFootballRosterContributions(players, starterContext)
+		: undefined;
+	const remainingPlayers = players.filter((p) => !pidsRemove.includes(p.pid));
+	let beforeRemovals = players;
 
 	for (const p of players) {
-		const value = zscore(p.value);
+		let value = zscore(p.value);
+		if (retention && value > 0) {
+			const contribution =
+				starterContext && pidsRemove.includes(p.pid)
+					? getFootballRosterContributions(beforeRemovals, starterContext).get(
+							p,
+						)!
+					: retention.get(p)!;
+			value *= helpers.bound(0.6 + contribution / 40, 0.65, 1.35);
+		}
 		if (!pidsRemove.includes(p.pid)) {
 			roster.push({
 				type: "player",
@@ -130,6 +152,9 @@ const getPlayers = async ({
 				justDrafted: helpers.justDrafted(p, phase, season),
 			});
 		} else {
+			// Two interchangeable players may each be expendable on their own,
+			// but the package must account for losing both of them.
+			beforeRemovals = beforeRemovals.filter((other) => other.pid !== p.pid);
 			// Only apply fudge factor to positive assets
 			let fudgedValue = value;
 			if (fudgedValue > 0) {
@@ -148,20 +173,38 @@ const getPlayers = async ({
 	}
 
 	// Get players to add
+	const incomingPlayers: Player[] = [];
 	for (const pid of pidsAdd) {
 		const p = await idb.cache.players.get(pid);
 		if (p) {
-			const value = zscore(p.value);
-
-			add.push({
-				type: "player",
-				value,
-				contractValue: getContractValue(p.contract, value),
-				injury: p.injury,
-				age: g.get("season") - p.born.year,
-				justDrafted: helpers.justDrafted(p, phase, season),
-			});
+			incomingPlayers.push(p);
 		}
+	}
+	// Evaluate a package in a stable order, independent of UI selection order.
+	if (starterContext) {
+		incomingPlayers.sort((a, b) => b.value - a.value || a.pid - b.pid);
+	}
+	for (const p of incomingPlayers) {
+		let value = zscore(p.value);
+		if (starterContext && value > 0) {
+			const fit = prepareFootballRoster(remainingPlayers, starterContext)(
+				p,
+				"trade",
+			);
+			// A redundant player still has resale value, but is worth less to
+			// this team. Recompute after each incoming asset, and after removals.
+			value *= helpers.bound(0.35 + fit.value / 3, 0.35, 1.15);
+		}
+		remainingPlayers.push(p);
+
+		add.push({
+			type: "player",
+			value,
+			contractValue: getContractValue(p.contract, value),
+			injury: p.injury,
+			age: g.get("season") - p.born.year,
+			justDrafted: helpers.justDrafted(p, phase, season),
+		});
 	}
 };
 

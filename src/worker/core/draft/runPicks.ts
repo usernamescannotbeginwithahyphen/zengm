@@ -13,6 +13,10 @@ import { player, team } from "../index.ts";
 import { last } from "../../../common/utils.ts";
 import { choice } from "../../../common/random.ts";
 import { prepareWholeRoster } from "../team/ovr.ts";
+import {
+	getStarterContext,
+	prepareFootballRoster,
+} from "../team/starterScore.football.ts";
 
 export const getTeamOvrDiffs = (
 	teamPlayers: PlayerWithoutKey[],
@@ -180,9 +184,20 @@ const runPicks = async (
 				"playersByTid",
 				dp.tid,
 			);
-			const teamOvrDiffs = await getTeamOvrDiffs(teamPlayers, playersAll);
+			const footballFit =
+				__SPORT === "football"
+					? prepareFootballRoster(teamPlayers, await getStarterContext(dp.tid))
+					: undefined;
+			const teamOvrDiffs = footballFit
+				? []
+				: getTeamOvrDiffs(teamPlayers, playersAll);
 
 			const score = (p: Player, i: number) => {
+				if (footballFit) {
+					// Some value for talent even at a covered role, but prioritize a
+					// genuine upgrade, missing depth, or an unfilled succession plan.
+					return Math.max(0.01, footballFit(p).draftValue) ** 40;
+				}
 				if (DRAFT_BY_TEAM_OVR) {
 					return (teamOvrDiffs[i]! + 0.05 * p.value) ** 40;
 				}
