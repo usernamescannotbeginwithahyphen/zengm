@@ -2883,13 +2883,38 @@ export const settings: Setting[] = (
 		},
 		{
 			category: "Game Simulation",
+			key: "fieldLength",
+			name: "Field Length (yards)",
+			godModeRequired: "existingLeagueOnly",
+			type: "int",
+			parse: Number,
+			description:
+				"Distance between goal lines: 100 for standard football, 50 for a shorter indoor-style field.",
+			descriptionLong:
+				"End zones remain 10 yards deep. Kickoff and ordinary touchback spots scale with field length. The kickoff touchback yard line is set separately below; use 10 for an indoor-style league. Other football rules are unchanged.",
+			validator: (value) => {
+				if (!Number.isInteger(value) || value < 50 || value > 150) {
+					throw new Error(
+						"Field length must be a whole number between 50 and 150 yards",
+					);
+				}
+			},
+		},
+		{
+			category: "Game Simulation",
 			key: "scrimmageTouchbackKickoff",
 			name: "Kickoff Touchback Yard Line",
-			godModeRequired: "always",
+			godModeRequired: "existingLeagueOnly",
 			type: "int",
-			validator: (value) => {
-				if (value < 1 || value > 99) {
-					throw new Error("Value must be between 1 and 99");
+			validator: (value, output) => {
+				if (
+					!Number.isInteger(value) ||
+					value < 1 ||
+					value >= output.fieldLength
+				) {
+					throw new Error(
+						"Kickoff touchback yard line must be a whole number greater than 0 and less than field length",
+					);
 				}
 			},
 		},

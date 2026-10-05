@@ -4,12 +4,6 @@ import getBestPenaltyResult from "./getBestPenaltyResult.ts";
 import type { PlayerGameSim } from "./types.ts";
 import type { TeamNum } from "../../../common/types.ts";
 
-export const SCRIMMAGE_KICKOFF = 35;
-const SCRIMMAGE_KICKOFF_SAFETY = 20;
-export const SCRIMMAGE_EXTRA_POINT = 85;
-export const SCRIMMAGE_TWO_POINT_CONVERSION = 98;
-const SCRIMMAGE_TOUCHBACK = 20;
-
 const UPDATE_SPOT_OF_ENFORCEMENT = new Set<PlayType>([
 	"possessionChange",
 	"k",
@@ -229,6 +223,7 @@ type PlayState = Pick<
 	GameSim,
 	| "down"
 	| "toGo"
+	| "field"
 	| "scrimmage"
 	| "o"
 	| "d"
@@ -245,6 +240,7 @@ type PlayState = Pick<
 type StatChange = Parameters<GameSim["recordStat"]>;
 
 export class State {
+	field: PlayState["field"];
 	down: PlayState["down"];
 	toGo: PlayState["toGo"];
 	scrimmage: PlayState["scrimmage"];
@@ -290,6 +286,7 @@ export class State {
 			turnoverOnDowns: boolean;
 		},
 	) {
+		this.field = gameSim.field;
 		this.down = gameSim.down;
 		this.toGo = gameSim.toGo;
 		this.scrimmage = gameSim.scrimmage;
@@ -336,7 +333,7 @@ export class State {
 
 	newFirstDown() {
 		this.down = 1;
-		this.toGo = Math.min(10, 100 - this.scrimmage);
+		this.toGo = Math.min(10, this.field.length - this.scrimmage);
 		this.firstDownLine = this.scrimmage + this.toGo;
 	}
 
@@ -347,7 +344,7 @@ export class State {
 			this.overtimeState = "bothTeamsPossessed";
 		}
 
-		this.scrimmage = 100 - this.scrimmage;
+		this.scrimmage = this.field.length - this.scrimmage;
 		this.o = this.o === 1 ? 0 : 1;
 		this.d = this.o === 1 ? 0 : 1;
 		this.newFirstDown();
@@ -430,7 +427,7 @@ class Play {
 	// If there is going to be a possession change related to this yds quantity, do possession change before calling boundedYds
 	boundedYds(yds: number) {
 		const scrimmage = this.state.current.scrimmage;
-		const ydsTD = 100 - scrimmage;
+		const ydsTD = this.g.field.length - scrimmage;
 		const ydsSafety = -scrimmage;
 
 		if (yds > ydsTD) {
@@ -469,7 +466,12 @@ class Play {
 			if (event.type === "k") {
 				statChanges.push(
 					[state.o, event.p, "ko"],
-					[state.o, event.p, "koYds", 65 - event.kickTo],
+					[
+						state.o,
+						event.p,
+						"koYds",
+						this.g.field.length - state.scrimmage - event.kickTo,
+					],
 				);
 			} else if (event.type === "kr") {
 				statChanges.push(
@@ -498,7 +500,7 @@ class Play {
 					[state.o, event.p, "pntLng", event.yds],
 				);
 				const kickTo = state.scrimmage + event.yds;
-				if (kickTo > 80 && kickTo < 100) {
+				if (kickTo > this.g.field.length - 20 && kickTo < this.g.field.length) {
 					statChanges.push([state.o, event.p, "pntIn20"]);
 				}
 			} else if (event.type === "touchbackPunt") {
@@ -684,7 +686,8 @@ class Play {
 		const halfDistanceToGoal =
 			side === "off" && state.scrimmage / 2 < event.penYds;
 
-		const placeOnOne = side === "def" && state.scrimmage + penYdsSigned > 99;
+		const placeOnOne =
+			side === "def" && state.scrimmage + penYdsSigned > state.field.length - 1;
 
 		const onDefense = event.t === state.d;
 
@@ -714,7 +717,7 @@ class Play {
 
 			// Adjust penalty yards when near endzones
 			if (placeOnOne) {
-				state.scrimmage = 99;
+				state.scrimmage = state.field.length - 1;
 			} else if (halfDistanceToGoal) {
 				state.scrimmage = Math.round(state.scrimmage / 2);
 			} else {
@@ -732,9 +735,9 @@ class Play {
 
 			if (
 				event.subtype === "missedFg" &&
-				state.scrimmage < SCRIMMAGE_TOUCHBACK
+				state.scrimmage < state.field.touchback
 			) {
-				state.scrimmage = SCRIMMAGE_TOUCHBACK;
+				state.scrimmage = state.field.touchback;
 			}
 
 			if (event.subtype === "kickoff") {
@@ -748,7 +751,7 @@ class Play {
 				state.currentDrive = undefined;
 			}
 		} else if (event.type === "k" || event.type === "onsideKick") {
-			state.scrimmage = 100 - event.kickTo;
+			state.scrimmage = state.field.length - event.kickTo;
 		} else if (event.type === "touchbackKick") {
 			state.scrimmage = g.get("scrimmageTouchbackKickoff");
 		} else if (event.type === "kr") {
@@ -761,9 +764,9 @@ class Play {
 		} else if (event.type === "p") {
 			state.scrimmage += event.yds;
 		} else if (event.type === "touchbackPunt") {
-			state.scrimmage = SCRIMMAGE_TOUCHBACK;
+			state.scrimmage = state.field.touchback;
 		} else if (event.type === "touchbackInt") {
-			state.scrimmage = SCRIMMAGE_TOUCHBACK;
+			state.scrimmage = state.field.touchback;
 		} else if (event.type === "pr") {
 			state.scrimmage += event.yds;
 		} else if (event.type === "rus") {
@@ -791,7 +794,7 @@ class Play {
 		} else if (event.type === "fg" || event.type === "xp") {
 			if (event.type === "xp" || event.made) {
 				state.awaitingKickoff = this.state.initial.o;
-				state.scrimmage = SCRIMMAGE_KICKOFF;
+				state.scrimmage = state.field.kickoff;
 			}
 
 			if (event.type === "xp" && !event.made) {
@@ -813,12 +816,12 @@ class Play {
 
 			state.twoPointConversionTeam = undefined;
 			state.awaitingKickoff = event.t;
-			state.scrimmage = SCRIMMAGE_KICKOFF;
+			state.scrimmage = state.field.kickoff;
 			state.awaitingAfterTouchdown = false;
 			state.isClockRunning = false;
 		} else if (event.type === "defSft") {
 			state.awaitingKickoff = state.o;
-			state.scrimmage = SCRIMMAGE_KICKOFF_SAFETY;
+			state.scrimmage = state.field.safetyKickoff;
 			state.awaitingAfterSafety = true;
 			state.isClockRunning = false;
 		} else if (event.type === "fmb") {
@@ -849,7 +852,10 @@ class Play {
 		let safety = false;
 		let touchback = false;
 
-		if (state.scrimmage >= 100 && TOUCHDOWN_IS_POSSIBLE.has(event.type)) {
+		if (
+			state.scrimmage >= state.field.length &&
+			TOUCHDOWN_IS_POSSIBLE.has(event.type)
+		) {
 			td = true;
 		}
 
@@ -861,7 +867,7 @@ class Play {
 					// Touchback only if it's a lost fumble
 					return true;
 				}
-			} else if (state.scrimmage >= 100) {
+			} else if (state.scrimmage >= state.field.length) {
 				if (event.type === "p") {
 					return true;
 				}
@@ -889,7 +895,7 @@ class Play {
 		if (event.type === "fmbRec") {
 			if (state.scrimmage <= 0) {
 				if (event.lost) {
-					state.scrimmage = SCRIMMAGE_TOUCHBACK;
+					state.scrimmage = state.field.touchback;
 					touchback = true;
 				} else {
 					safety = true;
@@ -952,7 +958,7 @@ class Play {
 
 	checkDownAtEndOfPlay(state: State) {
 		// In endzone at end of play
-		if (state.scrimmage >= 100 || state.scrimmage <= 0) {
+		if (state.scrimmage >= state.field.length || state.scrimmage <= 0) {
 			return;
 		}
 

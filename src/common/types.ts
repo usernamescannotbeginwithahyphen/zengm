@@ -810,6 +810,7 @@ export type GameAttributesLeague = {
 	overtimeLengthPlayoffs: number | null;
 	forceRetireRealPlayers: boolean;
 	forceHistoricalRosters: boolean;
+	fieldLength: number;
 	scrimmageTouchbackKickoff: number;
 	twoPointConversions: boolean;
 	footballOvertime: FootballOvertime;

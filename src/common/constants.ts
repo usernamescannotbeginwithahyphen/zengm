@@ -467,6 +467,7 @@ export const EXHIBITION_GAME_SETTINGS = [
 	"saveFactor",
 	"gender",
 	"neutralSite",
+	"fieldLength",
 	"scrimmageTouchbackKickoff",
 	"twoPointConversions",
 	"footballOvertime",

@@ -62,6 +62,29 @@ the `SPORT` environment variable to `football`, `baseball`, or `hockey`, like:
 
     SPORT=football node --run dev
 
+### Custom football field length
+
+In this fork, go to **New League > Customize settings > Game Simulation** and
+set **Field Length (yards)** to **50** for a shorter indoor-style field. The
+default is 100 yards; whole-number lengths from 50 to 150 are supported.
+Set **Kickoff Touchback Yard Line** to **10** for an indoor-style starting spot.
+Both options are available at league creation without enabling God Mode.
+Existing leagues can change them in League Settings with God Mode enabled.
+
+Field length affects the simulation, scoring, possession changes, penalties,
+kick distances, and live field display. Kickoff and ordinary touchback spots
+scale with field length. End zones remain 10 yards deep; extra points are
+snapped 15 yards from goal and two-point attempts from 2 yards. This does not
+implement the other arena football rules, such as eight-player teams or nets.
+Old leagues and saved play-by-play without a field length use 100 yards.
+
+On Windows PowerShell, start the football version with:
+
+```powershell
+$env:SPORT = "football"
+node --run dev
+```
+
 ## Other dev info
 
 ### Tests

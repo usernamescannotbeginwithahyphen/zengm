@@ -1,3 +1,4 @@
+import { getFootballField } from "../../common/footballField.ts";
 import { getPeriodName } from "../../common/getPeriodName.ts";
 import { formatScoringSummaryEvent } from "../../common/formatScoringSummaryEvent.football.ts";
 import { helpers } from "./helpers.ts";
@@ -41,6 +42,7 @@ let playersByPid:
 	  >
 	| undefined;
 export type SportState = {
+	fieldLength: number;
 	awaitingAfterTouchdown: boolean;
 	awaitingKickoff: boolean;
 	awaitingShootout: boolean;
@@ -72,6 +74,7 @@ export type SportState = {
 };
 
 export const DEFAULT_SPORT_STATE: SportState = {
+	fieldLength: 100,
 	awaitingAfterTouchdown: false,
 	awaitingKickoff: true,
 	awaitingShootout: false,
@@ -87,11 +90,12 @@ export const scrimmageToFieldPos = (
 	scrimmage: number,
 	ownAbbrev: string,
 	oppAbbrev: string,
+	fieldLength: number = 100,
 ) => {
-	if (scrimmage === 50) {
-		return "50 yd line";
-	} else if (scrimmage > 50) {
-		return `${oppAbbrev} ${100 - scrimmage}`;
+	if (scrimmage === fieldLength / 2) {
+		return `${fieldLength / 2} yd line`;
+	} else if (scrimmage > fieldLength / 2) {
+		return `${oppAbbrev} ${fieldLength - scrimmage}`;
 	} else {
 		return `${ownAbbrev} ${scrimmage}`;
 	}
@@ -206,8 +210,9 @@ export const formatDownAndDistance = (
 	down: number,
 	toGo: number,
 	scrimmage: number,
+	fieldLength: number = 100,
 ) => {
-	const toGoText = scrimmage + toGo >= 100 ? "goal" : toGo;
+	const toGoText = scrimmage + toGo >= fieldLength ? "goal" : toGo;
 
 	return `${helpers.ordinal(down)} & ${toGoText}`;
 };
@@ -593,6 +598,11 @@ const processLiveGameEvents = ({
 			continue;
 		}
 
+		if (e.type === "clock") {
+			sportState.fieldLength = e.fieldLength ?? 100;
+		}
+		const fieldLength = sportState.fieldLength;
+
 		const eAny = e as any;
 
 		const eventT: 0 | 1 | undefined =
@@ -697,7 +707,7 @@ const processLiveGameEvents = ({
 			addNewPlay({
 				down: 1,
 				toGo: 10,
-				scrimmage: 100 - 33,
+				scrimmage: fieldLength - 33,
 				intendedPossessionChange: false,
 				subPlay: false,
 				tOverride: 1,
@@ -741,7 +751,7 @@ const processLiveGameEvents = ({
 				down: 1,
 				toGo: 10,
 				// Home team is kicking in the opposite direction
-				scrimmage: eventT === 0 ? 33 : 100 - 33,
+				scrimmage: eventT === 0 ? 33 : fieldLength - 33,
 				intendedPossessionChange: false,
 				subPlay: false,
 			});
@@ -761,10 +771,11 @@ const processLiveGameEvents = ({
 						e.scrimmage,
 						boxScore.teams[eventT!].abbrev,
 						boxScore.teams[otherT].abbrev,
+						fieldLength,
 					);
 
 					textParts.push(
-						formatDownAndDistance(e.down, e.toGo, e.scrimmage),
+						formatDownAndDistance(e.down, e.toGo, e.scrimmage, fieldLength),
 						fieldPos,
 					);
 				}
@@ -958,7 +969,7 @@ const processLiveGameEvents = ({
 					const reversedField = play.t !== sportState.t;
 					let scrimmageAfter = e.scrimmageAfter;
 					if (reversedField) {
-						scrimmageAfter = 100 - scrimmageAfter;
+						scrimmageAfter = fieldLength - scrimmageAfter;
 					}
 
 					// A foul added on after the play keeps the play's own yards; any
@@ -1022,7 +1033,7 @@ const processLiveGameEvents = ({
 
 			if (e.type === "kickoff") {
 				// yds is the distance kicked to
-				play.yards = 100 - sportState.scrimmage - e.yds;
+				play.yards = fieldLength - sportState.scrimmage - e.yds;
 			} else if (
 				e.type === "kickoffReturn" ||
 				e.type === "punt" ||
@@ -1042,10 +1053,10 @@ const processLiveGameEvents = ({
 					(e.type === "fumbleRecovery" || e.type === "interceptionReturn") &&
 					e.touchback
 				) {
-					const SCRIMMAGE_TOUCHBACK = 20;
+					const SCRIMMAGE_TOUCHBACK = getFootballField(fieldLength).touchback;
 
-					// (100 - play.scrimmage) is for the case when scrimmage is further than 100 (never happens?) or less than 100 (presumably momentum carried defender a yard or two into the endzone)
-					play.yards = -SCRIMMAGE_TOUCHBACK + (100 - play.scrimmage);
+					// Account for momentum carrying the defender past the goal line.
+					play.yards = -SCRIMMAGE_TOUCHBACK + (fieldLength - play.scrimmage);
 				} else {
 					play.yards += (reversedField ? -1 : 1) * e.yds;
 				}

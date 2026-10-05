@@ -168,6 +168,7 @@ export type Key =
 	| "overtimeLengthPlayoffs"
 	| "forceRetireRealPlayers"
 	| "forceHistoricalRosters"
+	| "fieldLength"
 	| "scrimmageTouchbackKickoff"
 	| "twoPointConversions"
 	| "footballOvertime"

@@ -2,8 +2,21 @@ import { assert, describe, test } from "vitest";
 import processLiveGameEvents, {
 	DEFAULT_SPORT_STATE,
 	penaltySegments,
+	formatDownAndDistance,
+	scrimmageToFieldPos,
 	type SportState,
 } from "./processLiveGameEvents.football.tsx";
+
+test("field position and goal-to-go labels use the field length", () => {
+	assert.equal(scrimmageToFieldPos(25, "AAA", "BBB", 50), "25 yd line");
+	assert.equal(scrimmageToFieldPos(20, "AAA", "BBB", 50), "AAA 20");
+	assert.equal(scrimmageToFieldPos(30, "AAA", "BBB", 50), "BBB 20");
+	assert.equal(formatDownAndDistance(1, 5, 45, 50), "1st & goal");
+	assert.equal(formatDownAndDistance(1, 10, 30, 50), "1st & 10");
+	assert.equal(scrimmageToFieldPos(50, "AAA", "BBB"), "50 yd line");
+	assert.equal(scrimmageToFieldPos(80, "AAA", "BBB"), "BBB 20");
+	assert.equal(formatDownAndDistance(1, 5, 95), "1st & goal");
+});
 
 describe("penaltySegments", () => {
 	test("no penalty: the whole bar is the play", () => {
@@ -71,6 +84,28 @@ describe("processLiveGameEvents penalty yards", () => {
 		scrimmage,
 		t: 0,
 		toGo: 10,
+	});
+	test("uses field length saved with the game and defaults old replays to 100", () => {
+		const state = run([{ ...clock(45), fieldLength: 50, toGo: 5 }]);
+		assert.equal(state.fieldLength, 50);
+		assert.include(state.text, "1st & goal");
+		assert.include(state.text, "BBB 5");
+		assert.equal(run([clock(45)]).fieldLength, 100);
+	});
+
+	test("kickoff drive bars use the shorter field", () => {
+		const state = run([
+			{ ...clock(18), fieldLength: 50, awaitingKickoff: 0 },
+			{
+				type: "kickoff",
+				clock: 10,
+				t: 0,
+				names: ["K"],
+				yds: -5,
+				touchback: true,
+			},
+		]);
+		assert.equal(state.plays[0]!.yards, 37);
 	});
 	const penalty = (fields: Record<string, unknown>) => ({
 		type: "penalty",

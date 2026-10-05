@@ -443,19 +443,26 @@ const ScoringSummary = memo(
 	},
 );
 
-// 12 is for 2 endzones and 10 10-yard areas in between
-const NUM_SECTIONS = 12;
 const DEFAULT_HEIGHT = 200;
 
 const FieldBackground = ({
+	fieldLength,
 	neutralSite,
 	t,
 	t2,
 }: {
+	fieldLength: number;
 	neutralSite: boolean | undefined;
 	t: Team;
 	t2: Team;
 }) => {
+	// Two 10-yard end zones, with the field divided into at most 10-yard sections.
+	const boundaries = [
+		-10,
+		...range(Math.ceil(fieldLength / 10)).map((i) => i * 10),
+		fieldLength,
+		fieldLength + 10,
+	];
 	let midfieldLogo;
 	if (neutralSite) {
 		midfieldLogo = `https://zengm.com/files/logo-${__SPORT}.svg`;
@@ -479,13 +486,14 @@ const FieldBackground = ({
 				}}
 				alt=""
 			/>
-			{range(NUM_SECTIONS).map((i) => {
+			{boundaries.slice(0, -1).map((start, i) => {
 				const style: CSSProperties = {
-					width: `${(1 / 12) * 100}%`,
+					width: `${((boundaries[i + 1]! - start) / (fieldLength + 20)) * 100}%`,
+					flexShrink: 0,
 					borderLeft: i > 0 ? "1px solid #495057" : undefined,
 				};
 				const ENDZONE_OFFENSE = i === 0;
-				const ENDZONE_DEFENSE = i === NUM_SECTIONS - 1;
+				const ENDZONE_DEFENSE = i === boundaries.length - 2;
 
 				const endzoneTeam = ENDZONE_OFFENSE
 					? t
@@ -507,12 +515,10 @@ const FieldBackground = ({
 					style.transform = "rotate(180deg)";
 				}
 
-				let yardLine: number | undefined;
-				if (i > 1 && i <= 6) {
-					yardLine = (i - 1) * 10;
-				} else if (i > 6 && i <= 10) {
-					yardLine = 100 - (i - 1) * 10;
-				}
+				const yardLine =
+					start > 0 && start < fieldLength
+						? Math.min(start, fieldLength - start)
+						: undefined;
 
 				return (
 					<div
@@ -547,31 +553,33 @@ const FieldBackground = ({
 	);
 };
 
-const yardsToPercent = (yards: number) => {
-	return (Math.abs(yards) * 10) / NUM_SECTIONS;
+const yardsToPercent = (yards: number, fieldLength: number) => {
+	return (Math.abs(yards) * 100) / (fieldLength + 20);
 };
 
-const yardLineToPercent = (yards: number) => {
-	return ((10 + yards) * 10) / NUM_SECTIONS;
+const yardLineToPercent = (yards: number, fieldLength: number) => {
+	return ((10 + yards) * 100) / (fieldLength + 20);
 };
 
 const VerticalLine = ({
+	fieldLength,
 	color,
 	driveDirection,
 	yards,
 }: {
+	fieldLength: number;
 	color: string;
 	driveDirection: boolean;
 	yards: number;
 }) => {
-	const yardsNormalized = driveDirection ? yards : 100 - yards;
+	const yardsNormalized = driveDirection ? yards : fieldLength - yards;
 	return (
 		<div
 			className="position-absolute h-100"
 			style={{
 				width: 2,
 				backgroundColor: color,
-				left: `${yardLineToPercent(yardsNormalized)}%`,
+				left: `${yardLineToPercent(yardsNormalized, fieldLength)}%`,
 			}}
 		/>
 	);
@@ -587,6 +595,7 @@ const red = "#dc3545";
 const boiseBlue = "#0480ff";
 
 const PlayBar = ({
+	fieldLength,
 	first,
 	kickoff,
 	last,
@@ -594,18 +603,19 @@ const PlayBar = ({
 	driveDirection,
 	...props // https://github.com/react-bootstrap/react-bootstrap/issues/2208
 }: {
+	fieldLength: number;
 	first: boolean;
 	kickoff: boolean;
 	last: boolean;
 	driveDirection: boolean;
 	play: SportState["plays"][number];
 }) => {
-	const goalToGo = play.toGo + play.scrimmage >= 100;
+	const goalToGo = play.toGo + play.scrimmage >= fieldLength;
 	const TAG_WIDTH = goalToGo ? 75 : 60;
 	let SCORE_TAG_WIDTH = 30;
 
 	const negative =
-		play.yards < 0 || (play.scoreInfo?.type === "SH" && play.scrimmage < 50);
+		play.yards < 0 || (play.scoreInfo?.type === "SH" && play.t === 0);
 
 	const barGoingLeft = driveDirection === negative;
 
@@ -633,8 +643,15 @@ const PlayBar = ({
 		}
 	}
 
-	const yardLinePercent = yardLineToPercent(play.scrimmage);
-	const yardsPercent = yardsToPercent(play.yards);
+	// A kickoff can travel past the back of the end zone, especially on a short field.
+	const visibleStart = helpers.bound(play.scrimmage, -10, fieldLength + 10);
+	const visibleEnd = helpers.bound(
+		play.scrimmage + play.yards,
+		-10,
+		fieldLength + 10,
+	);
+	const yardLinePercent = yardLineToPercent(visibleStart, fieldLength);
+	const yardsPercent = yardsToPercent(visibleEnd - visibleStart, fieldLength);
 
 	const showTag = !play.subPlay;
 
@@ -788,7 +805,12 @@ const PlayBar = ({
 						{play.tagOverride ??
 							(kickoff
 								? "Kickoff"
-								: formatDownAndDistance(play.down, play.toGo, play.scrimmage))}
+								: formatDownAndDistance(
+										play.down,
+										play.toGo,
+										play.scrimmage,
+										fieldLength,
+									))}
 					</div>
 				) : (
 					<>&nbsp;</>
@@ -808,6 +830,7 @@ const FieldAndDrive = ({
 	boxScore: BoxScore;
 	sportState: SportState;
 }) => {
+	const fieldLength = sportState.fieldLength;
 	const t = sportState.t;
 	const t2 = t === 0 ? 1 : 0;
 
@@ -839,6 +862,7 @@ const FieldAndDrive = ({
 				}}
 			>
 				<FieldBackground
+					fieldLength={fieldLength}
 					t={boxScore.teams[leftT]}
 					t2={boxScore.teams[rightT]}
 					neutralSite={boxScore.neutralSite}
@@ -846,12 +870,14 @@ const FieldAndDrive = ({
 				{!sportState.newPeriodText ? (
 					<>
 						<VerticalLine
+							fieldLength={fieldLength}
 							color={blue}
 							yards={sportState.scrimmage ?? sportState.scrimmage}
 							driveDirection={driveDirection}
 						/>
 						{!sportState.awaitingKickoff ? (
 							<VerticalLine
+								fieldLength={fieldLength}
 								color={yellow}
 								yards={sportState.scrimmage + sportState.toGo}
 								driveDirection={driveDirection}
@@ -886,6 +912,7 @@ const FieldAndDrive = ({
 														play.scrimmage,
 														boxScore.teams[t].abbrev,
 														boxScore.teams[t2].abbrev,
+														fieldLength,
 													)}
 												</li>
 											)}
@@ -899,6 +926,7 @@ const FieldAndDrive = ({
 							rootClose
 						>
 							<PlayBar
+								fieldLength={fieldLength}
 								first={i === 0}
 								kickoff={sportState.awaitingKickoff}
 								last={i === sportState.plays.length - 1}

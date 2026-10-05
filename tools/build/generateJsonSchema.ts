@@ -1562,10 +1562,15 @@ export const generateJsonSchema = (sport: Sport | "test") => {
 					forceHistoricalRosters: {
 						type: "boolean",
 					},
+					fieldLength: {
+						type: "integer",
+						minimum: 50,
+						maximum: 150,
+					},
 					scrimmageTouchbackKickoff: {
 						type: "number",
 						minimum: 1,
-						maximum: 99,
+						maximum: 149,
 					},
 					twoPointConversions: {
 						type: "boolean",

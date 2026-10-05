@@ -286,6 +286,7 @@ export type PlayByPlayEventOutput =
 	  }
 	| {
 			type: "clock";
+			fieldLength?: number; // Absent in older saved play-by-play
 			awaitingKickoff: TeamNum | undefined;
 			awaitingAfterTouchdown: boolean;
 			clock: number;
@@ -339,6 +340,7 @@ class FootballPlayByPlayLogger extends PlayByPlayLoggerBase<PlayByPlayEventOutpu
 		scrimmage,
 		t,
 		toGo,
+		fieldLength,
 	}: {
 		awaitingKickoff: TeamNum | undefined;
 		awaitingAfterTouchdown: boolean;
@@ -347,6 +349,7 @@ class FootballPlayByPlayLogger extends PlayByPlayLoggerBase<PlayByPlayEventOutpu
 		scrimmage: number;
 		t: TeamNum;
 		toGo: number;
+		fieldLength: number;
 	}) {
 		if (!this.active) {
 			return;
@@ -361,6 +364,7 @@ class FootballPlayByPlayLogger extends PlayByPlayLoggerBase<PlayByPlayEventOutpu
 			scrimmage,
 			t,
 			toGo,
+			fieldLength,
 		});
 	}
 

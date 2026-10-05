@@ -21,11 +21,8 @@ import type {
 	Formation,
 } from "./types.ts";
 import getInjuryRate from "../GameSim.basketball/getInjuryRate.ts";
-import Play, {
-	SCRIMMAGE_EXTRA_POINT,
-	SCRIMMAGE_KICKOFF,
-	SCRIMMAGE_TWO_POINT_CONVERSION,
-} from "./Play.ts";
+import Play from "./Play.ts";
+import { getFootballField } from "../../../common/footballField.ts";
 import LngTracker from "./LngTracker.ts";
 import GameSimBase from "../GameSim/GameSimBase.ts";
 import { PHASE, STARTING_NUM_TIMEOUTS } from "../../../common/constants.ts";
@@ -161,7 +158,8 @@ class GameSim extends GameSimBase {
 	awaitingKickoff: TeamNum | undefined;
 	lastHalfAwaitingKickoff: TeamNum;
 
-	scrimmage = SCRIMMAGE_KICKOFF;
+	field = getFootballField(g.get("fieldLength"));
+	scrimmage = this.field.kickoff;
 
 	down = 1;
 
@@ -345,7 +343,10 @@ class GameSim extends GameSimBase {
 		const distance = 50;
 
 		const p = this.getTopPlayerOnField(this.o, "K");
-		this.scrimmage = distance + FIELD_GOAL_DISTANCE_YARDS_ADDED_FROM_SCRIMMAGE;
+		this.scrimmage =
+			this.field.length -
+			distance +
+			FIELD_GOAL_DISTANCE_YARDS_ADDED_FROM_SCRIMMAGE;
 
 		// Don't let it ever be 0% or 100%
 		const probMake = helpers.bound(this.probMadeFieldGoal(p), 0.01, 0.99);
@@ -459,7 +460,7 @@ class GameSim extends GameSimBase {
 				this.o = this.lastHalfAwaitingKickoff;
 				this.awaitingKickoff = this.d;
 				this.lastHalfAwaitingKickoff = this.d;
-				this.scrimmage = SCRIMMAGE_KICKOFF;
+				this.scrimmage = this.field.kickoff;
 			} else if (quarter === this.numPeriods) {
 				break;
 			}
@@ -490,7 +491,7 @@ class GameSim extends GameSimBase {
 			// Coin flip in initial overtime
 			this.awaitingKickoff = Math.random() < 0.5 ? 0 : 1;
 			this.lastHalfAwaitingKickoff = this.awaitingKickoff;
-			this.scrimmage = SCRIMMAGE_KICKOFF;
+			this.scrimmage = this.field.kickoff;
 		}
 		this.team[0].stat.ptsQtrs.push(0);
 		this.team[1].stat.ptsQtrs.push(0);
@@ -510,7 +511,7 @@ class GameSim extends GameSimBase {
 		this.o = this.lastHalfAwaitingKickoff;
 		this.awaitingKickoff = this.d;
 		this.lastHalfAwaitingKickoff = this.d;
-		this.scrimmage = SCRIMMAGE_KICKOFF;
+		this.scrimmage = this.field.kickoff;
 
 		while (
 			(this.clock > 0 || this.playUntimedPossession) &&
@@ -537,7 +538,7 @@ class GameSim extends GameSimBase {
 		const ptsDown = this.team[this.d].stat.pts - this.team[this.o].stat.pts;
 		const quarter = this.team[0].stat.ptsQtrs.length;
 		const desperation =
-			this.scrimmage < 97 &&
+			this.scrimmage < this.field.length - 3 &&
 			quarter >= this.numPeriods &&
 			((quarter > this.numPeriods && ptsDown > 0) ||
 				(ptsDown > 0 && this.clock <= 2) ||
@@ -601,9 +602,9 @@ class GameSim extends GameSimBase {
 			);
 		}
 
-		if (this.scrimmage >= 95) {
+		if (this.scrimmage >= this.field.length - 5) {
 			// 5 for 1 yd to go, 1 for 5 yds to go
-			const runAtGoallineWeight = this.scrimmage - 94;
+			const runAtGoallineWeight = this.scrimmage - (this.field.length - 6);
 
 			passOdds = passOdds / runAtGoallineWeight;
 		}
@@ -659,7 +660,8 @@ class GameSim extends GameSimBase {
 		const ptsDown = this.team[this.d].stat.pts - this.team[this.o].stat.pts;
 		const quarter = this.team[0].stat.ptsQtrs.length;
 		return (
-			((this.kickoffAfterEndOfPeriod(quarter) && this.scrimmage >= 50) ||
+			((this.kickoffAfterEndOfPeriod(quarter) &&
+				this.scrimmage >= this.field.length / 2) ||
 				(quarter === this.numPeriods && ptsDown >= 0)) &&
 			this.clock <= 2
 		);
@@ -867,7 +869,7 @@ class GameSim extends GameSimBase {
 						) {
 							return 0;
 						}
-						if (this.scrimmage < 40) {
+						if (this.scrimmage < this.field.length * 0.4) {
 							return 0;
 						}
 						if (this.toGo <= 1) {
@@ -937,13 +939,13 @@ class GameSim extends GameSimBase {
 
 		// Set these before creating a new Play so they are updated in there too
 		if (playType === "extraPoint") {
-			this.scrimmage = SCRIMMAGE_EXTRA_POINT;
+			this.scrimmage = this.field.extraPoint;
 			this.down = 1;
-			this.toGo = 100 - this.scrimmage;
+			this.toGo = this.field.length - this.scrimmage;
 		} else if (playType === "twoPointConversion") {
-			this.scrimmage = SCRIMMAGE_TWO_POINT_CONVERSION;
+			this.scrimmage = this.field.twoPointConversion;
 			this.down = 1;
-			this.toGo = 100 - this.scrimmage;
+			this.toGo = this.field.length - this.scrimmage;
 		}
 
 		this.currentPlay = new Play(this);
@@ -956,6 +958,7 @@ class GameSim extends GameSimBase {
 			scrimmage: this.scrimmage,
 			t: this.o,
 			toGo: this.toGo,
+			fieldLength: this.field.length,
 		});
 
 		// Track team drive stats - easier here than directly in Play.ts because we have playType here
@@ -1374,7 +1377,7 @@ class GameSim extends GameSimBase {
 
 		if (onside) {
 			dt = randInt(2, 5);
-			const kickTo = randInt(40, 55);
+			const kickTo = this.field.length - this.scrimmage - randInt(10, 25);
 			this.currentPlay.addEvent({
 				type: "onsideKick",
 				p: kicker,
@@ -1398,7 +1401,8 @@ class GameSim extends GameSimBase {
 					yds: 0,
 				});
 
-				const rawLength = Math.random() < 0.003 ? 100 : randInt(0, 5);
+				const rawLength =
+					Math.random() < 0.003 ? this.field.length : randInt(0, 5);
 				yds = this.currentPlay.boundedYds(rawLength);
 				dt += Math.abs(yds) / 8;
 			}
@@ -1473,7 +1477,14 @@ class GameSim extends GameSimBase {
 			}
 
 			const kickReturner = this.getTopPlayerOnField(this.d, "KR");
-			const kickTo = randInt(...kickToRange);
+			// The ranges above describe kicks on a standard field. Keep kicking
+			// distance in yards as the distance to the receiving goal line changes.
+			const standardKickoff = this.awaitingAfterSafety ? 20 : 35;
+			const kickTo =
+				randInt(...kickToRange) +
+				this.field.length -
+				this.scrimmage -
+				(100 - standardKickoff);
 			const touchback = kickTo <= -10 || (kickTo < 0 && Math.random() < 0.8);
 			this.currentPlay.addEvent({
 				type: "k",
@@ -1567,17 +1578,20 @@ class GameSim extends GameSimBase {
 		const puntReturner = this.getTopPlayerOnField(this.d, "PR");
 		const adjustment = (punter.compositeRating.puntingPower - 0.7) * 20; // 100 ratings - 6 yd bonus. 0 ratings - 14 yard penalty
 
-		const maxDistance = 109 - this.scrimmage;
+		const maxDistance = this.field.length + 9 - this.scrimmage;
 		const averageDistance = 50 + adjustment;
 		const sigma = 8;
 
 		// If close to endzone, try to avoid it. Otherwise, kick as far as possible
 		let distance = Math.round(truncGauss(averageDistance, sigma, 25, 90));
 		if (
-			this.scrimmage + distance >= 100 &&
+			this.scrimmage + distance >= this.field.length &&
 			Math.random() < punter.compositeRating.puntingAccuracy ** 1.5 * 0.95
 		) {
-			const target = randInt(99, Math.max(81, this.scrimmage));
+			const target = randInt(
+				this.field.length - 1,
+				Math.max(this.field.length - 19, this.scrimmage),
+			);
 			distance = target - this.scrimmage;
 		}
 
@@ -1614,7 +1628,8 @@ class GameSim extends GameSimBase {
 				p: punter,
 			});
 		} else {
-			const maxReturnLength = 100 - this.currentPlay.state.current.scrimmage;
+			const maxReturnLength =
+				this.field.length - this.currentPlay.state.current.scrimmage;
 			const meanYds = 4 + 10 * puntReturner.compositeRating.rushing;
 			let ydsRaw = Math.round(truncGauss(meanYds, 10, -10, 109));
 
@@ -1669,7 +1684,9 @@ class GameSim extends GameSimBase {
 				: this.team[this.o].depth.K.find((p) => !p.injured);
 		let baseProb = 0;
 		let distance =
-			100 - this.scrimmage + FIELD_GOAL_DISTANCE_YARDS_ADDED_FROM_SCRIMMAGE;
+			this.field.length -
+			this.scrimmage +
+			FIELD_GOAL_DISTANCE_YARDS_ADDED_FROM_SCRIMMAGE;
 
 		if (!kicker) {
 			// Would take an absurd amount of injuries to get here, but technically possible
@@ -1770,7 +1787,9 @@ class GameSim extends GameSimBase {
 
 		const extraPoint = playType === "extraPoint";
 		const distance =
-			100 - this.scrimmage + FIELD_GOAL_DISTANCE_YARDS_ADDED_FROM_SCRIMMAGE;
+			this.field.length -
+			this.scrimmage +
+			FIELD_GOAL_DISTANCE_YARDS_ADDED_FROM_SCRIMMAGE;
 		const kicker = this.getTopPlayerOnField(this.o, "K");
 
 		this.playByPlay.logEvent({
@@ -2745,8 +2764,8 @@ class GameSim extends GameSimBase {
 			}
 
 			if (spotYds !== undefined) {
-				if (spotYds + scrimmage > 99) {
-					spotYds = 99 - scrimmage;
+				if (spotYds + scrimmage > this.field.length - 1) {
+					spotYds = this.field.length - 1 - scrimmage;
 				}
 			}
 

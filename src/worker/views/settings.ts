@@ -179,6 +179,7 @@ type Key =
 	| "overtimeLengthPlayoffs"
 	| "forceRetireRealPlayers"
 	| "forceHistoricalRosters"
+	| "fieldLength"
 	| "scrimmageTouchbackKickoff"
 	| "twoPointConversions"
 	| "footballOvertime"
@@ -401,6 +402,7 @@ export default defineView({
 				overtimeLengthPlayoffs: g.get("overtimeLengthPlayoffs"),
 				forceRetireRealPlayers: g.get("forceRetireRealPlayers"),
 				forceHistoricalRosters: g.get("forceHistoricalRosters"),
+				fieldLength: g.get("fieldLength"),
 				scrimmageTouchbackKickoff: g.get("scrimmageTouchbackKickoff"),
 				twoPointConversions: g.get("twoPointConversions"),
 				footballOvertime: g.get("footballOvertime"),

@@ -456,6 +456,7 @@ export const getDefaultSettings = () => {
 			defaultGameAttributes,
 			"forceHistoricalRosters",
 		),
+		fieldLength: unwrapGameAttribute(defaultGameAttributes, "fieldLength"),
 		scrimmageTouchbackKickoff: unwrapGameAttribute(
 			defaultGameAttributes,
 			"scrimmageTouchbackKickoff",

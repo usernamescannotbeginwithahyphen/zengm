@@ -118,7 +118,10 @@ const getBestPenaltyResult = <
 
 		// Defense likes offense having 4th and long (or, close to the offense's endzone, any 4th down)
 		let fourthAndLong = 0;
-		if (state.down === 4 && (state.scrimmage <= 35 || state.toGo > 2)) {
+		if (
+			state.down === 4 &&
+			(state.scrimmage <= state.field.length * 0.35 || state.toGo > 2)
+		) {
 			fourthAndLong = state.o === t ? -1 : 1;
 		}
 
