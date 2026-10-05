@@ -103,36 +103,67 @@ export const gradeFootballPerformance = (
 	const fieldFactor = bound(fieldLength / 100, 0.65, 1.2);
 	if (pos === "QB") {
 		const attempts = n("pss") + n("pssSk");
-		if (attempts === 0) {
+		const opportunities = attempts + n("rus");
+		if (opportunities === 0) {
 			return;
 		}
-		const efficiency =
-			(n("pssYds") - n("pssSkYds") + 20 * n("pssTD") - 45 * n("pssInt")) /
-			attempts;
-		return sample((efficiency - 5.5 * fieldFactor) * 3.5, attempts, 30);
+		const passing =
+			n("pssYds") -
+			n("pssSkYds") +
+			20 * n("pssTD") -
+			45 * n("pssInt") -
+			5.5 * fieldFactor * attempts;
+		const rushing =
+			n("rusYds") + 10 * n("rusTD") - 4.5 * fieldFactor * n("rus");
+		return sample(
+			((passing + rushing - 35 * n("fmbLost")) / opportunities) * 3.5,
+			opportunities,
+			30,
+		);
 	}
 	if (pos === "RB") {
-		const touches = n("rus") + n("rec");
-		if (touches === 0) {
+		// Targets count unsuccessful receiving opportunities too. Imported older
+		// stat lines may contain receptions without targets.
+		const targets = Math.max(n("tgt"), n("rec"));
+		const opportunities = n("rus") + targets;
+		if (opportunities === 0) {
 			return;
 		}
+		const rushing =
+			n("rusYds") + 10 * n("rusTD") - 4.5 * fieldFactor * n("rus");
+		const receiving = n("recYds") + 10 * n("recTD") - 6 * fieldFactor * targets;
 		return sample(
-			((n("rusYds") + n("recYds") - 35 * n("fmbLost")) / touches -
-				4.5 * fieldFactor) *
-				4,
-			touches,
+			((rushing + receiving - 35 * n("fmbLost")) / opportunities) * 4,
+			opportunities,
 			15,
 		);
 	}
 	if (pos === "WR" || pos === "TE") {
-		if (n("tgt") === 0) {
+		const targets = Math.max(n("tgt"), n("rec"));
+		const blocks = pos === "TE" ? n("pba") + n("rba") : 0;
+		// Blocking is a secondary part of a TE's evidence. A block is not
+		// interchangeable with a target, so use one tenth of its sample weight.
+		const blockSamples = blocks * 0.1;
+		const opportunities = targets + n("rus") + blockSamples;
+		if (opportunities === 0) {
 			return;
 		}
+		const receiving =
+			n("recYds") +
+			10 * n("recTD") -
+			(pos === "TE" ? 6 : 7) * fieldFactor * targets;
+		const rushing =
+			n("rusYds") + 10 * n("rusTD") - 4.5 * fieldFactor * n("rus");
+		const blockingGrade =
+			blocks > 0
+				? ((n("pbw") + n("rbw")) / blocks - 0.7) * 45 -
+					(35 * n("skAlw")) / blocks
+				: 0;
 		return sample(
-			((n("recYds") + 10 * n("recTD") - 25 * n("fmbLost")) / n("tgt") -
-				7 * fieldFactor) *
-				3,
-			n("tgt"),
+			((receiving + rushing - 25 * n("fmbLost")) * 3 +
+				blockingGrade * blockSamples) /
+				opportunities,
+			opportunities,
 			6,
 		);
 	}
@@ -167,13 +198,14 @@ export const gradeFootballPerformance = (
 		return sample((aboveExpected / attempts) * 45, attempts, 3);
 	}
 	if (pos === "P") {
-		if (n("pnt") === 0) {
+		const attempts = n("pnt") + n("pntBlk");
+		if (attempts === 0) {
 			return;
 		}
 		return sample(
-			(n("pntYds") / n("pnt") - 43 * fieldFactor) * 0.8 +
-				(4 * (n("pntIn20") - n("pntTB"))) / n("pnt"),
-			n("pnt"),
+			((n("pntYds") - 13 * n("pntBlk")) / attempts - 43 * fieldFactor) * 0.8 +
+				(4 * (n("pntIn20") - n("pntTB"))) / attempts,
+			attempts,
 			5,
 		);
 	}
@@ -183,26 +215,38 @@ export const gradeFootballPerformance = (
 			return;
 		}
 		return sample(
-			(n(`${key}Yds`) / n(key) - (pos === "KR" ? 23 : 9) * fieldFactor) * 0.9,
+			((n(`${key}Yds`) + 20 * n(`${key}TD`)) / n(key) -
+				(pos === "KR" ? 23 : 9) * fieldFactor) *
+				(pos === "KR" ? 0.9 : 1.5),
 			n(key),
 			3,
 		);
 	}
-	// Coverage targets and defensive snap counts are not recorded. Keep these
-	// grades modest, rather than pretending tackles alone measure good defense.
+	// Coverage targets and defensive snap counts are not recorded. A quiet CB/S
+	// might have prevented any throws, so a quiet box score is not negative
+	// coverage evidence. Front-seven production is also only a modest proxy.
 	if (n("min") < 1) {
 		return;
 	}
-	const production =
-		n("defTckSolo") +
-		0.5 * n("defTckAst") +
+	const tackles = n("defTckSolo") + 0.5 * n("defTckAst");
+	const disruptions =
 		3 * n("defSk") +
 		3 * n("defInt") +
 		n("defPssDef") +
-		2 * n("defFmbFrc");
+		2 * n("defFmbFrc") +
+		n("defFmbRec") +
+		// Sacks already count as tackles for loss in the simulation.
+		0.5 * Math.max(0, n("defTckLoss") - n("defSk")) +
+		2 * n("defSft");
 	const expected = pos === "LB" ? 7 : pos === "DL" ? 4 : 5;
+	const perGame = 30 / n("min");
+	const grade =
+		pos === "CB" || pos === "S"
+			? Math.max(0, tackles * perGame - expected) * 0.6 +
+				disruptions * perGame * 1.2
+			: ((tackles + disruptions) * perGame - expected) * 1.2;
 	return sample(
-		bound(((production / n("min")) * 30 - expected) * 1.2, -6, 6),
+		bound(grade, pos === "CB" || pos === "S" ? 0 : -3, 6),
 		n("min"),
 		30,
 	);
@@ -230,11 +274,11 @@ export const updateFootballForm = (
 		}
 		const weight = Math.min(1, grade.samples);
 		const previous = p.footballForm.roles[pos];
-		const alpha = 1 - 0.72 ** weight;
+		const alpha = 1 - 0.82 ** weight;
 		p.footballForm.roles[pos] = {
-			score: previous
-				? previous.score * (1 - alpha) + grade.score * alpha
-				: grade.score,
+			// Start at neutral evidence; a first appearance is not an established
+			// hot/cold streak. Subsequent updates retain more of the prior form.
+			score: (previous?.score ?? 0) * (1 - alpha) + grade.score * alpha,
 			samples: Math.min(8, (previous?.samples ?? 0) + weight),
 		};
 	}
@@ -361,7 +405,9 @@ export const getStarterScore = (
 			? depthIndex < FOOTBALL_STARTERS[pos]
 			: startsForTeam >= 4);
 	const continuity = incumbent
-		? 3 * (1 - rebuild * 0.5) * bound(1 + performance / 10, 0, 1.5)
+		? // Poor play already lowers performance. Removing all continuity as
+			// well caused equally struggling QBs to swap after nearly every game.
+			3 * (1 - rebuild * 0.5) * bound(1 + performance / 10, 1, 1.5)
 		: 0;
 	const recentMvp =
 		native &&
@@ -460,6 +506,7 @@ export const prepareFootballRoster = (
 			);
 			const injuryNeed =
 				kind !== "draft" &&
+				incumbents.length >= starters &&
 				healthy.length < starters &&
 				candidate.injury.gamesRemaining === 0;
 			if (injuryNeed) {

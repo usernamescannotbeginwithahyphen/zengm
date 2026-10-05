@@ -117,6 +117,24 @@ duplicate free-agent signings, and trades. Defensive performance evidence is
 deliberately modest because the game lacks coverage-target data. The weights
 are initial tuning, not a guarantee of any particular historical outcome.
 
+The [scenario audit](analysis/starter-score/report.html) contains 55 synthetic
+trajectories, weekly score curves, all-position stat checks, and roster-building
+comparisons against the original model. It uses the production scorer and depth
+sorter with controlled dummy stats, rather than simulating whole leagues.
+Recent form retains 82% of its previous value per full appearance, and an
+incumbent keeps a minimum continuity bonus even during poor play. There is no
+hard minimum starting stint. QB rushing, RB receiving, TE blocking, and recorded
+defensive disruptions contribute alongside each role's primary production.
+
+To regenerate the current audit in PowerShell:
+
+```powershell
+$env:STARTER_SCORE_REPORT_PATH = 'analysis/starter-score/after.json'
+pnpm exec vitest run --project football src/worker/core/team/starterScoreScenarios.football.test.ts
+Remove-Item Env:STARTER_SCORE_REPORT_PATH
+node tools/analysis/renderStarterScoreReport.ts
+```
+
 ## Other dev info
 
 ### Tests

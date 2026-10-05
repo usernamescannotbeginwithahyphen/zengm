@@ -1,0 +1,9074 @@
+{
+	"methodology": "Synthetic box scores, not real historical player estimates or a probabilistic football season. Uses production getStarterScore, updateFootballForm, rosterAutoSort and acquisition evaluation. Ratings/contract/team record held fixed to isolate performance; only selected players accumulate stats except the explicitly listed cameos. Selection at row N is for the game after N completed appearances/rounds. Injuries affect availability separately from depth order. Fixed 100-yard field. Scores rounded only for report display.",
+	"lines": {
+		"cameo": {
+			"pssCmp": 2,
+			"pss": 3,
+			"pssYds": 40,
+			"pssTD": 1
+		},
+		"steady": {
+			"pssCmp": 27,
+			"pss": 40,
+			"pssYds": 270
+		},
+		"good": {
+			"pssCmp": 24,
+			"pss": 32,
+			"pssYds": 300,
+			"pssTD": 2,
+			"pssSk": 2,
+			"pssSkYds": 12
+		},
+		"poor": {
+			"pssCmp": 18,
+			"pss": 35,
+			"pssYds": 150,
+			"pssInt": 2,
+			"pssSk": 3,
+			"pssSkYds": 20
+		},
+		"ordinary": {
+			"pssCmp": 21,
+			"pss": 35,
+			"pssYds": 220,
+			"pssTD": 1,
+			"pssInt": 1,
+			"pssSk": 2,
+			"pssSkYds": 12
+		},
+		"breakout": {
+			"pssCmp": 25,
+			"pss": 32,
+			"pssYds": 330,
+			"pssTD": 3,
+			"pssSk": 1,
+			"pssSkYds": 6
+		}
+	},
+	"trajectories": [
+		{
+			"id": "cameo",
+			"description": "Equal ability; starter goes 27/40 for 270 yards and no TD each week. Reserve goes 2/3 for 40 yards and a TD twice, then does not play.",
+			"profiles": [
+				{
+					"name": "Starter",
+					"ability": 65
+				},
+				{
+					"name": "Cameo",
+					"ability": 65
+				}
+			],
+			"context": {
+				"tid": 1,
+				"season": 2016,
+				"strategy": "contending",
+				"won": 8,
+				"lost": 4,
+				"tied": 0,
+				"numGames": 17,
+				"salaryCap": 200000,
+				"fieldLength": 100,
+				"depth": {}
+			},
+			"initialSelection": "Starter",
+			"changes": [],
+			"trace": [
+				{
+					"week": 0,
+					"selected": "Starter",
+					"depthLeader": "Starter",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 67.85,
+							"ability": 65,
+							"potential": 65,
+							"performance": 0,
+							"runway": 0,
+							"future": 0,
+							"continuity": 2.775,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 65.075,
+							"ability": 65,
+							"potential": 65,
+							"performance": 0,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 1,
+					"selected": "Starter",
+					"depthLeader": "Starter",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 70.086,
+							"ability": 65,
+							"potential": 65,
+							"performance": 1.75,
+							"runway": 0,
+							"future": 0,
+							"continuity": 3.261,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 65.859,
+							"ability": 65,
+							"potential": 65,
+							"performance": 0.784,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 2,
+					"selected": "Starter",
+					"depthLeader": "Starter",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 71.092,
+							"ability": 65,
+							"potential": 65,
+							"performance": 2.537,
+							"runway": 0,
+							"future": 0,
+							"continuity": 3.479,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 66.569,
+							"ability": 65,
+							"potential": 65,
+							"performance": 1.494,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 3,
+					"selected": "Starter",
+					"depthLeader": "Starter",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 71.651,
+							"ability": 65,
+							"potential": 65,
+							"performance": 2.975,
+							"runway": 0,
+							"future": 0,
+							"continuity": 3.601,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 66.569,
+							"ability": 65,
+							"potential": 65,
+							"performance": 1.494,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 4,
+					"selected": "Starter",
+					"depthLeader": "Starter",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 72.002,
+							"ability": 65,
+							"potential": 65,
+							"performance": 3.25,
+							"runway": 0,
+							"future": 0,
+							"continuity": 3.677,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 66.569,
+							"ability": 65,
+							"potential": 65,
+							"performance": 1.494,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 5,
+					"selected": "Starter",
+					"depthLeader": "Starter",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 72.241,
+							"ability": 65,
+							"potential": 65,
+							"performance": 3.438,
+							"runway": 0,
+							"future": 0,
+							"continuity": 3.729,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 66.569,
+							"ability": 65,
+							"potential": 65,
+							"performance": 1.494,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 6,
+					"selected": "Starter",
+					"depthLeader": "Starter",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 72.414,
+							"ability": 65,
+							"potential": 65,
+							"performance": 3.573,
+							"runway": 0,
+							"future": 0,
+							"continuity": 3.766,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 66.569,
+							"ability": 65,
+							"potential": 65,
+							"performance": 1.494,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 7,
+					"selected": "Starter",
+					"depthLeader": "Starter",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 72.545,
+							"ability": 65,
+							"potential": 65,
+							"performance": 3.675,
+							"runway": 0,
+							"future": 0,
+							"continuity": 3.795,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 66.569,
+							"ability": 65,
+							"potential": 65,
+							"performance": 1.494,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 8,
+					"selected": "Starter",
+					"depthLeader": "Starter",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 72.646,
+							"ability": 65,
+							"potential": 65,
+							"performance": 3.755,
+							"runway": 0,
+							"future": 0,
+							"continuity": 3.817,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 66.569,
+							"ability": 65,
+							"potential": 65,
+							"performance": 1.494,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 9,
+					"selected": "Starter",
+					"depthLeader": "Starter",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 72.712,
+							"ability": 65,
+							"potential": 65,
+							"performance": 3.806,
+							"runway": 0,
+							"future": 0,
+							"continuity": 3.831,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 66.569,
+							"ability": 65,
+							"potential": 65,
+							"performance": 1.494,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 10,
+					"selected": "Starter",
+					"depthLeader": "Starter",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 72.768,
+							"ability": 65,
+							"potential": 65,
+							"performance": 3.85,
+							"runway": 0,
+							"future": 0,
+							"continuity": 3.843,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 66.569,
+							"ability": 65,
+							"potential": 65,
+							"performance": 1.494,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 11,
+					"selected": "Starter",
+					"depthLeader": "Starter",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 72.816,
+							"ability": 65,
+							"potential": 65,
+							"performance": 3.888,
+							"runway": 0,
+							"future": 0,
+							"continuity": 3.854,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 66.569,
+							"ability": 65,
+							"potential": 65,
+							"performance": 1.494,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 12,
+					"selected": "Starter",
+					"depthLeader": "Starter",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 72.858,
+							"ability": 65,
+							"potential": 65,
+							"performance": 3.92,
+							"runway": 0,
+							"future": 0,
+							"continuity": 3.863,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 66.569,
+							"ability": 65,
+							"potential": 65,
+							"performance": 1.494,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 13,
+					"selected": "Starter",
+					"depthLeader": "Starter",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 72.894,
+							"ability": 65,
+							"potential": 65,
+							"performance": 3.948,
+							"runway": 0,
+							"future": 0,
+							"continuity": 3.871,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 66.569,
+							"ability": 65,
+							"potential": 65,
+							"performance": 1.494,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 14,
+					"selected": "Starter",
+					"depthLeader": "Starter",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 72.926,
+							"ability": 65,
+							"potential": 65,
+							"performance": 3.974,
+							"runway": 0,
+							"future": 0,
+							"continuity": 3.878,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 66.569,
+							"ability": 65,
+							"potential": 65,
+							"performance": 1.494,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 15,
+					"selected": "Starter",
+					"depthLeader": "Starter",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 72.955,
+							"ability": 65,
+							"potential": 65,
+							"performance": 3.996,
+							"runway": 0,
+							"future": 0,
+							"continuity": 3.884,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 66.569,
+							"ability": 65,
+							"potential": 65,
+							"performance": 1.494,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 16,
+					"selected": "Starter",
+					"depthLeader": "Starter",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 72.98,
+							"ability": 65,
+							"potential": 65,
+							"performance": 4.016,
+							"runway": 0,
+							"future": 0,
+							"continuity": 3.889,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 66.569,
+							"ability": 65,
+							"potential": 65,
+							"performance": 1.494,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 17,
+					"selected": "Starter",
+					"depthLeader": "Starter",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 73.003,
+							"ability": 65,
+							"potential": 65,
+							"performance": 4.034,
+							"runway": 0,
+							"future": 0,
+							"continuity": 3.894,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 66.569,
+							"ability": 65,
+							"potential": 65,
+							"performance": 1.494,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				}
+			]
+		},
+		{
+			"id": "proven-slump",
+			"description": "67-rated veteran with a good prior season and $30m contract repeatedly plays poorly; 64-rated reserve plays steady football if promoted.",
+			"profiles": [
+				{
+					"name": "Veteran",
+					"ability": 67,
+					"salary": 30000,
+					"prior": {
+						"pssCmp": 24,
+						"pss": 32,
+						"pssYds": 300,
+						"pssTD": 2,
+						"pssSk": 2,
+						"pssSkYds": 12
+					}
+				},
+				{
+					"name": "Reserve",
+					"ability": 64
+				}
+			],
+			"context": {
+				"tid": 1,
+				"season": 2016,
+				"strategy": "contending",
+				"won": 8,
+				"lost": 4,
+				"tied": 0,
+				"numGames": 17,
+				"salaryCap": 200000,
+				"fieldLength": 100,
+				"depth": {}
+			},
+			"initialSelection": "Veteran",
+			"changes": [
+				{
+					"afterGame": 3,
+					"to": "Reserve"
+				}
+			],
+			"trace": [
+				{
+					"week": 0,
+					"selected": "Veteran",
+					"depthLeader": "Veteran",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 83.676,
+							"ability": 67,
+							"potential": 67,
+							"performance": 9.513,
+							"runway": 0,
+							"future": 0,
+							"continuity": 4.163,
+							"contract": 3,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 64.075,
+							"ability": 64,
+							"potential": 64,
+							"performance": 0,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 1,
+					"selected": "Veteran",
+					"depthLeader": "Veteran",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 72.64,
+							"ability": 67,
+							"potential": 67,
+							"performance": -0.106,
+							"runway": 0,
+							"future": 0,
+							"continuity": 2.746,
+							"contract": 3,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 64.075,
+							"ability": 64,
+							"potential": 64,
+							"performance": 0,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 2,
+					"selected": "Veteran",
+					"depthLeader": "Veteran",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 67.034,
+							"ability": 67,
+							"potential": 67,
+							"performance": -4.494,
+							"runway": 0,
+							"future": 0,
+							"continuity": 1.528,
+							"contract": 3,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 64.075,
+							"ability": 64,
+							"potential": 64,
+							"performance": 0,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 3,
+					"selected": "Reserve",
+					"depthLeader": "Reserve",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 63.89,
+							"ability": 67,
+							"potential": 67,
+							"performance": -6.955,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0.845,
+							"contract": 3,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 64.075,
+							"ability": 64,
+							"potential": 64,
+							"performance": 0,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 4,
+					"selected": "Reserve",
+					"depthLeader": "Reserve",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 63.045,
+							"ability": 67,
+							"potential": 67,
+							"performance": -6.955,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 3,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 69.086,
+							"ability": 64,
+							"potential": 64,
+							"performance": 1.75,
+							"runway": 0,
+							"future": 0,
+							"continuity": 3.261,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 5,
+					"selected": "Reserve",
+					"depthLeader": "Reserve",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 63.045,
+							"ability": 67,
+							"potential": 67,
+							"performance": -6.955,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 3,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 70.092,
+							"ability": 64,
+							"potential": 64,
+							"performance": 2.537,
+							"runway": 0,
+							"future": 0,
+							"continuity": 3.479,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 6,
+					"selected": "Reserve",
+					"depthLeader": "Reserve",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 63.045,
+							"ability": 67,
+							"potential": 67,
+							"performance": -6.955,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 3,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 70.651,
+							"ability": 64,
+							"potential": 64,
+							"performance": 2.975,
+							"runway": 0,
+							"future": 0,
+							"continuity": 3.601,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 7,
+					"selected": "Reserve",
+					"depthLeader": "Reserve",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 63.045,
+							"ability": 67,
+							"potential": 67,
+							"performance": -6.955,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 3,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 71.002,
+							"ability": 64,
+							"potential": 64,
+							"performance": 3.25,
+							"runway": 0,
+							"future": 0,
+							"continuity": 3.677,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 8,
+					"selected": "Reserve",
+					"depthLeader": "Reserve",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 63.045,
+							"ability": 67,
+							"potential": 67,
+							"performance": -6.955,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 3,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 71.241,
+							"ability": 64,
+							"potential": 64,
+							"performance": 3.438,
+							"runway": 0,
+							"future": 0,
+							"continuity": 3.729,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 9,
+					"selected": "Reserve",
+					"depthLeader": "Reserve",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 63.045,
+							"ability": 67,
+							"potential": 67,
+							"performance": -6.955,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 3,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 71.414,
+							"ability": 64,
+							"potential": 64,
+							"performance": 3.573,
+							"runway": 0,
+							"future": 0,
+							"continuity": 3.766,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 10,
+					"selected": "Reserve",
+					"depthLeader": "Reserve",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 63.045,
+							"ability": 67,
+							"potential": 67,
+							"performance": -6.955,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 3,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 71.545,
+							"ability": 64,
+							"potential": 64,
+							"performance": 3.675,
+							"runway": 0,
+							"future": 0,
+							"continuity": 3.795,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 11,
+					"selected": "Reserve",
+					"depthLeader": "Reserve",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 63.045,
+							"ability": 67,
+							"potential": 67,
+							"performance": -6.955,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 3,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 71.646,
+							"ability": 64,
+							"potential": 64,
+							"performance": 3.755,
+							"runway": 0,
+							"future": 0,
+							"continuity": 3.817,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 12,
+					"selected": "Reserve",
+					"depthLeader": "Reserve",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 63.045,
+							"ability": 67,
+							"potential": 67,
+							"performance": -6.955,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 3,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 71.712,
+							"ability": 64,
+							"potential": 64,
+							"performance": 3.806,
+							"runway": 0,
+							"future": 0,
+							"continuity": 3.831,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 13,
+					"selected": "Reserve",
+					"depthLeader": "Reserve",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 63.045,
+							"ability": 67,
+							"potential": 67,
+							"performance": -6.955,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 3,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 71.768,
+							"ability": 64,
+							"potential": 64,
+							"performance": 3.85,
+							"runway": 0,
+							"future": 0,
+							"continuity": 3.843,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 14,
+					"selected": "Reserve",
+					"depthLeader": "Reserve",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 63.045,
+							"ability": 67,
+							"potential": 67,
+							"performance": -6.955,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 3,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 71.816,
+							"ability": 64,
+							"potential": 64,
+							"performance": 3.888,
+							"runway": 0,
+							"future": 0,
+							"continuity": 3.854,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 15,
+					"selected": "Reserve",
+					"depthLeader": "Reserve",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 63.045,
+							"ability": 67,
+							"potential": 67,
+							"performance": -6.955,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 3,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 71.858,
+							"ability": 64,
+							"potential": 64,
+							"performance": 3.92,
+							"runway": 0,
+							"future": 0,
+							"continuity": 3.863,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 16,
+					"selected": "Reserve",
+					"depthLeader": "Reserve",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 63.045,
+							"ability": 67,
+							"potential": 67,
+							"performance": -6.955,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 3,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 71.894,
+							"ability": 64,
+							"potential": 64,
+							"performance": 3.948,
+							"runway": 0,
+							"future": 0,
+							"continuity": 3.871,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 17,
+					"selected": "Reserve",
+					"depthLeader": "Reserve",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 63.045,
+							"ability": 67,
+							"potential": 67,
+							"performance": -6.955,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 3,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 71.926,
+							"ability": 64,
+							"potential": 64,
+							"performance": 3.974,
+							"runway": 0,
+							"future": 0,
+							"continuity": 3.878,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				}
+			]
+		},
+		{
+			"id": "two-bad-games",
+			"description": "Same veteran: two poor games, then good play. Reserve only plays if promoted.",
+			"profiles": [
+				{
+					"name": "Veteran",
+					"ability": 67,
+					"salary": 30000,
+					"prior": {
+						"pssCmp": 24,
+						"pss": 32,
+						"pssYds": 300,
+						"pssTD": 2,
+						"pssSk": 2,
+						"pssSkYds": 12
+					}
+				},
+				{
+					"name": "Reserve",
+					"ability": 64
+				}
+			],
+			"context": {
+				"tid": 1,
+				"season": 2016,
+				"strategy": "contending",
+				"won": 8,
+				"lost": 4,
+				"tied": 0,
+				"numGames": 17,
+				"salaryCap": 200000,
+				"fieldLength": 100,
+				"depth": {}
+			},
+			"initialSelection": "Veteran",
+			"changes": [],
+			"trace": [
+				{
+					"week": 0,
+					"selected": "Veteran",
+					"depthLeader": "Veteran",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 83.676,
+							"ability": 67,
+							"potential": 67,
+							"performance": 9.513,
+							"runway": 0,
+							"future": 0,
+							"continuity": 4.163,
+							"contract": 3,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 64.075,
+							"ability": 64,
+							"potential": 64,
+							"performance": 0,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 1,
+					"selected": "Veteran",
+					"depthLeader": "Veteran",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 72.64,
+							"ability": 67,
+							"potential": 67,
+							"performance": -0.106,
+							"runway": 0,
+							"future": 0,
+							"continuity": 2.746,
+							"contract": 3,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 64.075,
+							"ability": 64,
+							"potential": 64,
+							"performance": 0,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 2,
+					"selected": "Veteran",
+					"depthLeader": "Veteran",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 67.034,
+							"ability": 67,
+							"potential": 67,
+							"performance": -4.494,
+							"runway": 0,
+							"future": 0,
+							"continuity": 1.528,
+							"contract": 3,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 64.075,
+							"ability": 64,
+							"potential": 64,
+							"performance": 0,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 3,
+					"selected": "Veteran",
+					"depthLeader": "Veteran",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 71.284,
+							"ability": 67,
+							"potential": 67,
+							"performance": -1.167,
+							"runway": 0,
+							"future": 0,
+							"continuity": 2.451,
+							"contract": 3,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 64.075,
+							"ability": 64,
+							"potential": 64,
+							"performance": 0,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 4,
+					"selected": "Veteran",
+					"depthLeader": "Veteran",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 75.119,
+							"ability": 67,
+							"potential": 67,
+							"performance": 1.835,
+							"runway": 0,
+							"future": 0,
+							"continuity": 3.284,
+							"contract": 3,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 64.075,
+							"ability": 64,
+							"potential": 64,
+							"performance": 0,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 5,
+					"selected": "Veteran",
+					"depthLeader": "Veteran",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 78.216,
+							"ability": 67,
+							"potential": 67,
+							"performance": 4.259,
+							"runway": 0,
+							"future": 0,
+							"continuity": 3.957,
+							"contract": 3,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 64.075,
+							"ability": 64,
+							"potential": 64,
+							"performance": 0,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 6,
+					"selected": "Veteran",
+					"depthLeader": "Veteran",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 80.326,
+							"ability": 67,
+							"potential": 67,
+							"performance": 6.164,
+							"runway": 0,
+							"future": 0,
+							"continuity": 4.163,
+							"contract": 3,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 64.075,
+							"ability": 64,
+							"potential": 64,
+							"performance": 0,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 7,
+					"selected": "Veteran",
+					"depthLeader": "Veteran",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 81.806,
+							"ability": 67,
+							"potential": 67,
+							"performance": 7.644,
+							"runway": 0,
+							"future": 0,
+							"continuity": 4.163,
+							"contract": 3,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 64.075,
+							"ability": 64,
+							"potential": 64,
+							"performance": 0,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 8,
+					"selected": "Veteran",
+					"depthLeader": "Veteran",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 82.951,
+							"ability": 67,
+							"potential": 67,
+							"performance": 8.789,
+							"runway": 0,
+							"future": 0,
+							"continuity": 4.163,
+							"contract": 3,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 64.075,
+							"ability": 64,
+							"potential": 64,
+							"performance": 0,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 9,
+					"selected": "Veteran",
+					"depthLeader": "Veteran",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 83.798,
+							"ability": 67,
+							"potential": 67,
+							"performance": 9.635,
+							"runway": 0,
+							"future": 0,
+							"continuity": 4.163,
+							"contract": 3,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 64.075,
+							"ability": 64,
+							"potential": 64,
+							"performance": 0,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 10,
+					"selected": "Veteran",
+					"depthLeader": "Veteran",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 84.447,
+							"ability": 67,
+							"potential": 67,
+							"performance": 10.285,
+							"runway": 0,
+							"future": 0,
+							"continuity": 4.163,
+							"contract": 3,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 64.075,
+							"ability": 64,
+							"potential": 64,
+							"performance": 0,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 11,
+					"selected": "Veteran",
+					"depthLeader": "Veteran",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 84.951,
+							"ability": 67,
+							"potential": 67,
+							"performance": 10.788,
+							"runway": 0,
+							"future": 0,
+							"continuity": 4.163,
+							"contract": 3,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 64.075,
+							"ability": 64,
+							"potential": 64,
+							"performance": 0,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 12,
+					"selected": "Veteran",
+					"depthLeader": "Veteran",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 85.347,
+							"ability": 67,
+							"potential": 67,
+							"performance": 11.184,
+							"runway": 0,
+							"future": 0,
+							"continuity": 4.163,
+							"contract": 3,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 64.075,
+							"ability": 64,
+							"potential": 64,
+							"performance": 0,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 13,
+					"selected": "Veteran",
+					"depthLeader": "Veteran",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 85.662,
+							"ability": 67,
+							"potential": 67,
+							"performance": 11.5,
+							"runway": 0,
+							"future": 0,
+							"continuity": 4.163,
+							"contract": 3,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 64.075,
+							"ability": 64,
+							"potential": 64,
+							"performance": 0,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 14,
+					"selected": "Veteran",
+					"depthLeader": "Veteran",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 85.917,
+							"ability": 67,
+							"potential": 67,
+							"performance": 11.755,
+							"runway": 0,
+							"future": 0,
+							"continuity": 4.163,
+							"contract": 3,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 64.075,
+							"ability": 64,
+							"potential": 64,
+							"performance": 0,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 15,
+					"selected": "Veteran",
+					"depthLeader": "Veteran",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 86.127,
+							"ability": 67,
+							"potential": 67,
+							"performance": 11.964,
+							"runway": 0,
+							"future": 0,
+							"continuity": 4.163,
+							"contract": 3,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 64.075,
+							"ability": 64,
+							"potential": 64,
+							"performance": 0,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 16,
+					"selected": "Veteran",
+					"depthLeader": "Veteran",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 86.301,
+							"ability": 67,
+							"potential": 67,
+							"performance": 12.139,
+							"runway": 0,
+							"future": 0,
+							"continuity": 4.163,
+							"contract": 3,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 64.075,
+							"ability": 64,
+							"potential": 64,
+							"performance": 0,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 17,
+					"selected": "Veteran",
+					"depthLeader": "Veteran",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 86.449,
+							"ability": 67,
+							"potential": 67,
+							"performance": 12.286,
+							"runway": 0,
+							"future": 0,
+							"continuity": 4.163,
+							"contract": 3,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 64.075,
+							"ability": 64,
+							"potential": 64,
+							"performance": 0,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				}
+			]
+		},
+		{
+			"id": "unproven-slump",
+			"description": "67-rated incumbent without prior results or a large contract; 64-rated reserve available. Incumbent plays poorly repeatedly.",
+			"profiles": [
+				{
+					"name": "Unproven",
+					"ability": 67
+				},
+				{
+					"name": "Reserve",
+					"ability": 64
+				}
+			],
+			"context": {
+				"tid": 1,
+				"season": 2016,
+				"strategy": "contending",
+				"won": 8,
+				"lost": 4,
+				"tied": 0,
+				"numGames": 17,
+				"salaryCap": 200000,
+				"fieldLength": 100,
+				"depth": {}
+			},
+			"initialSelection": "Unproven",
+			"changes": [
+				{
+					"afterGame": 1,
+					"to": "Reserve"
+				}
+			],
+			"trace": [
+				{
+					"week": 0,
+					"selected": "Unproven",
+					"depthLeader": "Unproven",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 69.85,
+							"ability": 67,
+							"potential": 67,
+							"performance": 0,
+							"runway": 0,
+							"future": 0,
+							"continuity": 2.775,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 64.075,
+							"ability": 64,
+							"potential": 64,
+							"performance": 0,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 1,
+					"selected": "Reserve",
+					"depthLeader": "Reserve",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 62.331,
+							"ability": 67,
+							"potential": 67,
+							"performance": -5.886,
+							"runway": 0,
+							"future": 0,
+							"continuity": 1.142,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 64.075,
+							"ability": 64,
+							"potential": 64,
+							"performance": 0,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 2,
+					"selected": "Reserve",
+					"depthLeader": "Reserve",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 61.189,
+							"ability": 67,
+							"potential": 67,
+							"performance": -5.886,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 69.086,
+							"ability": 64,
+							"potential": 64,
+							"performance": 1.75,
+							"runway": 0,
+							"future": 0,
+							"continuity": 3.261,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 3,
+					"selected": "Reserve",
+					"depthLeader": "Reserve",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 61.189,
+							"ability": 67,
+							"potential": 67,
+							"performance": -5.886,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 70.092,
+							"ability": 64,
+							"potential": 64,
+							"performance": 2.537,
+							"runway": 0,
+							"future": 0,
+							"continuity": 3.479,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 4,
+					"selected": "Reserve",
+					"depthLeader": "Reserve",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 61.189,
+							"ability": 67,
+							"potential": 67,
+							"performance": -5.886,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 70.651,
+							"ability": 64,
+							"potential": 64,
+							"performance": 2.975,
+							"runway": 0,
+							"future": 0,
+							"continuity": 3.601,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 5,
+					"selected": "Reserve",
+					"depthLeader": "Reserve",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 61.189,
+							"ability": 67,
+							"potential": 67,
+							"performance": -5.886,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 71.002,
+							"ability": 64,
+							"potential": 64,
+							"performance": 3.25,
+							"runway": 0,
+							"future": 0,
+							"continuity": 3.677,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 6,
+					"selected": "Reserve",
+					"depthLeader": "Reserve",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 61.189,
+							"ability": 67,
+							"potential": 67,
+							"performance": -5.886,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 71.241,
+							"ability": 64,
+							"potential": 64,
+							"performance": 3.438,
+							"runway": 0,
+							"future": 0,
+							"continuity": 3.729,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 7,
+					"selected": "Reserve",
+					"depthLeader": "Reserve",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 61.189,
+							"ability": 67,
+							"potential": 67,
+							"performance": -5.886,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 71.414,
+							"ability": 64,
+							"potential": 64,
+							"performance": 3.573,
+							"runway": 0,
+							"future": 0,
+							"continuity": 3.766,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 8,
+					"selected": "Reserve",
+					"depthLeader": "Reserve",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 61.189,
+							"ability": 67,
+							"potential": 67,
+							"performance": -5.886,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 71.545,
+							"ability": 64,
+							"potential": 64,
+							"performance": 3.675,
+							"runway": 0,
+							"future": 0,
+							"continuity": 3.795,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 9,
+					"selected": "Reserve",
+					"depthLeader": "Reserve",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 61.189,
+							"ability": 67,
+							"potential": 67,
+							"performance": -5.886,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 71.646,
+							"ability": 64,
+							"potential": 64,
+							"performance": 3.755,
+							"runway": 0,
+							"future": 0,
+							"continuity": 3.817,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 10,
+					"selected": "Reserve",
+					"depthLeader": "Reserve",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 61.189,
+							"ability": 67,
+							"potential": 67,
+							"performance": -5.886,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 71.712,
+							"ability": 64,
+							"potential": 64,
+							"performance": 3.806,
+							"runway": 0,
+							"future": 0,
+							"continuity": 3.831,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 11,
+					"selected": "Reserve",
+					"depthLeader": "Reserve",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 61.189,
+							"ability": 67,
+							"potential": 67,
+							"performance": -5.886,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 71.768,
+							"ability": 64,
+							"potential": 64,
+							"performance": 3.85,
+							"runway": 0,
+							"future": 0,
+							"continuity": 3.843,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 12,
+					"selected": "Reserve",
+					"depthLeader": "Reserve",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 61.189,
+							"ability": 67,
+							"potential": 67,
+							"performance": -5.886,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 71.816,
+							"ability": 64,
+							"potential": 64,
+							"performance": 3.888,
+							"runway": 0,
+							"future": 0,
+							"continuity": 3.854,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 13,
+					"selected": "Reserve",
+					"depthLeader": "Reserve",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 61.189,
+							"ability": 67,
+							"potential": 67,
+							"performance": -5.886,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 71.858,
+							"ability": 64,
+							"potential": 64,
+							"performance": 3.92,
+							"runway": 0,
+							"future": 0,
+							"continuity": 3.863,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 14,
+					"selected": "Reserve",
+					"depthLeader": "Reserve",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 61.189,
+							"ability": 67,
+							"potential": 67,
+							"performance": -5.886,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 71.894,
+							"ability": 64,
+							"potential": 64,
+							"performance": 3.948,
+							"runway": 0,
+							"future": 0,
+							"continuity": 3.871,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 15,
+					"selected": "Reserve",
+					"depthLeader": "Reserve",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 61.189,
+							"ability": 67,
+							"potential": 67,
+							"performance": -5.886,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 71.926,
+							"ability": 64,
+							"potential": 64,
+							"performance": 3.974,
+							"runway": 0,
+							"future": 0,
+							"continuity": 3.878,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 16,
+					"selected": "Reserve",
+					"depthLeader": "Reserve",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 61.189,
+							"ability": 67,
+							"potential": 67,
+							"performance": -5.886,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 71.955,
+							"ability": 64,
+							"potential": 64,
+							"performance": 3.996,
+							"runway": 0,
+							"future": 0,
+							"continuity": 3.884,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 17,
+					"selected": "Reserve",
+					"depthLeader": "Reserve",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 61.189,
+							"ability": 67,
+							"potential": 67,
+							"performance": -5.886,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 71.98,
+							"ability": 64,
+							"potential": 64,
+							"performance": 4.016,
+							"runway": 0,
+							"future": 0,
+							"continuity": 3.889,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				}
+			]
+		},
+		{
+			"id": "rookie-weak-backup",
+			"description": "Second-year first-rounder, 58 ability/82 potential, prior poor season, $9m contract; 45-rated backup. Starter continues struggling.",
+			"profiles": [
+				{
+					"name": "Prospect",
+					"ability": 58,
+					"potential": 82,
+					"age": 23,
+					"round": 1,
+					"draftAge": 1,
+					"salary": 9000,
+					"prior": {
+						"pssCmp": 18,
+						"pss": 35,
+						"pssYds": 150,
+						"pssInt": 2,
+						"pssSk": 3,
+						"pssSkYds": 20
+					}
+				},
+				{
+					"name": "Backup",
+					"ability": 45
+				}
+			],
+			"context": {
+				"tid": 1,
+				"season": 2016,
+				"strategy": "contending",
+				"won": 8,
+				"lost": 4,
+				"tied": 0,
+				"numGames": 17,
+				"salaryCap": 200000,
+				"fieldLength": 100,
+				"depth": {}
+			},
+			"initialSelection": "Prospect",
+			"changes": [],
+			"trace": [
+				{
+					"week": 0,
+					"selected": "Prospect",
+					"depthLeader": "Prospect",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 59.968,
+							"ability": 58,
+							"potential": 82,
+							"performance": -10.022,
+							"runway": 6.4,
+							"future": 4.24,
+							"continuity": 0,
+							"contract": 1.35,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 45.075,
+							"ability": 45,
+							"potential": 45,
+							"performance": 0,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 1,
+					"selected": "Prospect",
+					"depthLeader": "Prospect",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 58.015,
+							"ability": 58,
+							"potential": 82,
+							"performance": -11.975,
+							"runway": 6.4,
+							"future": 4.24,
+							"continuity": 0,
+							"contract": 1.35,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 45.075,
+							"ability": 45,
+							"potential": 45,
+							"performance": 0,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 2,
+					"selected": "Prospect",
+					"depthLeader": "Prospect",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 57.123,
+							"ability": 58,
+							"potential": 82,
+							"performance": -12.867,
+							"runway": 6.4,
+							"future": 4.24,
+							"continuity": 0,
+							"contract": 1.35,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 45.075,
+							"ability": 45,
+							"potential": 45,
+							"performance": 0,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 3,
+					"selected": "Prospect",
+					"depthLeader": "Prospect",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 56.624,
+							"ability": 58,
+							"potential": 82,
+							"performance": -13.366,
+							"runway": 6.4,
+							"future": 4.24,
+							"continuity": 0,
+							"contract": 1.35,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 45.075,
+							"ability": 45,
+							"potential": 45,
+							"performance": 0,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 4,
+					"selected": "Prospect",
+					"depthLeader": "Prospect",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 56.308,
+							"ability": 58,
+							"potential": 82,
+							"performance": -13.682,
+							"runway": 6.4,
+							"future": 4.24,
+							"continuity": 0,
+							"contract": 1.35,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 45.075,
+							"ability": 45,
+							"potential": 45,
+							"performance": 0,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 5,
+					"selected": "Prospect",
+					"depthLeader": "Prospect",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 56.091,
+							"ability": 58,
+							"potential": 82,
+							"performance": -13.899,
+							"runway": 6.4,
+							"future": 4.24,
+							"continuity": 0,
+							"contract": 1.35,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 45.075,
+							"ability": 45,
+							"potential": 45,
+							"performance": 0,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 6,
+					"selected": "Prospect",
+					"depthLeader": "Prospect",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 55.934,
+							"ability": 58,
+							"potential": 82,
+							"performance": -14.056,
+							"runway": 6.4,
+							"future": 4.24,
+							"continuity": 0,
+							"contract": 1.35,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 45.075,
+							"ability": 45,
+							"potential": 45,
+							"performance": 0,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 7,
+					"selected": "Prospect",
+					"depthLeader": "Prospect",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 55.815,
+							"ability": 58,
+							"potential": 82,
+							"performance": -14.175,
+							"runway": 6.4,
+							"future": 4.24,
+							"continuity": 0,
+							"contract": 1.35,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 45.075,
+							"ability": 45,
+							"potential": 45,
+							"performance": 0,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 8,
+					"selected": "Prospect",
+					"depthLeader": "Prospect",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 55.723,
+							"ability": 58,
+							"potential": 82,
+							"performance": -14.267,
+							"runway": 6.4,
+							"future": 4.24,
+							"continuity": 0,
+							"contract": 1.35,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 45.075,
+							"ability": 45,
+							"potential": 45,
+							"performance": 0,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 9,
+					"selected": "Prospect",
+					"depthLeader": "Prospect",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 55.662,
+							"ability": 58,
+							"potential": 82,
+							"performance": -14.328,
+							"runway": 6.4,
+							"future": 4.24,
+							"continuity": 0,
+							"contract": 1.35,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 45.075,
+							"ability": 45,
+							"potential": 45,
+							"performance": 0,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 10,
+					"selected": "Prospect",
+					"depthLeader": "Prospect",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 55.611,
+							"ability": 58,
+							"potential": 82,
+							"performance": -14.379,
+							"runway": 6.4,
+							"future": 4.24,
+							"continuity": 0,
+							"contract": 1.35,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 45.075,
+							"ability": 45,
+							"potential": 45,
+							"performance": 0,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 11,
+					"selected": "Prospect",
+					"depthLeader": "Prospect",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 55.567,
+							"ability": 58,
+							"potential": 82,
+							"performance": -14.423,
+							"runway": 6.4,
+							"future": 4.24,
+							"continuity": 0,
+							"contract": 1.35,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 45.075,
+							"ability": 45,
+							"potential": 45,
+							"performance": 0,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 12,
+					"selected": "Prospect",
+					"depthLeader": "Prospect",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 55.529,
+							"ability": 58,
+							"potential": 82,
+							"performance": -14.461,
+							"runway": 6.4,
+							"future": 4.24,
+							"continuity": 0,
+							"contract": 1.35,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 45.075,
+							"ability": 45,
+							"potential": 45,
+							"performance": 0,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 13,
+					"selected": "Prospect",
+					"depthLeader": "Prospect",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 55.496,
+							"ability": 58,
+							"potential": 82,
+							"performance": -14.494,
+							"runway": 6.4,
+							"future": 4.24,
+							"continuity": 0,
+							"contract": 1.35,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 45.075,
+							"ability": 45,
+							"potential": 45,
+							"performance": 0,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 14,
+					"selected": "Prospect",
+					"depthLeader": "Prospect",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 55.466,
+							"ability": 58,
+							"potential": 82,
+							"performance": -14.524,
+							"runway": 6.4,
+							"future": 4.24,
+							"continuity": 0,
+							"contract": 1.35,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 45.075,
+							"ability": 45,
+							"potential": 45,
+							"performance": 0,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 15,
+					"selected": "Prospect",
+					"depthLeader": "Prospect",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 55.44,
+							"ability": 58,
+							"potential": 82,
+							"performance": -14.55,
+							"runway": 6.4,
+							"future": 4.24,
+							"continuity": 0,
+							"contract": 1.35,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 45.075,
+							"ability": 45,
+							"potential": 45,
+							"performance": 0,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 16,
+					"selected": "Prospect",
+					"depthLeader": "Prospect",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 55.417,
+							"ability": 58,
+							"potential": 82,
+							"performance": -14.573,
+							"runway": 6.4,
+							"future": 4.24,
+							"continuity": 0,
+							"contract": 1.35,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 45.075,
+							"ability": 45,
+							"potential": 45,
+							"performance": 0,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 17,
+					"selected": "Prospect",
+					"depthLeader": "Prospect",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 55.396,
+							"ability": 58,
+							"potential": 82,
+							"performance": -14.594,
+							"runway": 6.4,
+							"future": 4.24,
+							"continuity": 0,
+							"contract": 1.35,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 45.075,
+							"ability": 45,
+							"potential": 45,
+							"performance": 0,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				}
+			]
+		},
+		{
+			"id": "rookie-viable-backup",
+			"description": "Same prospect with a credible 60-rated veteran available; the veteran produces steady games when selected.",
+			"profiles": [
+				{
+					"name": "Prospect",
+					"ability": 58,
+					"potential": 82,
+					"age": 23,
+					"round": 1,
+					"draftAge": 1,
+					"salary": 9000,
+					"prior": {
+						"pssCmp": 18,
+						"pss": 35,
+						"pssYds": 150,
+						"pssInt": 2,
+						"pssSk": 3,
+						"pssSkYds": 20
+					}
+				},
+				{
+					"name": "Veteran",
+					"ability": 60,
+					"age": 32
+				}
+			],
+			"context": {
+				"tid": 1,
+				"season": 2016,
+				"strategy": "contending",
+				"won": 8,
+				"lost": 4,
+				"tied": 0,
+				"numGames": 17,
+				"salaryCap": 200000,
+				"fieldLength": 100,
+				"depth": {}
+			},
+			"initialSelection": "Veteran",
+			"changes": [],
+			"trace": [
+				{
+					"week": 0,
+					"selected": "Veteran",
+					"depthLeader": "Veteran",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 59.968,
+							"ability": 58,
+							"potential": 82,
+							"performance": -10.022,
+							"runway": 6.4,
+							"future": 4.24,
+							"continuity": 0,
+							"contract": 1.35,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 60.075,
+							"ability": 60,
+							"potential": 60,
+							"performance": 0,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 1,
+					"selected": "Veteran",
+					"depthLeader": "Veteran",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 59.968,
+							"ability": 58,
+							"potential": 82,
+							"performance": -10.022,
+							"runway": 6.4,
+							"future": 4.24,
+							"continuity": 0,
+							"contract": 1.35,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 65.086,
+							"ability": 60,
+							"potential": 60,
+							"performance": 1.75,
+							"runway": 0,
+							"future": 0,
+							"continuity": 3.261,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 2,
+					"selected": "Veteran",
+					"depthLeader": "Veteran",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 59.968,
+							"ability": 58,
+							"potential": 82,
+							"performance": -10.022,
+							"runway": 6.4,
+							"future": 4.24,
+							"continuity": 0,
+							"contract": 1.35,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 66.092,
+							"ability": 60,
+							"potential": 60,
+							"performance": 2.537,
+							"runway": 0,
+							"future": 0,
+							"continuity": 3.479,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 3,
+					"selected": "Veteran",
+					"depthLeader": "Veteran",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 59.968,
+							"ability": 58,
+							"potential": 82,
+							"performance": -10.022,
+							"runway": 6.4,
+							"future": 4.24,
+							"continuity": 0,
+							"contract": 1.35,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 66.651,
+							"ability": 60,
+							"potential": 60,
+							"performance": 2.975,
+							"runway": 0,
+							"future": 0,
+							"continuity": 3.601,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 4,
+					"selected": "Veteran",
+					"depthLeader": "Veteran",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 59.968,
+							"ability": 58,
+							"potential": 82,
+							"performance": -10.022,
+							"runway": 6.4,
+							"future": 4.24,
+							"continuity": 0,
+							"contract": 1.35,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 67.002,
+							"ability": 60,
+							"potential": 60,
+							"performance": 3.25,
+							"runway": 0,
+							"future": 0,
+							"continuity": 3.677,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 5,
+					"selected": "Veteran",
+					"depthLeader": "Veteran",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 59.968,
+							"ability": 58,
+							"potential": 82,
+							"performance": -10.022,
+							"runway": 6.4,
+							"future": 4.24,
+							"continuity": 0,
+							"contract": 1.35,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 67.241,
+							"ability": 60,
+							"potential": 60,
+							"performance": 3.438,
+							"runway": 0,
+							"future": 0,
+							"continuity": 3.729,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 6,
+					"selected": "Veteran",
+					"depthLeader": "Veteran",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 59.968,
+							"ability": 58,
+							"potential": 82,
+							"performance": -10.022,
+							"runway": 6.4,
+							"future": 4.24,
+							"continuity": 0,
+							"contract": 1.35,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 67.414,
+							"ability": 60,
+							"potential": 60,
+							"performance": 3.573,
+							"runway": 0,
+							"future": 0,
+							"continuity": 3.766,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 7,
+					"selected": "Veteran",
+					"depthLeader": "Veteran",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 59.968,
+							"ability": 58,
+							"potential": 82,
+							"performance": -10.022,
+							"runway": 6.4,
+							"future": 4.24,
+							"continuity": 0,
+							"contract": 1.35,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 67.545,
+							"ability": 60,
+							"potential": 60,
+							"performance": 3.675,
+							"runway": 0,
+							"future": 0,
+							"continuity": 3.795,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 8,
+					"selected": "Veteran",
+					"depthLeader": "Veteran",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 59.968,
+							"ability": 58,
+							"potential": 82,
+							"performance": -10.022,
+							"runway": 6.4,
+							"future": 4.24,
+							"continuity": 0,
+							"contract": 1.35,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 67.646,
+							"ability": 60,
+							"potential": 60,
+							"performance": 3.755,
+							"runway": 0,
+							"future": 0,
+							"continuity": 3.817,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 9,
+					"selected": "Veteran",
+					"depthLeader": "Veteran",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 59.968,
+							"ability": 58,
+							"potential": 82,
+							"performance": -10.022,
+							"runway": 6.4,
+							"future": 4.24,
+							"continuity": 0,
+							"contract": 1.35,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 67.712,
+							"ability": 60,
+							"potential": 60,
+							"performance": 3.806,
+							"runway": 0,
+							"future": 0,
+							"continuity": 3.831,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 10,
+					"selected": "Veteran",
+					"depthLeader": "Veteran",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 59.968,
+							"ability": 58,
+							"potential": 82,
+							"performance": -10.022,
+							"runway": 6.4,
+							"future": 4.24,
+							"continuity": 0,
+							"contract": 1.35,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 67.768,
+							"ability": 60,
+							"potential": 60,
+							"performance": 3.85,
+							"runway": 0,
+							"future": 0,
+							"continuity": 3.843,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 11,
+					"selected": "Veteran",
+					"depthLeader": "Veteran",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 59.968,
+							"ability": 58,
+							"potential": 82,
+							"performance": -10.022,
+							"runway": 6.4,
+							"future": 4.24,
+							"continuity": 0,
+							"contract": 1.35,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 67.816,
+							"ability": 60,
+							"potential": 60,
+							"performance": 3.888,
+							"runway": 0,
+							"future": 0,
+							"continuity": 3.854,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 12,
+					"selected": "Veteran",
+					"depthLeader": "Veteran",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 59.968,
+							"ability": 58,
+							"potential": 82,
+							"performance": -10.022,
+							"runway": 6.4,
+							"future": 4.24,
+							"continuity": 0,
+							"contract": 1.35,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 67.858,
+							"ability": 60,
+							"potential": 60,
+							"performance": 3.92,
+							"runway": 0,
+							"future": 0,
+							"continuity": 3.863,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 13,
+					"selected": "Veteran",
+					"depthLeader": "Veteran",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 59.968,
+							"ability": 58,
+							"potential": 82,
+							"performance": -10.022,
+							"runway": 6.4,
+							"future": 4.24,
+							"continuity": 0,
+							"contract": 1.35,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 67.894,
+							"ability": 60,
+							"potential": 60,
+							"performance": 3.948,
+							"runway": 0,
+							"future": 0,
+							"continuity": 3.871,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 14,
+					"selected": "Veteran",
+					"depthLeader": "Veteran",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 59.968,
+							"ability": 58,
+							"potential": 82,
+							"performance": -10.022,
+							"runway": 6.4,
+							"future": 4.24,
+							"continuity": 0,
+							"contract": 1.35,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 67.926,
+							"ability": 60,
+							"potential": 60,
+							"performance": 3.974,
+							"runway": 0,
+							"future": 0,
+							"continuity": 3.878,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 15,
+					"selected": "Veteran",
+					"depthLeader": "Veteran",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 59.968,
+							"ability": 58,
+							"potential": 82,
+							"performance": -10.022,
+							"runway": 6.4,
+							"future": 4.24,
+							"continuity": 0,
+							"contract": 1.35,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 67.955,
+							"ability": 60,
+							"potential": 60,
+							"performance": 3.996,
+							"runway": 0,
+							"future": 0,
+							"continuity": 3.884,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 16,
+					"selected": "Veteran",
+					"depthLeader": "Veteran",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 59.968,
+							"ability": 58,
+							"potential": 82,
+							"performance": -10.022,
+							"runway": 6.4,
+							"future": 4.24,
+							"continuity": 0,
+							"contract": 1.35,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 67.98,
+							"ability": 60,
+							"potential": 60,
+							"performance": 4.016,
+							"runway": 0,
+							"future": 0,
+							"continuity": 3.889,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 17,
+					"selected": "Veteran",
+					"depthLeader": "Veteran",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 59.968,
+							"ability": 58,
+							"potential": 82,
+							"performance": -10.022,
+							"runway": 6.4,
+							"future": 4.24,
+							"continuity": 0,
+							"contract": 1.35,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 68.003,
+							"ability": 60,
+							"potential": 60,
+							"performance": 4.034,
+							"runway": 0,
+							"future": 0,
+							"continuity": 3.894,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				}
+			]
+		},
+		{
+			"id": "breakout-injury",
+			"description": "68-rated veteran misses weeks 1–6; 63-rated, 24-year-old backup posts breakout games. Injury recovery after week 6 tests whether the job is earned.",
+			"profiles": [
+				{
+					"name": "Veteran",
+					"ability": 68,
+					"salary": 25000,
+					"age": 32,
+					"prior": {
+						"pssCmp": 21,
+						"pss": 35,
+						"pssYds": 220,
+						"pssTD": 1,
+						"pssInt": 1,
+						"pssSk": 2,
+						"pssSkYds": 12
+					}
+				},
+				{
+					"name": "Breakout",
+					"ability": 63,
+					"potential": 78,
+					"age": 24
+				}
+			],
+			"context": {
+				"tid": 1,
+				"season": 2016,
+				"strategy": "contending",
+				"won": 8,
+				"lost": 4,
+				"tied": 0,
+				"numGames": 17,
+				"salaryCap": 200000,
+				"fieldLength": 100,
+				"depth": {}
+			},
+			"initialSelection": "Breakout",
+			"changes": [],
+			"trace": [
+				{
+					"week": 0,
+					"selected": "Breakout",
+					"depthLeader": "Veteran",
+					"injured": [true, false],
+					"scores": [
+						{
+							"score": 72.127,
+							"ability": 68,
+							"potential": 68,
+							"performance": -1.29,
+							"runway": 0,
+							"future": 0,
+							"continuity": 2.417,
+							"contract": 3,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 65.513,
+							"ability": 63,
+							"potential": 78,
+							"performance": 0,
+							"runway": 0,
+							"future": 2.438,
+							"continuity": 0,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 1,
+					"selected": "Breakout",
+					"depthLeader": "Veteran",
+					"injured": [true, false],
+					"scores": [
+						{
+							"score": 72.127,
+							"ability": 68,
+							"potential": 68,
+							"performance": -1.29,
+							"runway": 0,
+							"future": 0,
+							"continuity": 2.417,
+							"contract": 3,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 71.101,
+							"ability": 63,
+							"potential": 78,
+							"performance": 5.588,
+							"runway": 0,
+							"future": 2.438,
+							"continuity": 0,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 2,
+					"selected": "Breakout",
+					"depthLeader": "Breakout",
+					"injured": [true, false],
+					"scores": [
+						{
+							"score": 72.127,
+							"ability": 68,
+							"potential": 68,
+							"performance": -1.29,
+							"runway": 0,
+							"future": 0,
+							"continuity": 2.417,
+							"contract": 3,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 73.738,
+							"ability": 63,
+							"potential": 78,
+							"performance": 8.226,
+							"runway": 0,
+							"future": 2.438,
+							"continuity": 0,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 3,
+					"selected": "Breakout",
+					"depthLeader": "Breakout",
+					"injured": [true, false],
+					"scores": [
+						{
+							"score": 69.71,
+							"ability": 68,
+							"potential": 68,
+							"performance": -1.29,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 3,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 79.415,
+							"ability": 63,
+							"potential": 78,
+							"performance": 9.74,
+							"runway": 0,
+							"future": 2.438,
+							"continuity": 4.163,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 4,
+					"selected": "Breakout",
+					"depthLeader": "Breakout",
+					"injured": [true, false],
+					"scores": [
+						{
+							"score": 69.71,
+							"ability": 68,
+							"potential": 68,
+							"performance": -1.29,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 3,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 80.389,
+							"ability": 63,
+							"potential": 78,
+							"performance": 10.714,
+							"runway": 0,
+							"future": 2.438,
+							"continuity": 4.163,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 5,
+					"selected": "Breakout",
+					"depthLeader": "Breakout",
+					"injured": [true, false],
+					"scores": [
+						{
+							"score": 69.71,
+							"ability": 68,
+							"potential": 68,
+							"performance": -1.29,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 3,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 81.066,
+							"ability": 63,
+							"potential": 78,
+							"performance": 11.391,
+							"runway": 0,
+							"future": 2.438,
+							"continuity": 4.163,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 6,
+					"selected": "Breakout",
+					"depthLeader": "Breakout",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 69.71,
+							"ability": 68,
+							"potential": 68,
+							"performance": -1.29,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 3,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 81.562,
+							"ability": 63,
+							"potential": 78,
+							"performance": 11.887,
+							"runway": 0,
+							"future": 2.438,
+							"continuity": 4.163,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 7,
+					"selected": "Breakout",
+					"depthLeader": "Breakout",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 69.71,
+							"ability": 68,
+							"potential": 68,
+							"performance": -1.29,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 3,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 81.94,
+							"ability": 63,
+							"potential": 78,
+							"performance": 12.265,
+							"runway": 0,
+							"future": 2.438,
+							"continuity": 4.163,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 8,
+					"selected": "Breakout",
+					"depthLeader": "Breakout",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 69.71,
+							"ability": 68,
+							"potential": 68,
+							"performance": -1.29,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 3,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 82.238,
+							"ability": 63,
+							"potential": 78,
+							"performance": 12.562,
+							"runway": 0,
+							"future": 2.438,
+							"continuity": 4.163,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 9,
+					"selected": "Breakout",
+					"depthLeader": "Breakout",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 69.71,
+							"ability": 68,
+							"potential": 68,
+							"performance": -1.29,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 3,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 82.43,
+							"ability": 63,
+							"potential": 78,
+							"performance": 12.755,
+							"runway": 0,
+							"future": 2.438,
+							"continuity": 4.163,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 10,
+					"selected": "Breakout",
+					"depthLeader": "Breakout",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 69.71,
+							"ability": 68,
+							"potential": 68,
+							"performance": -1.29,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 3,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 82.595,
+							"ability": 63,
+							"potential": 78,
+							"performance": 12.92,
+							"runway": 0,
+							"future": 2.438,
+							"continuity": 4.163,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 11,
+					"selected": "Breakout",
+					"depthLeader": "Breakout",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 69.71,
+							"ability": 68,
+							"potential": 68,
+							"performance": -1.29,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 3,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 82.737,
+							"ability": 63,
+							"potential": 78,
+							"performance": 13.062,
+							"runway": 0,
+							"future": 2.438,
+							"continuity": 4.163,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 12,
+					"selected": "Breakout",
+					"depthLeader": "Breakout",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 69.71,
+							"ability": 68,
+							"potential": 68,
+							"performance": -1.29,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 3,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 82.861,
+							"ability": 63,
+							"potential": 78,
+							"performance": 13.186,
+							"runway": 0,
+							"future": 2.438,
+							"continuity": 4.163,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 13,
+					"selected": "Breakout",
+					"depthLeader": "Breakout",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 69.71,
+							"ability": 68,
+							"potential": 68,
+							"performance": -1.29,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 3,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 82.97,
+							"ability": 63,
+							"potential": 78,
+							"performance": 13.295,
+							"runway": 0,
+							"future": 2.438,
+							"continuity": 4.163,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 14,
+					"selected": "Breakout",
+					"depthLeader": "Breakout",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 69.71,
+							"ability": 68,
+							"potential": 68,
+							"performance": -1.29,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 3,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 83.067,
+							"ability": 63,
+							"potential": 78,
+							"performance": 13.392,
+							"runway": 0,
+							"future": 2.438,
+							"continuity": 4.163,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 15,
+					"selected": "Breakout",
+					"depthLeader": "Breakout",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 69.71,
+							"ability": 68,
+							"potential": 68,
+							"performance": -1.29,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 3,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 83.153,
+							"ability": 63,
+							"potential": 78,
+							"performance": 13.478,
+							"runway": 0,
+							"future": 2.438,
+							"continuity": 4.163,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 16,
+					"selected": "Breakout",
+					"depthLeader": "Breakout",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 69.71,
+							"ability": 68,
+							"potential": 68,
+							"performance": -1.29,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 3,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 83.231,
+							"ability": 63,
+							"potential": 78,
+							"performance": 13.556,
+							"runway": 0,
+							"future": 2.438,
+							"continuity": 4.163,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 17,
+					"selected": "Breakout",
+					"depthLeader": "Breakout",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 69.71,
+							"ability": 68,
+							"potential": 68,
+							"performance": -1.29,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 3,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 83.301,
+							"ability": 63,
+							"potential": 78,
+							"performance": 13.626,
+							"runway": 0,
+							"future": 2.438,
+							"continuity": 4.163,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				}
+			]
+		},
+		{
+			"id": "bench-return",
+			"description": "Young first-rounder struggles; veteran gets the job. Veteran then misses weeks 7–10, giving the prospect a real chance to recover with breakout performances.",
+			"profiles": [
+				{
+					"name": "Prospect",
+					"ability": 59,
+					"potential": 78,
+					"age": 23,
+					"round": 1,
+					"draftAge": 1
+				},
+				{
+					"name": "Veteran",
+					"ability": 63,
+					"age": 32
+				}
+			],
+			"context": {
+				"tid": 1,
+				"season": 2016,
+				"strategy": "contending",
+				"won": 8,
+				"lost": 4,
+				"tied": 0,
+				"numGames": 17,
+				"salaryCap": 200000,
+				"fieldLength": 100,
+				"depth": {}
+			},
+			"initialSelection": "Prospect",
+			"changes": [
+				{
+					"afterGame": 2,
+					"to": "Veteran"
+				},
+				{
+					"afterGame": 6,
+					"to": "Prospect"
+				}
+			],
+			"trace": [
+				{
+					"week": 0,
+					"selected": "Prospect",
+					"depthLeader": "Prospect",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 71.94,
+							"ability": 59,
+							"potential": 78,
+							"performance": 0,
+							"runway": 6.4,
+							"future": 3.69,
+							"continuity": 2.775,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 63.075,
+							"ability": 63,
+							"potential": 63,
+							"performance": 0,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 1,
+					"selected": "Prospect",
+					"depthLeader": "Prospect",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 64.421,
+							"ability": 59,
+							"potential": 78,
+							"performance": -5.886,
+							"runway": 6.4,
+							"future": 3.69,
+							"continuity": 1.142,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 63.075,
+							"ability": 63,
+							"potential": 63,
+							"performance": 0,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 2,
+					"selected": "Veteran",
+					"depthLeader": "Veteran",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 60.99,
+							"ability": 59,
+							"potential": 78,
+							"performance": -8.571,
+							"runway": 6.4,
+							"future": 3.69,
+							"continuity": 0.396,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 63.075,
+							"ability": 63,
+							"potential": 63,
+							"performance": 0,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 3,
+					"selected": "Veteran",
+					"depthLeader": "Veteran",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 60.594,
+							"ability": 59,
+							"potential": 78,
+							"performance": -8.571,
+							"runway": 6.4,
+							"future": 3.69,
+							"continuity": 0,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 68.086,
+							"ability": 63,
+							"potential": 63,
+							"performance": 1.75,
+							"runway": 0,
+							"future": 0,
+							"continuity": 3.261,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 4,
+					"selected": "Veteran",
+					"depthLeader": "Veteran",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 60.594,
+							"ability": 59,
+							"potential": 78,
+							"performance": -8.571,
+							"runway": 6.4,
+							"future": 3.69,
+							"continuity": 0,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 69.092,
+							"ability": 63,
+							"potential": 63,
+							"performance": 2.537,
+							"runway": 0,
+							"future": 0,
+							"continuity": 3.479,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 5,
+					"selected": "Veteran",
+					"depthLeader": "Veteran",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 60.594,
+							"ability": 59,
+							"potential": 78,
+							"performance": -8.571,
+							"runway": 6.4,
+							"future": 3.69,
+							"continuity": 0,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 69.651,
+							"ability": 63,
+							"potential": 63,
+							"performance": 2.975,
+							"runway": 0,
+							"future": 0,
+							"continuity": 3.601,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 6,
+					"selected": "Prospect",
+					"depthLeader": "Veteran",
+					"injured": [false, true],
+					"scores": [
+						{
+							"score": 60.594,
+							"ability": 59,
+							"potential": 78,
+							"performance": -8.571,
+							"runway": 6.4,
+							"future": 3.69,
+							"continuity": 0,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 70.002,
+							"ability": 63,
+							"potential": 63,
+							"performance": 3.25,
+							"runway": 0,
+							"future": 0,
+							"continuity": 3.677,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 7,
+					"selected": "Prospect",
+					"depthLeader": "Veteran",
+					"injured": [false, true],
+					"scores": [
+						{
+							"score": 65.464,
+							"ability": 59,
+							"potential": 78,
+							"performance": -3.701,
+							"runway": 6.4,
+							"future": 3.69,
+							"continuity": 0,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 70.002,
+							"ability": 63,
+							"potential": 63,
+							"performance": 3.25,
+							"runway": 0,
+							"future": 0,
+							"continuity": 3.677,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 8,
+					"selected": "Prospect",
+					"depthLeader": "Veteran",
+					"injured": [false, true],
+					"scores": [
+						{
+							"score": 69.481,
+							"ability": 59,
+							"potential": 78,
+							"performance": 0.316,
+							"runway": 6.4,
+							"future": 3.69,
+							"continuity": 0,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 70.002,
+							"ability": 63,
+							"potential": 63,
+							"performance": 3.25,
+							"runway": 0,
+							"future": 0,
+							"continuity": 3.677,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 9,
+					"selected": "Prospect",
+					"depthLeader": "Prospect",
+					"injured": [false, true],
+					"scores": [
+						{
+							"score": 72.622,
+							"ability": 59,
+							"potential": 78,
+							"performance": 3.457,
+							"runway": 6.4,
+							"future": 3.69,
+							"continuity": 0,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 70.002,
+							"ability": 63,
+							"potential": 63,
+							"performance": 3.25,
+							"runway": 0,
+							"future": 0,
+							"continuity": 3.677,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 10,
+					"selected": "Prospect",
+					"depthLeader": "Prospect",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 79.22,
+							"ability": 59,
+							"potential": 78,
+							"performance": 5.892,
+							"runway": 6.4,
+							"future": 3.69,
+							"continuity": 4.163,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 66.325,
+							"ability": 63,
+							"potential": 63,
+							"performance": 3.25,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 11,
+					"selected": "Prospect",
+					"depthLeader": "Prospect",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 81.106,
+							"ability": 59,
+							"potential": 78,
+							"performance": 7.779,
+							"runway": 6.4,
+							"future": 3.69,
+							"continuity": 4.163,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 66.325,
+							"ability": 63,
+							"potential": 63,
+							"performance": 3.25,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 12,
+					"selected": "Prospect",
+					"depthLeader": "Prospect",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 82.572,
+							"ability": 59,
+							"potential": 78,
+							"performance": 9.245,
+							"runway": 6.4,
+							"future": 3.69,
+							"continuity": 4.163,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 66.325,
+							"ability": 63,
+							"potential": 63,
+							"performance": 3.25,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 13,
+					"selected": "Prospect",
+					"depthLeader": "Prospect",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 83.684,
+							"ability": 59,
+							"potential": 78,
+							"performance": 10.357,
+							"runway": 6.4,
+							"future": 3.69,
+							"continuity": 4.163,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 66.325,
+							"ability": 63,
+							"potential": 63,
+							"performance": 3.25,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 14,
+					"selected": "Prospect",
+					"depthLeader": "Prospect",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 84.56,
+							"ability": 59,
+							"potential": 78,
+							"performance": 11.232,
+							"runway": 6.4,
+							"future": 3.69,
+							"continuity": 4.163,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 66.325,
+							"ability": 63,
+							"potential": 63,
+							"performance": 3.25,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 15,
+					"selected": "Prospect",
+					"depthLeader": "Prospect",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 85.259,
+							"ability": 59,
+							"potential": 78,
+							"performance": 11.932,
+							"runway": 6.4,
+							"future": 3.69,
+							"continuity": 4.163,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 66.325,
+							"ability": 63,
+							"potential": 63,
+							"performance": 3.25,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 16,
+					"selected": "Prospect",
+					"depthLeader": "Prospect",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 85.826,
+							"ability": 59,
+							"potential": 78,
+							"performance": 12.498,
+							"runway": 6.4,
+							"future": 3.69,
+							"continuity": 4.163,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 66.325,
+							"ability": 63,
+							"potential": 63,
+							"performance": 3.25,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 17,
+					"selected": "Prospect",
+					"depthLeader": "Prospect",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 86.265,
+							"ability": 59,
+							"potential": 78,
+							"performance": 12.937,
+							"runway": 6.4,
+							"future": 3.69,
+							"continuity": 4.163,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 66.325,
+							"ability": 63,
+							"potential": 63,
+							"performance": 3.25,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				}
+			]
+		},
+		{
+			"id": "aging-contender",
+			"description": "38-year-old 70-rated QB versus 23-year-old 62/85 successor. Team is 10–2, veteran has an ordinary prior season.",
+			"profiles": [
+				{
+					"name": "Veteran",
+					"ability": 70,
+					"age": 38,
+					"salary": 30000,
+					"prior": {
+						"pssCmp": 21,
+						"pss": 35,
+						"pssYds": 220,
+						"pssTD": 1,
+						"pssInt": 1,
+						"pssSk": 2,
+						"pssSkYds": 12
+					}
+				},
+				{
+					"name": "Successor",
+					"ability": 62,
+					"potential": 85,
+					"age": 23
+				}
+			],
+			"context": {
+				"tid": 1,
+				"season": 2016,
+				"strategy": "contending",
+				"won": 10,
+				"lost": 2,
+				"tied": 0,
+				"numGames": 17,
+				"salaryCap": 200000,
+				"fieldLength": 100,
+				"depth": {}
+			},
+			"initialSelection": "Veteran",
+			"changes": [],
+			"trace": [
+				{
+					"week": 0,
+					"selected": "Veteran",
+					"depthLeader": "Veteran",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 72.147,
+							"ability": 70,
+							"potential": 70,
+							"performance": -1.29,
+							"runway": 0,
+							"future": 0,
+							"continuity": 2.417,
+							"contract": 3,
+							"agePenalty": 1.98,
+							"recognition": 0
+						},
+						{
+							"score": 66.205,
+							"ability": 62,
+							"potential": 85,
+							"performance": 0,
+							"runway": 0,
+							"future": 4.13,
+							"continuity": 0,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 1,
+					"selected": "Veteran",
+					"depthLeader": "Veteran",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 71.825,
+							"ability": 70,
+							"potential": 70,
+							"performance": -1.542,
+							"runway": 0,
+							"future": 0,
+							"continuity": 2.347,
+							"contract": 3,
+							"agePenalty": 1.98,
+							"recognition": 0
+						},
+						{
+							"score": 66.205,
+							"ability": 62,
+							"potential": 85,
+							"performance": 0,
+							"runway": 0,
+							"future": 4.13,
+							"continuity": 0,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 2,
+					"selected": "Veteran",
+					"depthLeader": "Veteran",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 71.677,
+							"ability": 70,
+							"potential": 70,
+							"performance": -1.658,
+							"runway": 0,
+							"future": 0,
+							"continuity": 2.315,
+							"contract": 3,
+							"agePenalty": 1.98,
+							"recognition": 0
+						},
+						{
+							"score": 66.205,
+							"ability": 62,
+							"potential": 85,
+							"performance": 0,
+							"runway": 0,
+							"future": 4.13,
+							"continuity": 0,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 3,
+					"selected": "Veteran",
+					"depthLeader": "Veteran",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 71.593,
+							"ability": 70,
+							"potential": 70,
+							"performance": -1.723,
+							"runway": 0,
+							"future": 0,
+							"continuity": 2.297,
+							"contract": 3,
+							"agePenalty": 1.98,
+							"recognition": 0
+						},
+						{
+							"score": 66.205,
+							"ability": 62,
+							"potential": 85,
+							"performance": 0,
+							"runway": 0,
+							"future": 4.13,
+							"continuity": 0,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 4,
+					"selected": "Veteran",
+					"depthLeader": "Veteran",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 71.541,
+							"ability": 70,
+							"potential": 70,
+							"performance": -1.765,
+							"runway": 0,
+							"future": 0,
+							"continuity": 2.285,
+							"contract": 3,
+							"agePenalty": 1.98,
+							"recognition": 0
+						},
+						{
+							"score": 66.205,
+							"ability": 62,
+							"potential": 85,
+							"performance": 0,
+							"runway": 0,
+							"future": 4.13,
+							"continuity": 0,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 5,
+					"selected": "Veteran",
+					"depthLeader": "Veteran",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 71.504,
+							"ability": 70,
+							"potential": 70,
+							"performance": -1.793,
+							"runway": 0,
+							"future": 0,
+							"continuity": 2.277,
+							"contract": 3,
+							"agePenalty": 1.98,
+							"recognition": 0
+						},
+						{
+							"score": 66.205,
+							"ability": 62,
+							"potential": 85,
+							"performance": 0,
+							"runway": 0,
+							"future": 4.13,
+							"continuity": 0,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 6,
+					"selected": "Veteran",
+					"depthLeader": "Veteran",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 71.478,
+							"ability": 70,
+							"potential": 70,
+							"performance": -1.814,
+							"runway": 0,
+							"future": 0,
+							"continuity": 2.272,
+							"contract": 3,
+							"agePenalty": 1.98,
+							"recognition": 0
+						},
+						{
+							"score": 66.205,
+							"ability": 62,
+							"potential": 85,
+							"performance": 0,
+							"runway": 0,
+							"future": 4.13,
+							"continuity": 0,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 7,
+					"selected": "Veteran",
+					"depthLeader": "Veteran",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 71.458,
+							"ability": 70,
+							"potential": 70,
+							"performance": -1.83,
+							"runway": 0,
+							"future": 0,
+							"continuity": 2.267,
+							"contract": 3,
+							"agePenalty": 1.98,
+							"recognition": 0
+						},
+						{
+							"score": 66.205,
+							"ability": 62,
+							"potential": 85,
+							"performance": 0,
+							"runway": 0,
+							"future": 4.13,
+							"continuity": 0,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 8,
+					"selected": "Veteran",
+					"depthLeader": "Veteran",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 71.442,
+							"ability": 70,
+							"potential": 70,
+							"performance": -1.842,
+							"runway": 0,
+							"future": 0,
+							"continuity": 2.264,
+							"contract": 3,
+							"agePenalty": 1.98,
+							"recognition": 0
+						},
+						{
+							"score": 66.205,
+							"ability": 62,
+							"potential": 85,
+							"performance": 0,
+							"runway": 0,
+							"future": 4.13,
+							"continuity": 0,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 9,
+					"selected": "Veteran",
+					"depthLeader": "Veteran",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 71.432,
+							"ability": 70,
+							"potential": 70,
+							"performance": -1.85,
+							"runway": 0,
+							"future": 0,
+							"continuity": 2.262,
+							"contract": 3,
+							"agePenalty": 1.98,
+							"recognition": 0
+						},
+						{
+							"score": 66.205,
+							"ability": 62,
+							"potential": 85,
+							"performance": 0,
+							"runway": 0,
+							"future": 4.13,
+							"continuity": 0,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 10,
+					"selected": "Veteran",
+					"depthLeader": "Veteran",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 71.423,
+							"ability": 70,
+							"potential": 70,
+							"performance": -1.857,
+							"runway": 0,
+							"future": 0,
+							"continuity": 2.26,
+							"contract": 3,
+							"agePenalty": 1.98,
+							"recognition": 0
+						},
+						{
+							"score": 66.205,
+							"ability": 62,
+							"potential": 85,
+							"performance": 0,
+							"runway": 0,
+							"future": 4.13,
+							"continuity": 0,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 11,
+					"selected": "Veteran",
+					"depthLeader": "Veteran",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 71.416,
+							"ability": 70,
+							"potential": 70,
+							"performance": -1.862,
+							"runway": 0,
+							"future": 0,
+							"continuity": 2.258,
+							"contract": 3,
+							"agePenalty": 1.98,
+							"recognition": 0
+						},
+						{
+							"score": 66.205,
+							"ability": 62,
+							"potential": 85,
+							"performance": 0,
+							"runway": 0,
+							"future": 4.13,
+							"continuity": 0,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 12,
+					"selected": "Veteran",
+					"depthLeader": "Veteran",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 71.409,
+							"ability": 70,
+							"potential": 70,
+							"performance": -1.867,
+							"runway": 0,
+							"future": 0,
+							"continuity": 2.257,
+							"contract": 3,
+							"agePenalty": 1.98,
+							"recognition": 0
+						},
+						{
+							"score": 66.205,
+							"ability": 62,
+							"potential": 85,
+							"performance": 0,
+							"runway": 0,
+							"future": 4.13,
+							"continuity": 0,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 13,
+					"selected": "Veteran",
+					"depthLeader": "Veteran",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 71.404,
+							"ability": 70,
+							"potential": 70,
+							"performance": -1.872,
+							"runway": 0,
+							"future": 0,
+							"continuity": 2.256,
+							"contract": 3,
+							"agePenalty": 1.98,
+							"recognition": 0
+						},
+						{
+							"score": 66.205,
+							"ability": 62,
+							"potential": 85,
+							"performance": 0,
+							"runway": 0,
+							"future": 4.13,
+							"continuity": 0,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 14,
+					"selected": "Veteran",
+					"depthLeader": "Veteran",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 71.399,
+							"ability": 70,
+							"potential": 70,
+							"performance": -1.876,
+							"runway": 0,
+							"future": 0,
+							"continuity": 2.254,
+							"contract": 3,
+							"agePenalty": 1.98,
+							"recognition": 0
+						},
+						{
+							"score": 66.205,
+							"ability": 62,
+							"potential": 85,
+							"performance": 0,
+							"runway": 0,
+							"future": 4.13,
+							"continuity": 0,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 15,
+					"selected": "Veteran",
+					"depthLeader": "Veteran",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 71.394,
+							"ability": 70,
+							"potential": 70,
+							"performance": -1.879,
+							"runway": 0,
+							"future": 0,
+							"continuity": 2.254,
+							"contract": 3,
+							"agePenalty": 1.98,
+							"recognition": 0
+						},
+						{
+							"score": 66.205,
+							"ability": 62,
+							"potential": 85,
+							"performance": 0,
+							"runway": 0,
+							"future": 4.13,
+							"continuity": 0,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 16,
+					"selected": "Veteran",
+					"depthLeader": "Veteran",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 71.39,
+							"ability": 70,
+							"potential": 70,
+							"performance": -1.882,
+							"runway": 0,
+							"future": 0,
+							"continuity": 2.253,
+							"contract": 3,
+							"agePenalty": 1.98,
+							"recognition": 0
+						},
+						{
+							"score": 66.205,
+							"ability": 62,
+							"potential": 85,
+							"performance": 0,
+							"runway": 0,
+							"future": 4.13,
+							"continuity": 0,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 17,
+					"selected": "Veteran",
+					"depthLeader": "Veteran",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 71.387,
+							"ability": 70,
+							"potential": 70,
+							"performance": -1.885,
+							"runway": 0,
+							"future": 0,
+							"continuity": 2.252,
+							"contract": 3,
+							"agePenalty": 1.98,
+							"recognition": 0
+						},
+						{
+							"score": 66.205,
+							"ability": 62,
+							"potential": 85,
+							"performance": 0,
+							"runway": 0,
+							"future": 4.13,
+							"continuity": 0,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				}
+			]
+		},
+		{
+			"id": "aging-rebuilder",
+			"description": "Same players on a 2–10 rebuilding team.",
+			"profiles": [
+				{
+					"name": "Veteran",
+					"ability": 70,
+					"age": 38,
+					"salary": 30000,
+					"prior": {
+						"pssCmp": 21,
+						"pss": 35,
+						"pssYds": 220,
+						"pssTD": 1,
+						"pssInt": 1,
+						"pssSk": 2,
+						"pssSkYds": 12
+					}
+				},
+				{
+					"name": "Successor",
+					"ability": 62,
+					"potential": 85,
+					"age": 23
+				}
+			],
+			"context": {
+				"tid": 1,
+				"season": 2016,
+				"strategy": "rebuilding",
+				"won": 2,
+				"lost": 10,
+				"tied": 0,
+				"numGames": 17,
+				"salaryCap": 200000,
+				"fieldLength": 100,
+				"depth": {}
+			},
+			"initialSelection": "Successor",
+			"changes": [],
+			"trace": [
+				{
+					"week": 0,
+					"selected": "Successor",
+					"depthLeader": "Successor",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 64.917,
+							"ability": 70,
+							"potential": 70,
+							"performance": -1.29,
+							"runway": 0,
+							"future": 0,
+							"continuity": 1.307,
+							"contract": 3,
+							"agePenalty": 8.1,
+							"recognition": 0
+						},
+						{
+							"score": 70.115,
+							"ability": 62,
+							"potential": 85,
+							"performance": 0,
+							"runway": 0,
+							"future": 8.04,
+							"continuity": 0,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 1,
+					"selected": "Successor",
+					"depthLeader": "Successor",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 63.61,
+							"ability": 70,
+							"potential": 70,
+							"performance": -1.29,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 3,
+							"agePenalty": 8.1,
+							"recognition": 0
+						},
+						{
+							"score": 70.749,
+							"ability": 62,
+							"potential": 85,
+							"performance": -0.753,
+							"runway": 0,
+							"future": 8.04,
+							"continuity": 1.387,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 2,
+					"selected": "Successor",
+					"depthLeader": "Successor",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 63.61,
+							"ability": 70,
+							"potential": 70,
+							"performance": -1.29,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 3,
+							"agePenalty": 8.1,
+							"recognition": 0
+						},
+						{
+							"score": 70.351,
+							"ability": 62,
+							"potential": 85,
+							"performance": -1.1,
+							"runway": 0,
+							"future": 8.04,
+							"continuity": 1.335,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 3,
+					"selected": "Successor",
+					"depthLeader": "Successor",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 63.61,
+							"ability": 70,
+							"potential": 70,
+							"performance": -1.29,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 3,
+							"agePenalty": 8.1,
+							"recognition": 0
+						},
+						{
+							"score": 70.126,
+							"ability": 62,
+							"potential": 85,
+							"performance": -1.294,
+							"runway": 0,
+							"future": 8.04,
+							"continuity": 1.306,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 4,
+					"selected": "Successor",
+					"depthLeader": "Successor",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 63.61,
+							"ability": 70,
+							"potential": 70,
+							"performance": -1.29,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 3,
+							"agePenalty": 8.1,
+							"recognition": 0
+						},
+						{
+							"score": 69.984,
+							"ability": 62,
+							"potential": 85,
+							"performance": -1.418,
+							"runway": 0,
+							"future": 8.04,
+							"continuity": 1.287,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 5,
+					"selected": "Successor",
+					"depthLeader": "Successor",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 63.61,
+							"ability": 70,
+							"potential": 70,
+							"performance": -1.29,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 3,
+							"agePenalty": 8.1,
+							"recognition": 0
+						},
+						{
+							"score": 69.886,
+							"ability": 62,
+							"potential": 85,
+							"performance": -1.503,
+							"runway": 0,
+							"future": 8.04,
+							"continuity": 1.275,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 6,
+					"selected": "Successor",
+					"depthLeader": "Successor",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 63.61,
+							"ability": 70,
+							"potential": 70,
+							"performance": -1.29,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 3,
+							"agePenalty": 8.1,
+							"recognition": 0
+						},
+						{
+							"score": 69.815,
+							"ability": 62,
+							"potential": 85,
+							"performance": -1.565,
+							"runway": 0,
+							"future": 8.04,
+							"continuity": 1.265,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 7,
+					"selected": "Successor",
+					"depthLeader": "Successor",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 63.61,
+							"ability": 70,
+							"potential": 70,
+							"performance": -1.29,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 3,
+							"agePenalty": 8.1,
+							"recognition": 0
+						},
+						{
+							"score": 69.762,
+							"ability": 62,
+							"potential": 85,
+							"performance": -1.612,
+							"runway": 0,
+							"future": 8.04,
+							"continuity": 1.258,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 8,
+					"selected": "Successor",
+					"depthLeader": "Successor",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 63.61,
+							"ability": 70,
+							"potential": 70,
+							"performance": -1.29,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 3,
+							"agePenalty": 8.1,
+							"recognition": 0
+						},
+						{
+							"score": 69.719,
+							"ability": 62,
+							"potential": 85,
+							"performance": -1.648,
+							"runway": 0,
+							"future": 8.04,
+							"continuity": 1.253,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 9,
+					"selected": "Successor",
+					"depthLeader": "Successor",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 63.61,
+							"ability": 70,
+							"potential": 70,
+							"performance": -1.29,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 3,
+							"agePenalty": 8.1,
+							"recognition": 0
+						},
+						{
+							"score": 69.692,
+							"ability": 62,
+							"potential": 85,
+							"performance": -1.672,
+							"runway": 0,
+							"future": 8.04,
+							"continuity": 1.249,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 10,
+					"selected": "Successor",
+					"depthLeader": "Successor",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 63.61,
+							"ability": 70,
+							"potential": 70,
+							"performance": -1.29,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 3,
+							"agePenalty": 8.1,
+							"recognition": 0
+						},
+						{
+							"score": 69.669,
+							"ability": 62,
+							"potential": 85,
+							"performance": -1.692,
+							"runway": 0,
+							"future": 8.04,
+							"continuity": 1.246,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 11,
+					"selected": "Successor",
+					"depthLeader": "Successor",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 63.61,
+							"ability": 70,
+							"potential": 70,
+							"performance": -1.29,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 3,
+							"agePenalty": 8.1,
+							"recognition": 0
+						},
+						{
+							"score": 69.649,
+							"ability": 62,
+							"potential": 85,
+							"performance": -1.71,
+							"runway": 0,
+							"future": 8.04,
+							"continuity": 1.244,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 12,
+					"selected": "Successor",
+					"depthLeader": "Successor",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 63.61,
+							"ability": 70,
+							"potential": 70,
+							"performance": -1.29,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 3,
+							"agePenalty": 8.1,
+							"recognition": 0
+						},
+						{
+							"score": 69.632,
+							"ability": 62,
+							"potential": 85,
+							"performance": -1.725,
+							"runway": 0,
+							"future": 8.04,
+							"continuity": 1.241,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 13,
+					"selected": "Successor",
+					"depthLeader": "Successor",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 63.61,
+							"ability": 70,
+							"potential": 70,
+							"performance": -1.29,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 3,
+							"agePenalty": 8.1,
+							"recognition": 0
+						},
+						{
+							"score": 69.616,
+							"ability": 62,
+							"potential": 85,
+							"performance": -1.738,
+							"runway": 0,
+							"future": 8.04,
+							"continuity": 1.239,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 14,
+					"selected": "Successor",
+					"depthLeader": "Successor",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 63.61,
+							"ability": 70,
+							"potential": 70,
+							"performance": -1.29,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 3,
+							"agePenalty": 8.1,
+							"recognition": 0
+						},
+						{
+							"score": 69.603,
+							"ability": 62,
+							"potential": 85,
+							"performance": -1.75,
+							"runway": 0,
+							"future": 8.04,
+							"continuity": 1.238,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 15,
+					"selected": "Successor",
+					"depthLeader": "Successor",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 63.61,
+							"ability": 70,
+							"potential": 70,
+							"performance": -1.29,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 3,
+							"agePenalty": 8.1,
+							"recognition": 0
+						},
+						{
+							"score": 69.591,
+							"ability": 62,
+							"potential": 85,
+							"performance": -1.76,
+							"runway": 0,
+							"future": 8.04,
+							"continuity": 1.236,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 16,
+					"selected": "Successor",
+					"depthLeader": "Successor",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 63.61,
+							"ability": 70,
+							"potential": 70,
+							"performance": -1.29,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 3,
+							"agePenalty": 8.1,
+							"recognition": 0
+						},
+						{
+							"score": 69.58,
+							"ability": 62,
+							"potential": 85,
+							"performance": -1.769,
+							"runway": 0,
+							"future": 8.04,
+							"continuity": 1.235,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 17,
+					"selected": "Successor",
+					"depthLeader": "Successor",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 63.61,
+							"ability": 70,
+							"potential": 70,
+							"performance": -1.29,
+							"runway": 0,
+							"future": 0,
+							"continuity": 0,
+							"contract": 3,
+							"agePenalty": 8.1,
+							"recognition": 0
+						},
+						{
+							"score": 69.571,
+							"ability": 62,
+							"potential": 85,
+							"performance": -1.778,
+							"runway": 0,
+							"future": 8.04,
+							"continuity": 1.233,
+							"contract": 0.075,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				}
+			]
+		},
+		{
+			"id": "mvp",
+			"description": "68-rated reigning MVP with a good prior season versus a newly drafted first-rounder rated 72/85. MVP continues good play.",
+			"profiles": [
+				{
+					"name": "MVP",
+					"ability": 68,
+					"age": 34,
+					"salary": 30000,
+					"prior": {
+						"pssCmp": 24,
+						"pss": 32,
+						"pssYds": 300,
+						"pssTD": 2,
+						"pssSk": 2,
+						"pssSkYds": 12
+					},
+					"mvp": true
+				},
+				{
+					"name": "Rookie",
+					"ability": 72,
+					"potential": 85,
+					"age": 22,
+					"round": 1,
+					"draftAge": 0,
+					"salary": 9000
+				}
+			],
+			"context": {
+				"tid": 1,
+				"season": 2016,
+				"strategy": "contending",
+				"won": 8,
+				"lost": 4,
+				"tied": 0,
+				"numGames": 17,
+				"salaryCap": 200000,
+				"fieldLength": 100,
+				"depth": {}
+			},
+			"initialSelection": "MVP",
+			"changes": [],
+			"trace": [
+				{
+					"week": 0,
+					"selected": "MVP",
+					"depthLeader": "MVP",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 90.016,
+							"ability": 68,
+							"potential": 68,
+							"performance": 9.513,
+							"runway": 0,
+							"future": 0,
+							"continuity": 4.163,
+							"contract": 3,
+							"agePenalty": 0.66,
+							"recognition": 6
+						},
+						{
+							"score": 85.137,
+							"ability": 72,
+							"potential": 85,
+							"performance": 0,
+							"runway": 8,
+							"future": 3.788,
+							"continuity": 0,
+							"contract": 1.35,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 1,
+					"selected": "MVP",
+					"depthLeader": "MVP",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 90.575,
+							"ability": 68,
+							"potential": 68,
+							"performance": 11.397,
+							"runway": 0,
+							"future": 0,
+							"continuity": 4.163,
+							"contract": 3,
+							"agePenalty": 0.66,
+							"recognition": 4.675
+						},
+						{
+							"score": 85.137,
+							"ability": 72,
+							"potential": 85,
+							"performance": 0,
+							"runway": 8,
+							"future": 3.788,
+							"continuity": 0,
+							"contract": 1.35,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 2,
+					"selected": "MVP",
+					"depthLeader": "MVP",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 90.612,
+							"ability": 68,
+							"potential": 68,
+							"performance": 12.28,
+							"runway": 0,
+							"future": 0,
+							"continuity": 4.163,
+							"contract": 3,
+							"agePenalty": 0.66,
+							"recognition": 3.83
+						},
+						{
+							"score": 85.137,
+							"ability": 72,
+							"potential": 85,
+							"performance": 0,
+							"runway": 8,
+							"future": 3.788,
+							"continuity": 0,
+							"contract": 1.35,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 3,
+					"selected": "MVP",
+					"depthLeader": "MVP",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 90.53,
+							"ability": 68,
+							"potential": 68,
+							"performance": 12.784,
+							"runway": 0,
+							"future": 0,
+							"continuity": 4.163,
+							"contract": 3,
+							"agePenalty": 0.66,
+							"recognition": 3.243
+						},
+						{
+							"score": 85.137,
+							"ability": 72,
+							"potential": 85,
+							"performance": 0,
+							"runway": 8,
+							"future": 3.788,
+							"continuity": 0,
+							"contract": 1.35,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 4,
+					"selected": "MVP",
+					"depthLeader": "MVP",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 90.423,
+							"ability": 68,
+							"potential": 68,
+							"performance": 13.108,
+							"runway": 0,
+							"future": 0,
+							"continuity": 4.163,
+							"contract": 3,
+							"agePenalty": 0.66,
+							"recognition": 2.813
+						},
+						{
+							"score": 85.137,
+							"ability": 72,
+							"potential": 85,
+							"performance": 0,
+							"runway": 8,
+							"future": 3.788,
+							"continuity": 0,
+							"contract": 1.35,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 5,
+					"selected": "MVP",
+					"depthLeader": "MVP",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 90.317,
+							"ability": 68,
+							"potential": 68,
+							"performance": 13.332,
+							"runway": 0,
+							"future": 0,
+							"continuity": 4.163,
+							"contract": 3,
+							"agePenalty": 0.66,
+							"recognition": 2.483
+						},
+						{
+							"score": 85.137,
+							"ability": 72,
+							"potential": 85,
+							"performance": 0,
+							"runway": 8,
+							"future": 3.788,
+							"continuity": 0,
+							"contract": 1.35,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 6,
+					"selected": "MVP",
+					"depthLeader": "MVP",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 90.221,
+							"ability": 68,
+							"potential": 68,
+							"performance": 13.496,
+							"runway": 0,
+							"future": 0,
+							"continuity": 4.163,
+							"contract": 3,
+							"agePenalty": 0.66,
+							"recognition": 2.222
+						},
+						{
+							"score": 85.137,
+							"ability": 72,
+							"potential": 85,
+							"performance": 0,
+							"runway": 8,
+							"future": 3.788,
+							"continuity": 0,
+							"contract": 1.35,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 7,
+					"selected": "MVP",
+					"depthLeader": "MVP",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 90.134,
+							"ability": 68,
+							"potential": 68,
+							"performance": 13.621,
+							"runway": 0,
+							"future": 0,
+							"continuity": 4.163,
+							"contract": 3,
+							"agePenalty": 0.66,
+							"recognition": 2.011
+						},
+						{
+							"score": 85.137,
+							"ability": 72,
+							"potential": 85,
+							"performance": 0,
+							"runway": 8,
+							"future": 3.788,
+							"continuity": 0,
+							"contract": 1.35,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 8,
+					"selected": "MVP",
+					"depthLeader": "MVP",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 90.058,
+							"ability": 68,
+							"potential": 68,
+							"performance": 13.719,
+							"runway": 0,
+							"future": 0,
+							"continuity": 4.163,
+							"contract": 3,
+							"agePenalty": 0.66,
+							"recognition": 1.837
+						},
+						{
+							"score": 85.137,
+							"ability": 72,
+							"potential": 85,
+							"performance": 0,
+							"runway": 8,
+							"future": 3.788,
+							"continuity": 0,
+							"contract": 1.35,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 9,
+					"selected": "MVP",
+					"depthLeader": "MVP",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 89.975,
+							"ability": 68,
+							"potential": 68,
+							"performance": 13.782,
+							"runway": 0,
+							"future": 0,
+							"continuity": 4.163,
+							"contract": 3,
+							"agePenalty": 0.66,
+							"recognition": 1.69
+						},
+						{
+							"score": 85.137,
+							"ability": 72,
+							"potential": 85,
+							"performance": 0,
+							"runway": 8,
+							"future": 3.788,
+							"continuity": 0,
+							"contract": 1.35,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 10,
+					"selected": "MVP",
+					"depthLeader": "MVP",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 89.904,
+							"ability": 68,
+							"potential": 68,
+							"performance": 13.836,
+							"runway": 0,
+							"future": 0,
+							"continuity": 4.163,
+							"contract": 3,
+							"agePenalty": 0.66,
+							"recognition": 1.565
+						},
+						{
+							"score": 85.137,
+							"ability": 72,
+							"potential": 85,
+							"performance": 0,
+							"runway": 8,
+							"future": 3.788,
+							"continuity": 0,
+							"contract": 1.35,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 11,
+					"selected": "MVP",
+					"depthLeader": "MVP",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 89.843,
+							"ability": 68,
+							"potential": 68,
+							"performance": 13.883,
+							"runway": 0,
+							"future": 0,
+							"continuity": 4.163,
+							"contract": 3,
+							"agePenalty": 0.66,
+							"recognition": 1.457
+						},
+						{
+							"score": 85.137,
+							"ability": 72,
+							"potential": 85,
+							"performance": 0,
+							"runway": 8,
+							"future": 3.788,
+							"continuity": 0,
+							"contract": 1.35,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 12,
+					"selected": "MVP",
+					"depthLeader": "MVP",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 89.79,
+							"ability": 68,
+							"potential": 68,
+							"performance": 13.924,
+							"runway": 0,
+							"future": 0,
+							"continuity": 4.163,
+							"contract": 3,
+							"agePenalty": 0.66,
+							"recognition": 1.364
+						},
+						{
+							"score": 85.137,
+							"ability": 72,
+							"potential": 85,
+							"performance": 0,
+							"runway": 8,
+							"future": 3.788,
+							"continuity": 0,
+							"contract": 1.35,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 13,
+					"selected": "MVP",
+					"depthLeader": "MVP",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 89.743,
+							"ability": 68,
+							"potential": 68,
+							"performance": 13.959,
+							"runway": 0,
+							"future": 0,
+							"continuity": 4.163,
+							"contract": 3,
+							"agePenalty": 0.66,
+							"recognition": 1.281
+						},
+						{
+							"score": 85.137,
+							"ability": 72,
+							"potential": 85,
+							"performance": 0,
+							"runway": 8,
+							"future": 3.788,
+							"continuity": 0,
+							"contract": 1.35,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 14,
+					"selected": "MVP",
+					"depthLeader": "MVP",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 89.702,
+							"ability": 68,
+							"potential": 68,
+							"performance": 13.991,
+							"runway": 0,
+							"future": 0,
+							"continuity": 4.163,
+							"contract": 3,
+							"agePenalty": 0.66,
+							"recognition": 1.208
+						},
+						{
+							"score": 85.137,
+							"ability": 72,
+							"potential": 85,
+							"performance": 0,
+							"runway": 8,
+							"future": 3.788,
+							"continuity": 0,
+							"contract": 1.35,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 15,
+					"selected": "MVP",
+					"depthLeader": "MVP",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 89.665,
+							"ability": 68,
+							"potential": 68,
+							"performance": 14.019,
+							"runway": 0,
+							"future": 0,
+							"continuity": 4.163,
+							"contract": 3,
+							"agePenalty": 0.66,
+							"recognition": 1.143
+						},
+						{
+							"score": 85.137,
+							"ability": 72,
+							"potential": 85,
+							"performance": 0,
+							"runway": 8,
+							"future": 3.788,
+							"continuity": 0,
+							"contract": 1.35,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 16,
+					"selected": "MVP",
+					"depthLeader": "MVP",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 89.632,
+							"ability": 68,
+							"potential": 68,
+							"performance": 14.045,
+							"runway": 0,
+							"future": 0,
+							"continuity": 4.163,
+							"contract": 3,
+							"agePenalty": 0.66,
+							"recognition": 1.084
+						},
+						{
+							"score": 85.137,
+							"ability": 72,
+							"potential": 85,
+							"performance": 0,
+							"runway": 8,
+							"future": 3.788,
+							"continuity": 0,
+							"contract": 1.35,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 17,
+					"selected": "MVP",
+					"depthLeader": "MVP",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 89.602,
+							"ability": 68,
+							"potential": 68,
+							"performance": 14.068,
+							"runway": 0,
+							"future": 0,
+							"continuity": 4.163,
+							"contract": 3,
+							"agePenalty": 0.66,
+							"recognition": 1.032
+						},
+						{
+							"score": 85.137,
+							"ability": 72,
+							"potential": 85,
+							"performance": 0,
+							"runway": 8,
+							"future": 3.788,
+							"continuity": 0,
+							"contract": 1.35,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				}
+			]
+		},
+		{
+			"id": "exceptional-replacement",
+			"description": "Struggling second-year first-rounder rated 54/68 versus an exceptional new first-rounder rated 78/92.",
+			"profiles": [
+				{
+					"name": "Struggling pick",
+					"ability": 54,
+					"potential": 68,
+					"age": 23,
+					"round": 1,
+					"draftAge": 1,
+					"salary": 9000,
+					"prior": {
+						"pssCmp": 18,
+						"pss": 35,
+						"pssYds": 150,
+						"pssInt": 2,
+						"pssSk": 3,
+						"pssSkYds": 20
+					}
+				},
+				{
+					"name": "Exceptional pick",
+					"ability": 78,
+					"potential": 92,
+					"age": 22,
+					"round": 1,
+					"draftAge": 0,
+					"salary": 9000
+				}
+			],
+			"context": {
+				"tid": 1,
+				"season": 2016,
+				"strategy": "contending",
+				"won": 8,
+				"lost": 4,
+				"tied": 0,
+				"numGames": 17,
+				"salaryCap": 200000,
+				"fieldLength": 100,
+				"depth": {}
+			},
+			"initialSelection": "Exceptional pick",
+			"changes": [],
+			"trace": [
+				{
+					"week": 0,
+					"selected": "Exceptional pick",
+					"depthLeader": "Exceptional pick",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 54.868,
+							"ability": 54,
+							"potential": 68,
+							"performance": -10.022,
+							"runway": 6.4,
+							"future": 3.14,
+							"continuity": 0,
+							"contract": 1.35,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 91.275,
+							"ability": 78,
+							"potential": 92,
+							"performance": 0,
+							"runway": 8,
+							"future": 3.925,
+							"continuity": 0,
+							"contract": 1.35,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 1,
+					"selected": "Exceptional pick",
+					"depthLeader": "Exceptional pick",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 54.868,
+							"ability": 54,
+							"potential": 68,
+							"performance": -10.022,
+							"runway": 6.4,
+							"future": 3.14,
+							"continuity": 0,
+							"contract": 1.35,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 93.087,
+							"ability": 78,
+							"potential": 92,
+							"performance": -0.753,
+							"runway": 8,
+							"future": 3.925,
+							"continuity": 2.566,
+							"contract": 1.35,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 2,
+					"selected": "Exceptional pick",
+					"depthLeader": "Exceptional pick",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 54.868,
+							"ability": 54,
+							"potential": 68,
+							"performance": -10.022,
+							"runway": 6.4,
+							"future": 3.14,
+							"continuity": 0,
+							"contract": 1.35,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 92.645,
+							"ability": 78,
+							"potential": 92,
+							"performance": -1.1,
+							"runway": 8,
+							"future": 3.925,
+							"continuity": 2.47,
+							"contract": 1.35,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 3,
+					"selected": "Exceptional pick",
+					"depthLeader": "Exceptional pick",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 54.868,
+							"ability": 54,
+							"potential": 68,
+							"performance": -10.022,
+							"runway": 6.4,
+							"future": 3.14,
+							"continuity": 0,
+							"contract": 1.35,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 92.396,
+							"ability": 78,
+							"potential": 92,
+							"performance": -1.294,
+							"runway": 8,
+							"future": 3.925,
+							"continuity": 2.416,
+							"contract": 1.35,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 4,
+					"selected": "Exceptional pick",
+					"depthLeader": "Exceptional pick",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 54.868,
+							"ability": 54,
+							"potential": 68,
+							"performance": -10.022,
+							"runway": 6.4,
+							"future": 3.14,
+							"continuity": 0,
+							"contract": 1.35,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 92.238,
+							"ability": 78,
+							"potential": 92,
+							"performance": -1.418,
+							"runway": 8,
+							"future": 3.925,
+							"continuity": 2.381,
+							"contract": 1.35,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 5,
+					"selected": "Exceptional pick",
+					"depthLeader": "Exceptional pick",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 54.868,
+							"ability": 54,
+							"potential": 68,
+							"performance": -10.022,
+							"runway": 6.4,
+							"future": 3.14,
+							"continuity": 0,
+							"contract": 1.35,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 92.13,
+							"ability": 78,
+							"potential": 92,
+							"performance": -1.503,
+							"runway": 8,
+							"future": 3.925,
+							"continuity": 2.358,
+							"contract": 1.35,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 6,
+					"selected": "Exceptional pick",
+					"depthLeader": "Exceptional pick",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 54.868,
+							"ability": 54,
+							"potential": 68,
+							"performance": -10.022,
+							"runway": 6.4,
+							"future": 3.14,
+							"continuity": 0,
+							"contract": 1.35,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 92.051,
+							"ability": 78,
+							"potential": 92,
+							"performance": -1.565,
+							"runway": 8,
+							"future": 3.925,
+							"continuity": 2.341,
+							"contract": 1.35,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 7,
+					"selected": "Exceptional pick",
+					"depthLeader": "Exceptional pick",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 54.868,
+							"ability": 54,
+							"potential": 68,
+							"performance": -10.022,
+							"runway": 6.4,
+							"future": 3.14,
+							"continuity": 0,
+							"contract": 1.35,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 91.991,
+							"ability": 78,
+							"potential": 92,
+							"performance": -1.612,
+							"runway": 8,
+							"future": 3.925,
+							"continuity": 2.328,
+							"contract": 1.35,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 8,
+					"selected": "Exceptional pick",
+					"depthLeader": "Exceptional pick",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 54.868,
+							"ability": 54,
+							"potential": 68,
+							"performance": -10.022,
+							"runway": 6.4,
+							"future": 3.14,
+							"continuity": 0,
+							"contract": 1.35,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 91.944,
+							"ability": 78,
+							"potential": 92,
+							"performance": -1.648,
+							"runway": 8,
+							"future": 3.925,
+							"continuity": 2.318,
+							"contract": 1.35,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 9,
+					"selected": "Exceptional pick",
+					"depthLeader": "Exceptional pick",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 54.868,
+							"ability": 54,
+							"potential": 68,
+							"performance": -10.022,
+							"runway": 6.4,
+							"future": 3.14,
+							"continuity": 0,
+							"contract": 1.35,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 91.914,
+							"ability": 78,
+							"potential": 92,
+							"performance": -1.672,
+							"runway": 8,
+							"future": 3.925,
+							"continuity": 2.311,
+							"contract": 1.35,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 10,
+					"selected": "Exceptional pick",
+					"depthLeader": "Exceptional pick",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 54.868,
+							"ability": 54,
+							"potential": 68,
+							"performance": -10.022,
+							"runway": 6.4,
+							"future": 3.14,
+							"continuity": 0,
+							"contract": 1.35,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 91.888,
+							"ability": 78,
+							"potential": 92,
+							"performance": -1.692,
+							"runway": 8,
+							"future": 3.925,
+							"continuity": 2.305,
+							"contract": 1.35,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 11,
+					"selected": "Exceptional pick",
+					"depthLeader": "Exceptional pick",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 54.868,
+							"ability": 54,
+							"potential": 68,
+							"performance": -10.022,
+							"runway": 6.4,
+							"future": 3.14,
+							"continuity": 0,
+							"contract": 1.35,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 91.866,
+							"ability": 78,
+							"potential": 92,
+							"performance": -1.71,
+							"runway": 8,
+							"future": 3.925,
+							"continuity": 2.301,
+							"contract": 1.35,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 12,
+					"selected": "Exceptional pick",
+					"depthLeader": "Exceptional pick",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 54.868,
+							"ability": 54,
+							"potential": 68,
+							"performance": -10.022,
+							"runway": 6.4,
+							"future": 3.14,
+							"continuity": 0,
+							"contract": 1.35,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 91.847,
+							"ability": 78,
+							"potential": 92,
+							"performance": -1.725,
+							"runway": 8,
+							"future": 3.925,
+							"continuity": 2.296,
+							"contract": 1.35,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 13,
+					"selected": "Exceptional pick",
+					"depthLeader": "Exceptional pick",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 54.868,
+							"ability": 54,
+							"potential": 68,
+							"performance": -10.022,
+							"runway": 6.4,
+							"future": 3.14,
+							"continuity": 0,
+							"contract": 1.35,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 91.83,
+							"ability": 78,
+							"potential": 92,
+							"performance": -1.738,
+							"runway": 8,
+							"future": 3.925,
+							"continuity": 2.293,
+							"contract": 1.35,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 14,
+					"selected": "Exceptional pick",
+					"depthLeader": "Exceptional pick",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 54.868,
+							"ability": 54,
+							"potential": 68,
+							"performance": -10.022,
+							"runway": 6.4,
+							"future": 3.14,
+							"continuity": 0,
+							"contract": 1.35,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 91.815,
+							"ability": 78,
+							"potential": 92,
+							"performance": -1.75,
+							"runway": 8,
+							"future": 3.925,
+							"continuity": 2.29,
+							"contract": 1.35,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 15,
+					"selected": "Exceptional pick",
+					"depthLeader": "Exceptional pick",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 54.868,
+							"ability": 54,
+							"potential": 68,
+							"performance": -10.022,
+							"runway": 6.4,
+							"future": 3.14,
+							"continuity": 0,
+							"contract": 1.35,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 91.802,
+							"ability": 78,
+							"potential": 92,
+							"performance": -1.76,
+							"runway": 8,
+							"future": 3.925,
+							"continuity": 2.287,
+							"contract": 1.35,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 16,
+					"selected": "Exceptional pick",
+					"depthLeader": "Exceptional pick",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 54.868,
+							"ability": 54,
+							"potential": 68,
+							"performance": -10.022,
+							"runway": 6.4,
+							"future": 3.14,
+							"continuity": 0,
+							"contract": 1.35,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 91.79,
+							"ability": 78,
+							"potential": 92,
+							"performance": -1.769,
+							"runway": 8,
+							"future": 3.925,
+							"continuity": 2.284,
+							"contract": 1.35,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				},
+				{
+					"week": 17,
+					"selected": "Exceptional pick",
+					"depthLeader": "Exceptional pick",
+					"injured": [false, false],
+					"scores": [
+						{
+							"score": 54.868,
+							"ability": 54,
+							"potential": 68,
+							"performance": -10.022,
+							"runway": 6.4,
+							"future": 3.14,
+							"continuity": 0,
+							"contract": 1.35,
+							"agePenalty": 0,
+							"recognition": 0
+						},
+						{
+							"score": 91.779,
+							"ability": 78,
+							"potential": 92,
+							"performance": -1.778,
+							"runway": 8,
+							"future": 3.925,
+							"continuity": 2.282,
+							"contract": 1.35,
+							"agePenalty": 0,
+							"recognition": 0
+						}
+					]
+				}
+			]
+		}
+	],
+	"sweep": [
+		{
+			"gap": -6,
+			"history": "none",
+			"pattern": "poor",
+			"initialSelection": "Challenger",
+			"changes": [
+				{
+					"afterGame": 2,
+					"to": "Incumbent"
+				},
+				{
+					"afterGame": 3,
+					"to": "Challenger"
+				},
+				{
+					"afterGame": 7,
+					"to": "Incumbent"
+				},
+				{
+					"afterGame": 8,
+					"to": "Challenger"
+				}
+			],
+			"switches": 4
+		},
+		{
+			"gap": -6,
+			"history": "none",
+			"pattern": "alternating",
+			"initialSelection": "Challenger",
+			"changes": [],
+			"switches": 0
+		},
+		{
+			"gap": -6,
+			"history": "ordinary",
+			"pattern": "poor",
+			"initialSelection": "Challenger",
+			"changes": [
+				{
+					"afterGame": 2,
+					"to": "Incumbent"
+				},
+				{
+					"afterGame": 3,
+					"to": "Challenger"
+				},
+				{
+					"afterGame": 9,
+					"to": "Incumbent"
+				},
+				{
+					"afterGame": 10,
+					"to": "Challenger"
+				}
+			],
+			"switches": 4
+		},
+		{
+			"gap": -6,
+			"history": "ordinary",
+			"pattern": "alternating",
+			"initialSelection": "Challenger",
+			"changes": [],
+			"switches": 0
+		},
+		{
+			"gap": -6,
+			"history": "good",
+			"pattern": "poor",
+			"initialSelection": "Incumbent",
+			"changes": [
+				{
+					"afterGame": 1,
+					"to": "Challenger"
+				},
+				{
+					"afterGame": 3,
+					"to": "Incumbent"
+				},
+				{
+					"afterGame": 4,
+					"to": "Challenger"
+				},
+				{
+					"afterGame": 6,
+					"to": "Incumbent"
+				},
+				{
+					"afterGame": 7,
+					"to": "Challenger"
+				},
+				{
+					"afterGame": 12,
+					"to": "Incumbent"
+				},
+				{
+					"afterGame": 13,
+					"to": "Challenger"
+				}
+			],
+			"switches": 7
+		},
+		{
+			"gap": -6,
+			"history": "good",
+			"pattern": "alternating",
+			"initialSelection": "Incumbent",
+			"changes": [
+				{
+					"afterGame": 6,
+					"to": "Challenger"
+				}
+			],
+			"switches": 1
+		},
+		{
+			"gap": -3,
+			"history": "none",
+			"pattern": "poor",
+			"initialSelection": "Challenger",
+			"changes": [
+				{
+					"afterGame": 1,
+					"to": "Incumbent"
+				},
+				{
+					"afterGame": 2,
+					"to": "Challenger"
+				},
+				{
+					"afterGame": 4,
+					"to": "Incumbent"
+				},
+				{
+					"afterGame": 5,
+					"to": "Challenger"
+				},
+				{
+					"afterGame": 7,
+					"to": "Incumbent"
+				},
+				{
+					"afterGame": 8,
+					"to": "Challenger"
+				},
+				{
+					"afterGame": 13,
+					"to": "Incumbent"
+				},
+				{
+					"afterGame": 14,
+					"to": "Challenger"
+				}
+			],
+			"switches": 8
+		},
+		{
+			"gap": -3,
+			"history": "none",
+			"pattern": "alternating",
+			"initialSelection": "Challenger",
+			"changes": [],
+			"switches": 0
+		},
+		{
+			"gap": -3,
+			"history": "ordinary",
+			"pattern": "poor",
+			"initialSelection": "Challenger",
+			"changes": [
+				{
+					"afterGame": 1,
+					"to": "Incumbent"
+				},
+				{
+					"afterGame": 2,
+					"to": "Challenger"
+				},
+				{
+					"afterGame": 4,
+					"to": "Incumbent"
+				},
+				{
+					"afterGame": 5,
+					"to": "Challenger"
+				},
+				{
+					"afterGame": 8,
+					"to": "Incumbent"
+				},
+				{
+					"afterGame": 9,
+					"to": "Challenger"
+				},
+				{
+					"afterGame": 17,
+					"to": "Incumbent"
+				}
+			],
+			"switches": 7
+		},
+		{
+			"gap": -3,
+			"history": "ordinary",
+			"pattern": "alternating",
+			"initialSelection": "Challenger",
+			"changes": [],
+			"switches": 0
+		},
+		{
+			"gap": -3,
+			"history": "good",
+			"pattern": "poor",
+			"initialSelection": "Incumbent",
+			"changes": [
+				{
+					"afterGame": 1,
+					"to": "Challenger"
+				},
+				{
+					"afterGame": 2,
+					"to": "Incumbent"
+				},
+				{
+					"afterGame": 3,
+					"to": "Challenger"
+				},
+				{
+					"afterGame": 4,
+					"to": "Incumbent"
+				},
+				{
+					"afterGame": 5,
+					"to": "Challenger"
+				},
+				{
+					"afterGame": 6,
+					"to": "Incumbent"
+				},
+				{
+					"afterGame": 7,
+					"to": "Challenger"
+				},
+				{
+					"afterGame": 9,
+					"to": "Incumbent"
+				},
+				{
+					"afterGame": 10,
+					"to": "Challenger"
+				},
+				{
+					"afterGame": 13,
+					"to": "Incumbent"
+				},
+				{
+					"afterGame": 14,
+					"to": "Challenger"
+				}
+			],
+			"switches": 11
+		},
+		{
+			"gap": -3,
+			"history": "good",
+			"pattern": "alternating",
+			"initialSelection": "Incumbent",
+			"changes": [
+				{
+					"afterGame": 10,
+					"to": "Challenger"
+				}
+			],
+			"switches": 1
+		},
+		{
+			"gap": 0,
+			"history": "none",
+			"pattern": "poor",
+			"initialSelection": "Incumbent",
+			"changes": [
+				{
+					"afterGame": 1,
+					"to": "Challenger"
+				},
+				{
+					"afterGame": 3,
+					"to": "Incumbent"
+				},
+				{
+					"afterGame": 5,
+					"to": "Challenger"
+				},
+				{
+					"afterGame": 7,
+					"to": "Incumbent"
+				},
+				{
+					"afterGame": 9,
+					"to": "Challenger"
+				},
+				{
+					"afterGame": 11,
+					"to": "Incumbent"
+				},
+				{
+					"afterGame": 13,
+					"to": "Challenger"
+				},
+				{
+					"afterGame": 15,
+					"to": "Incumbent"
+				},
+				{
+					"afterGame": 17,
+					"to": "Challenger"
+				}
+			],
+			"switches": 9
+		},
+		{
+			"gap": 0,
+			"history": "none",
+			"pattern": "alternating",
+			"initialSelection": "Incumbent",
+			"changes": [],
+			"switches": 0
+		},
+		{
+			"gap": 0,
+			"history": "ordinary",
+			"pattern": "poor",
+			"initialSelection": "Incumbent",
+			"changes": [
+				{
+					"afterGame": 1,
+					"to": "Challenger"
+				},
+				{
+					"afterGame": 3,
+					"to": "Incumbent"
+				},
+				{
+					"afterGame": 4,
+					"to": "Challenger"
+				},
+				{
+					"afterGame": 5,
+					"to": "Incumbent"
+				},
+				{
+					"afterGame": 6,
+					"to": "Challenger"
+				},
+				{
+					"afterGame": 7,
+					"to": "Incumbent"
+				},
+				{
+					"afterGame": 8,
+					"to": "Challenger"
+				},
+				{
+					"afterGame": 9,
+					"to": "Incumbent"
+				},
+				{
+					"afterGame": 10,
+					"to": "Challenger"
+				},
+				{
+					"afterGame": 11,
+					"to": "Incumbent"
+				},
+				{
+					"afterGame": 12,
+					"to": "Challenger"
+				},
+				{
+					"afterGame": 13,
+					"to": "Incumbent"
+				},
+				{
+					"afterGame": 14,
+					"to": "Challenger"
+				},
+				{
+					"afterGame": 15,
+					"to": "Incumbent"
+				},
+				{
+					"afterGame": 16,
+					"to": "Challenger"
+				}
+			],
+			"switches": 15
+		},
+		{
+			"gap": 0,
+			"history": "ordinary",
+			"pattern": "alternating",
+			"initialSelection": "Incumbent",
+			"changes": [],
+			"switches": 0
+		},
+		{
+			"gap": 0,
+			"history": "good",
+			"pattern": "poor",
+			"initialSelection": "Incumbent",
+			"changes": [
+				{
+					"afterGame": 2,
+					"to": "Challenger"
+				},
+				{
+					"afterGame": 3,
+					"to": "Incumbent"
+				},
+				{
+					"afterGame": 4,
+					"to": "Challenger"
+				},
+				{
+					"afterGame": 5,
+					"to": "Incumbent"
+				},
+				{
+					"afterGame": 7,
+					"to": "Challenger"
+				},
+				{
+					"afterGame": 8,
+					"to": "Incumbent"
+				},
+				{
+					"afterGame": 9,
+					"to": "Challenger"
+				},
+				{
+					"afterGame": 10,
+					"to": "Incumbent"
+				},
+				{
+					"afterGame": 12,
+					"to": "Challenger"
+				},
+				{
+					"afterGame": 13,
+					"to": "Incumbent"
+				},
+				{
+					"afterGame": 14,
+					"to": "Challenger"
+				},
+				{
+					"afterGame": 15,
+					"to": "Incumbent"
+				},
+				{
+					"afterGame": 17,
+					"to": "Challenger"
+				}
+			],
+			"switches": 13
+		},
+		{
+			"gap": 0,
+			"history": "good",
+			"pattern": "alternating",
+			"initialSelection": "Incumbent",
+			"changes": [],
+			"switches": 0
+		},
+		{
+			"gap": 3,
+			"history": "none",
+			"pattern": "poor",
+			"initialSelection": "Incumbent",
+			"changes": [
+				{
+					"afterGame": 1,
+					"to": "Challenger"
+				},
+				{
+					"afterGame": 2,
+					"to": "Incumbent"
+				},
+				{
+					"afterGame": 4,
+					"to": "Challenger"
+				},
+				{
+					"afterGame": 5,
+					"to": "Incumbent"
+				},
+				{
+					"afterGame": 7,
+					"to": "Challenger"
+				},
+				{
+					"afterGame": 8,
+					"to": "Incumbent"
+				},
+				{
+					"afterGame": 13,
+					"to": "Challenger"
+				},
+				{
+					"afterGame": 14,
+					"to": "Incumbent"
+				}
+			],
+			"switches": 8
+		},
+		{
+			"gap": 3,
+			"history": "none",
+			"pattern": "alternating",
+			"initialSelection": "Incumbent",
+			"changes": [],
+			"switches": 0
+		},
+		{
+			"gap": 3,
+			"history": "ordinary",
+			"pattern": "poor",
+			"initialSelection": "Incumbent",
+			"changes": [
+				{
+					"afterGame": 1,
+					"to": "Challenger"
+				},
+				{
+					"afterGame": 2,
+					"to": "Incumbent"
+				},
+				{
+					"afterGame": 4,
+					"to": "Challenger"
+				},
+				{
+					"afterGame": 5,
+					"to": "Incumbent"
+				},
+				{
+					"afterGame": 7,
+					"to": "Challenger"
+				},
+				{
+					"afterGame": 8,
+					"to": "Incumbent"
+				},
+				{
+					"afterGame": 12,
+					"to": "Challenger"
+				},
+				{
+					"afterGame": 13,
+					"to": "Incumbent"
+				}
+			],
+			"switches": 8
+		},
+		{
+			"gap": 3,
+			"history": "ordinary",
+			"pattern": "alternating",
+			"initialSelection": "Incumbent",
+			"changes": [],
+			"switches": 0
+		},
+		{
+			"gap": 3,
+			"history": "good",
+			"pattern": "poor",
+			"initialSelection": "Incumbent",
+			"changes": [
+				{
+					"afterGame": 3,
+					"to": "Challenger"
+				},
+				{
+					"afterGame": 4,
+					"to": "Incumbent"
+				},
+				{
+					"afterGame": 6,
+					"to": "Challenger"
+				},
+				{
+					"afterGame": 7,
+					"to": "Incumbent"
+				},
+				{
+					"afterGame": 11,
+					"to": "Challenger"
+				},
+				{
+					"afterGame": 12,
+					"to": "Incumbent"
+				}
+			],
+			"switches": 6
+		},
+		{
+			"gap": 3,
+			"history": "good",
+			"pattern": "alternating",
+			"initialSelection": "Incumbent",
+			"changes": [],
+			"switches": 0
+		},
+		{
+			"gap": 6,
+			"history": "none",
+			"pattern": "poor",
+			"initialSelection": "Incumbent",
+			"changes": [
+				{
+					"afterGame": 2,
+					"to": "Challenger"
+				},
+				{
+					"afterGame": 3,
+					"to": "Incumbent"
+				},
+				{
+					"afterGame": 7,
+					"to": "Challenger"
+				},
+				{
+					"afterGame": 8,
+					"to": "Incumbent"
+				}
+			],
+			"switches": 4
+		},
+		{
+			"gap": 6,
+			"history": "none",
+			"pattern": "alternating",
+			"initialSelection": "Incumbent",
+			"changes": [],
+			"switches": 0
+		},
+		{
+			"gap": 6,
+			"history": "ordinary",
+			"pattern": "poor",
+			"initialSelection": "Incumbent",
+			"changes": [
+				{
+					"afterGame": 2,
+					"to": "Challenger"
+				},
+				{
+					"afterGame": 3,
+					"to": "Incumbent"
+				},
+				{
+					"afterGame": 6,
+					"to": "Challenger"
+				},
+				{
+					"afterGame": 7,
+					"to": "Incumbent"
+				}
+			],
+			"switches": 4
+		},
+		{
+			"gap": 6,
+			"history": "ordinary",
+			"pattern": "alternating",
+			"initialSelection": "Incumbent",
+			"changes": [],
+			"switches": 0
+		},
+		{
+			"gap": 6,
+			"history": "good",
+			"pattern": "poor",
+			"initialSelection": "Incumbent",
+			"changes": [
+				{
+					"afterGame": 3,
+					"to": "Challenger"
+				},
+				{
+					"afterGame": 4,
+					"to": "Incumbent"
+				},
+				{
+					"afterGame": 11,
+					"to": "Challenger"
+				},
+				{
+					"afterGame": 12,
+					"to": "Incumbent"
+				}
+			],
+			"switches": 4
+		},
+		{
+			"gap": 6,
+			"history": "good",
+			"pattern": "alternating",
+			"initialSelection": "Incumbent",
+			"changes": [],
+			"switches": 0
+		}
+	],
+	"positions": [
+		{
+			"pos": "QB",
+			"inputs": {
+				"good": {
+					"pssCmp": 24,
+					"pss": 32,
+					"pssYds": 300,
+					"pssTD": 2,
+					"pssSk": 2,
+					"pssSkYds": 12
+				},
+				"poor": {
+					"pssCmp": 18,
+					"pss": 35,
+					"pssYds": 150,
+					"pssInt": 2,
+					"pssSk": 3,
+					"pssSkYds": 20
+				},
+				"added": {
+					"rus": 8,
+					"rusYds": 65,
+					"rusTD": 1
+				}
+			},
+			"noEvidence": {
+				"score": 67.85,
+				"ability": 65,
+				"potential": 65,
+				"performance": 0,
+				"runway": 0,
+				"future": 0,
+				"continuity": 2.775,
+				"contract": 0.075,
+				"agePenalty": 0,
+				"recognition": 0
+			},
+			"good": {
+				"score": 81.442,
+				"ability": 65,
+				"potential": 65,
+				"performance": 12.204,
+				"runway": 0,
+				"future": 0,
+				"continuity": 4.163,
+				"contract": 0.075,
+				"agePenalty": 0,
+				"recognition": 0
+			},
+			"poor": {
+				"score": 52.283,
+				"ability": 65,
+				"potential": 65,
+				"performance": -12.792,
+				"runway": 0,
+				"future": 0,
+				"continuity": 0,
+				"contract": 0.075,
+				"agePenalty": 0,
+				"recognition": 0
+			},
+			"withAdded": {
+				"score": 81.442,
+				"ability": 65,
+				"potential": 65,
+				"performance": 12.204,
+				"runway": 0,
+				"future": 0,
+				"continuity": 4.163,
+				"contract": 0.075,
+				"agePenalty": 0,
+				"recognition": 0
+			}
+		},
+		{
+			"pos": "RB",
+			"inputs": {
+				"good": {
+					"rus": 18,
+					"rusYds": 95,
+					"rusTD": 1
+				},
+				"poor": {
+					"rus": 18,
+					"rusYds": 40,
+					"fmbLost": 1
+				},
+				"added": {
+					"tgt": 7,
+					"rec": 6,
+					"recYds": 65,
+					"recTD": 1
+				}
+			},
+			"noEvidence": {
+				"score": 67.52,
+				"ability": 65,
+				"potential": 65,
+				"performance": 0,
+				"runway": 0,
+				"future": 0,
+				"continuity": 2.775,
+				"contract": 0.075,
+				"agePenalty": 0.33,
+				"recognition": 0
+			},
+			"good": {
+				"score": 70.887,
+				"ability": 65,
+				"potential": 65,
+				"performance": 2.635,
+				"runway": 0,
+				"future": 0,
+				"continuity": 3.506,
+				"contract": 0.075,
+				"agePenalty": 0.33,
+				"recognition": 0
+			},
+			"poor": {
+				"score": 52.039,
+				"ability": 65,
+				"potential": 65,
+				"performance": -12.706,
+				"runway": 0,
+				"future": 0,
+				"continuity": 0,
+				"contract": 0.075,
+				"agePenalty": 0.33,
+				"recognition": 0
+			},
+			"withAdded": {
+				"score": 76.501,
+				"ability": 65,
+				"potential": 65,
+				"performance": 7.594,
+				"runway": 0,
+				"future": 0,
+				"continuity": 4.163,
+				"contract": 0.075,
+				"agePenalty": 0.33,
+				"recognition": 0
+			}
+		},
+		{
+			"pos": "WR",
+			"inputs": {
+				"good": {
+					"tgt": 9,
+					"rec": 6,
+					"recYds": 100,
+					"recTD": 1
+				},
+				"poor": {
+					"tgt": 9,
+					"rec": 3,
+					"recYds": 25
+				},
+				"added": {
+					"rus": 2,
+					"rusYds": 30,
+					"rusTD": 1
+				}
+			},
+			"noEvidence": {
+				"score": 67.85,
+				"ability": 65,
+				"potential": 65,
+				"performance": 0,
+				"runway": 0,
+				"future": 0,
+				"continuity": 2.775,
+				"contract": 0.075,
+				"agePenalty": 0,
+				"recognition": 0
+			},
+			"good": {
+				"score": 82.288,
+				"ability": 65,
+				"potential": 65,
+				"performance": 13.05,
+				"runway": 0,
+				"future": 0,
+				"continuity": 4.163,
+				"contract": 0.075,
+				"agePenalty": 0,
+				"recognition": 0
+			},
+			"poor": {
+				"score": 54.055,
+				"ability": 65,
+				"potential": 65,
+				"performance": -11.02,
+				"runway": 0,
+				"future": 0,
+				"continuity": 0,
+				"contract": 0.075,
+				"agePenalty": 0,
+				"recognition": 0
+			},
+			"withAdded": {
+				"score": 82.288,
+				"ability": 65,
+				"potential": 65,
+				"performance": 13.05,
+				"runway": 0,
+				"future": 0,
+				"continuity": 4.163,
+				"contract": 0.075,
+				"agePenalty": 0,
+				"recognition": 0
+			}
+		},
+		{
+			"pos": "TE",
+			"inputs": {
+				"good": {
+					"tgt": 6,
+					"rec": 5,
+					"recYds": 65
+				},
+				"poor": {
+					"tgt": 6,
+					"rec": 2,
+					"recYds": 15
+				},
+				"added": {
+					"pba": 12,
+					"pbw": 11,
+					"rba": 18,
+					"rbw": 16
+				}
+			},
+			"noEvidence": {
+				"score": 67.85,
+				"ability": 65,
+				"potential": 65,
+				"performance": 0,
+				"runway": 0,
+				"future": 0,
+				"continuity": 2.775,
+				"contract": 0.075,
+				"agePenalty": 0,
+				"recognition": 0
+			},
+			"good": {
+				"score": 78.744,
+				"ability": 65,
+				"potential": 65,
+				"performance": 9.507,
+				"runway": 0,
+				"future": 0,
+				"continuity": 4.163,
+				"contract": 0.075,
+				"agePenalty": 0,
+				"recognition": 0
+			},
+			"poor": {
+				"score": 53.915,
+				"ability": 65,
+				"potential": 65,
+				"performance": -11.16,
+				"runway": 0,
+				"future": 0,
+				"continuity": 0,
+				"contract": 0.075,
+				"agePenalty": 0,
+				"recognition": 0
+			},
+			"withAdded": {
+				"score": 78.744,
+				"ability": 65,
+				"potential": 65,
+				"performance": 9.507,
+				"runway": 0,
+				"future": 0,
+				"continuity": 4.163,
+				"contract": 0.075,
+				"agePenalty": 0,
+				"recognition": 0
+			}
+		},
+		{
+			"pos": "OL",
+			"inputs": {
+				"good": {
+					"pba": 35,
+					"pbw": 31,
+					"rba": 25,
+					"rbw": 22
+				},
+				"poor": {
+					"pba": 35,
+					"pbw": 18,
+					"rba": 25,
+					"rbw": 13,
+					"skAlw": 3
+				}
+			},
+			"noEvidence": {
+				"score": 67.85,
+				"ability": 65,
+				"potential": 65,
+				"performance": 0,
+				"runway": 0,
+				"future": 0,
+				"continuity": 2.775,
+				"contract": 0.075,
+				"agePenalty": 0,
+				"recognition": 0
+			},
+			"good": {
+				"score": 76.415,
+				"ability": 65,
+				"potential": 65,
+				"performance": 7.178,
+				"runway": 0,
+				"future": 0,
+				"continuity": 4.163,
+				"contract": 0.075,
+				"agePenalty": 0,
+				"recognition": 0
+			},
+			"poor": {
+				"score": 56.736,
+				"ability": 65,
+				"potential": 65,
+				"performance": -8.7,
+				"runway": 0,
+				"future": 0,
+				"continuity": 0.361,
+				"contract": 0.075,
+				"agePenalty": 0,
+				"recognition": 0
+			}
+		},
+		{
+			"pos": "DL",
+			"inputs": {
+				"good": {
+					"min": 30,
+					"defTckSolo": 3,
+					"defTckAst": 2,
+					"defSk": 1,
+					"defTckLoss": 2
+				},
+				"poor": {
+					"min": 30,
+					"defTckSolo": 1
+				},
+				"added": {
+					"defFmbFrc": 1,
+					"defFmbRec": 1
+				}
+			},
+			"noEvidence": {
+				"score": 67.85,
+				"ability": 65,
+				"potential": 65,
+				"performance": 0,
+				"runway": 0,
+				"future": 0,
+				"continuity": 2.775,
+				"contract": 0.075,
+				"agePenalty": 0,
+				"recognition": 0
+			},
+			"good": {
+				"score": 71.652,
+				"ability": 65,
+				"potential": 65,
+				"performance": 2.976,
+				"runway": 0,
+				"future": 0,
+				"continuity": 3.601,
+				"contract": 0.075,
+				"agePenalty": 0,
+				"recognition": 0
+			},
+			"poor": {
+				"score": 64.048,
+				"ability": 65,
+				"potential": 65,
+				"performance": -2.976,
+				"runway": 0,
+				"future": 0,
+				"continuity": 1.949,
+				"contract": 0.075,
+				"agePenalty": 0,
+				"recognition": 0
+			},
+			"withAdded": {
+				"score": 74.186,
+				"ability": 65,
+				"potential": 65,
+				"performance": 4.96,
+				"runway": 0,
+				"future": 0,
+				"continuity": 4.151,
+				"contract": 0.075,
+				"agePenalty": 0,
+				"recognition": 0
+			}
+		},
+		{
+			"pos": "LB",
+			"inputs": {
+				"good": {
+					"min": 30,
+					"defTckSolo": 6,
+					"defTckAst": 4,
+					"defTckLoss": 1
+				},
+				"poor": {
+					"min": 30,
+					"defTckSolo": 2
+				},
+				"added": {
+					"defSk": 1,
+					"defInt": 1
+				}
+			},
+			"noEvidence": {
+				"score": 67.85,
+				"ability": 65,
+				"potential": 65,
+				"performance": 0,
+				"runway": 0,
+				"future": 0,
+				"continuity": 2.775,
+				"contract": 0.075,
+				"agePenalty": 0,
+				"recognition": 0
+			},
+			"good": {
+				"score": 69.117,
+				"ability": 65,
+				"potential": 65,
+				"performance": 0.992,
+				"runway": 0,
+				"future": 0,
+				"continuity": 3.05,
+				"contract": 0.075,
+				"agePenalty": 0,
+				"recognition": 0
+			},
+			"poor": {
+				"score": 61.514,
+				"ability": 65,
+				"potential": 65,
+				"performance": -4.96,
+				"runway": 0,
+				"future": 0,
+				"continuity": 1.399,
+				"contract": 0.075,
+				"agePenalty": 0,
+				"recognition": 0
+			},
+			"withAdded": {
+				"score": 74.186,
+				"ability": 65,
+				"potential": 65,
+				"performance": 4.96,
+				"runway": 0,
+				"future": 0,
+				"continuity": 4.151,
+				"contract": 0.075,
+				"agePenalty": 0,
+				"recognition": 0
+			}
+		},
+		{
+			"pos": "CB",
+			"inputs": {
+				"good": {
+					"min": 30,
+					"defTckSolo": 3,
+					"defTckAst": 1,
+					"defPssDef": 2
+				},
+				"poor": {
+					"min": 30
+				},
+				"added": {
+					"defSk": 1,
+					"defTckLoss": 1,
+					"defInt": 1
+				}
+			},
+			"noEvidence": {
+				"score": 67.85,
+				"ability": 65,
+				"potential": 65,
+				"performance": 0,
+				"runway": 0,
+				"future": 0,
+				"continuity": 2.775,
+				"contract": 0.075,
+				"agePenalty": 0,
+				"recognition": 0
+			},
+			"good": {
+				"score": 68.484,
+				"ability": 65,
+				"potential": 65,
+				"performance": 0.496,
+				"runway": 0,
+				"future": 0,
+				"continuity": 2.913,
+				"contract": 0.075,
+				"agePenalty": 0,
+				"recognition": 0
+			},
+			"poor": {
+				"score": 61.514,
+				"ability": 65,
+				"potential": 65,
+				"performance": -4.96,
+				"runway": 0,
+				"future": 0,
+				"continuity": 1.399,
+				"contract": 0.075,
+				"agePenalty": 0,
+				"recognition": 0
+			},
+			"withAdded": {
+				"score": 74.186,
+				"ability": 65,
+				"potential": 65,
+				"performance": 4.96,
+				"runway": 0,
+				"future": 0,
+				"continuity": 4.151,
+				"contract": 0.075,
+				"agePenalty": 0,
+				"recognition": 0
+			}
+		},
+		{
+			"pos": "S",
+			"inputs": {
+				"good": {
+					"min": 30,
+					"defTckSolo": 5,
+					"defTckAst": 2,
+					"defPssDef": 1
+				},
+				"poor": {
+					"min": 30,
+					"defTckSolo": 1
+				},
+				"added": {
+					"defFmbFrc": 1,
+					"defInt": 1
+				}
+			},
+			"noEvidence": {
+				"score": 67.85,
+				"ability": 65,
+				"potential": 65,
+				"performance": 0,
+				"runway": 0,
+				"future": 0,
+				"continuity": 2.775,
+				"contract": 0.075,
+				"agePenalty": 0,
+				"recognition": 0
+			},
+			"good": {
+				"score": 70.385,
+				"ability": 65,
+				"potential": 65,
+				"performance": 1.984,
+				"runway": 0,
+				"future": 0,
+				"continuity": 3.326,
+				"contract": 0.075,
+				"agePenalty": 0,
+				"recognition": 0
+			},
+			"poor": {
+				"score": 62.781,
+				"ability": 65,
+				"potential": 65,
+				"performance": -3.968,
+				"runway": 0,
+				"future": 0,
+				"continuity": 1.674,
+				"contract": 0.075,
+				"agePenalty": 0,
+				"recognition": 0
+			},
+			"withAdded": {
+				"score": 74.186,
+				"ability": 65,
+				"potential": 65,
+				"performance": 4.96,
+				"runway": 0,
+				"future": 0,
+				"continuity": 4.151,
+				"contract": 0.075,
+				"agePenalty": 0,
+				"recognition": 0
+			}
+		},
+		{
+			"pos": "K",
+			"inputs": {
+				"good": {
+					"fga30": 1,
+					"fg30": 1,
+					"fga40": 2,
+					"fg40": 2,
+					"xpa": 3,
+					"xp": 3
+				},
+				"poor": {
+					"fga30": 1,
+					"fg30": 0,
+					"fga40": 2,
+					"fg40": 0,
+					"xpa": 3,
+					"xp": 2
+				}
+			},
+			"noEvidence": {
+				"score": 67.85,
+				"ability": 65,
+				"potential": 65,
+				"performance": 0,
+				"runway": 0,
+				"future": 0,
+				"continuity": 2.775,
+				"contract": 0.075,
+				"agePenalty": 0,
+				"recognition": 0
+			},
+			"good": {
+				"score": 75.891,
+				"ability": 65,
+				"potential": 65,
+				"performance": 6.654,
+				"runway": 0,
+				"future": 0,
+				"continuity": 4.163,
+				"contract": 0.075,
+				"agePenalty": 0,
+				"recognition": 0
+			},
+			"poor": {
+				"score": 52.242,
+				"ability": 65,
+				"potential": 65,
+				"performance": -12.833,
+				"runway": 0,
+				"future": 0,
+				"continuity": 0,
+				"contract": 0.075,
+				"agePenalty": 0,
+				"recognition": 0
+			}
+		},
+		{
+			"pos": "P",
+			"inputs": {
+				"good": {
+					"pnt": 5,
+					"pntYds": 240,
+					"pntIn20": 2
+				},
+				"poor": {
+					"pnt": 5,
+					"pntYds": 160,
+					"pntTB": 2
+				}
+			},
+			"noEvidence": {
+				"score": 67.85,
+				"ability": 65,
+				"potential": 65,
+				"performance": 0,
+				"runway": 0,
+				"future": 0,
+				"continuity": 2.775,
+				"contract": 0.075,
+				"agePenalty": 0,
+				"recognition": 0
+			},
+			"good": {
+				"score": 73.764,
+				"ability": 65,
+				"potential": 65,
+				"performance": 4.629,
+				"runway": 0,
+				"future": 0,
+				"continuity": 4.06,
+				"contract": 0.075,
+				"agePenalty": 0,
+				"recognition": 0
+			},
+			"poor": {
+				"score": 56.867,
+				"ability": 65,
+				"potential": 65,
+				"performance": -8.597,
+				"runway": 0,
+				"future": 0,
+				"continuity": 0.389,
+				"contract": 0.075,
+				"agePenalty": 0,
+				"recognition": 0
+			}
+		},
+		{
+			"pos": "KR",
+			"inputs": {
+				"good": {
+					"kr": 3,
+					"krYds": 90
+				},
+				"poor": {
+					"kr": 3,
+					"krYds": 35
+				},
+				"added": {
+					"krTD": 1
+				}
+			},
+			"noEvidence": {
+				"score": 52.775,
+				"ability": 65,
+				"potential": 65,
+				"performance": 0,
+				"runway": 0,
+				"future": 0,
+				"continuity": 2.775,
+				"contract": 0,
+				"agePenalty": 0,
+				"recognition": 0
+			},
+			"good": {
+				"score": 59.371,
+				"ability": 65,
+				"potential": 65,
+				"performance": 5.208,
+				"runway": 0,
+				"future": 0,
+				"continuity": 4.163,
+				"contract": 0,
+				"agePenalty": 0,
+				"recognition": 0
+			},
+			"poor": {
+				"score": 42.003,
+				"ability": 65,
+				"potential": 65,
+				"performance": -8.432,
+				"runway": 0,
+				"future": 0,
+				"continuity": 0.435,
+				"contract": 0,
+				"agePenalty": 0,
+				"recognition": 0
+			},
+			"withAdded": {
+				"score": 59.371,
+				"ability": 65,
+				"potential": 65,
+				"performance": 5.208,
+				"runway": 0,
+				"future": 0,
+				"continuity": 4.163,
+				"contract": 0,
+				"agePenalty": 0,
+				"recognition": 0
+			}
+		},
+		{
+			"pos": "PR",
+			"inputs": {
+				"good": {
+					"pr": 3,
+					"prYds": 40
+				},
+				"poor": {
+					"pr": 3,
+					"prYds": 8
+				},
+				"added": {
+					"prTD": 1
+				}
+			},
+			"noEvidence": {
+				"score": 52.775,
+				"ability": 65,
+				"potential": 65,
+				"performance": 0,
+				"runway": 0,
+				"future": 0,
+				"continuity": 2.775,
+				"contract": 0,
+				"agePenalty": 0,
+				"recognition": 0
+			},
+			"good": {
+				"score": 56.894,
+				"ability": 65,
+				"potential": 65,
+				"performance": 3.224,
+				"runway": 0,
+				"future": 0,
+				"continuity": 3.67,
+				"contract": 0,
+				"agePenalty": 0,
+				"recognition": 0
+			},
+			"poor": {
+				"score": 46.755,
+				"ability": 65,
+				"potential": 65,
+				"performance": -4.712,
+				"runway": 0,
+				"future": 0,
+				"continuity": 1.467,
+				"contract": 0,
+				"agePenalty": 0,
+				"recognition": 0
+			},
+			"withAdded": {
+				"score": 56.894,
+				"ability": 65,
+				"potential": 65,
+				"performance": 3.224,
+				"runway": 0,
+				"future": 0,
+				"continuity": 3.67,
+				"contract": 0,
+				"agePenalty": 0,
+				"recognition": 0
+			}
+		}
+	],
+	"acquisitions": {
+		"scores": [
+			{
+				"name": "Another QB",
+				"value": 0.038,
+				"draftValue": 2.112,
+				"starterGain": 0,
+				"fillsNeed": false,
+				"affordableRole": false,
+				"freeAgent": {
+					"value": 0.038,
+					"draftValue": 2.112,
+					"starterGain": 0,
+					"fillsNeed": false,
+					"affordableRole": false
+				}
+			},
+			{
+				"name": "OL upgrade",
+				"value": 3.258,
+				"draftValue": 4.501,
+				"starterGain": 28.987,
+				"fillsNeed": true,
+				"affordableRole": true,
+				"freeAgent": {
+					"value": 3.258,
+					"draftValue": 4.501,
+					"starterGain": 28.987,
+					"fillsNeed": true,
+					"affordableRole": true
+				}
+			},
+			{
+				"name": "Elite punter",
+				"value": 2.5,
+				"draftValue": 0.45,
+				"starterGain": 100,
+				"fillsNeed": true,
+				"affordableRole": true,
+				"freeAgent": {
+					"value": 5,
+					"draftValue": 0.825,
+					"starterGain": 100,
+					"fillsNeed": true,
+					"affordableRole": true
+				}
+			}
+		],
+		"preferredFreeAgent": "Elite punter",
+		"beforeSuccessor": 1.866,
+		"afterSuccessor": 0.038
+	}
+}

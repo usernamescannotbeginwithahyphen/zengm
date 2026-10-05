@@ -256,6 +256,83 @@ describe("one bounded Starter Score", () => {
 });
 
 describe("performance evidence", () => {
+	test("QB rushing and lost fumbles affect the combined offensive grade", () => {
+		const passing = { pss: 35, pssYds: 220, pssTD: 1, pssInt: 1 };
+		const mobile = { ...passing, rus: 8, rusYds: 65, rusTD: 1 };
+		expect(gradeFootballPerformance(mobile, "QB")!.score).toBeGreaterThan(
+			gradeFootballPerformance(passing, "QB")!.score,
+		);
+		expect(
+			gradeFootballPerformance({ ...mobile, fmbLost: 1 }, "QB")!.score,
+		).toBeLessThan(gradeFootballPerformance(mobile, "QB")!.score);
+		expect(
+			gradeFootballPerformance({ rus: 8, rusYds: 65, rusTD: 1 }, "QB")!.samples,
+		).toBeGreaterThan(0);
+	});
+
+	test("RB receiving includes unsuccessful targets and both kinds of touchdowns", () => {
+		const line = { rus: 15, rusYds: 60, tgt: 5, rec: 4, recYds: 40 };
+		const baseline = gradeFootballPerformance(line, "RB")!.score;
+		expect(
+			gradeFootballPerformance({ ...line, tgt: 10 }, "RB")!.score,
+		).toBeLessThan(baseline);
+		expect(
+			gradeFootballPerformance({ ...line, recTD: 1 }, "RB")!.score,
+		).toBeGreaterThan(baseline);
+		expect(
+			gradeFootballPerformance({ ...line, rusTD: 1 }, "RB")!.score,
+		).toBeGreaterThan(baseline);
+	});
+
+	test("WR rushing and TE blocking count alongside receiving", () => {
+		const line = { tgt: 9, rec: 5, recYds: 60 };
+		expect(
+			gradeFootballPerformance({ ...line, rus: 2, rusYds: 30, rusTD: 1 }, "WR")!
+				.score,
+		).toBeGreaterThan(gradeFootballPerformance(line, "WR")!.score);
+		const blocks = { ...line, pba: 15, rba: 15 };
+		expect(
+			gradeFootballPerformance({ ...blocks, pbw: 13, rbw: 13 }, "TE")!.score,
+		).toBeGreaterThan(
+			gradeFootballPerformance({ ...blocks, pbw: 7, rbw: 7 }, "TE")!.score,
+		);
+	});
+
+	test.each(["CB", "S"] as const)(
+		"quiet %s coverage is not treated as failure, but recorded plays earn credit",
+		(pos) => {
+			expect(gradeFootballPerformance({ min: 30 }, pos)!.score).toBe(0);
+			for (const play of [
+				{ defSk: 1, defTckSolo: 1, defTckLoss: 1 },
+				{ defInt: 1 },
+				{ defPssDef: 1 },
+				{ defTckSolo: 8 },
+				{ defFmbFrc: 1 },
+				{ defFmbRec: 1 },
+			]) {
+				expect(
+					gradeFootballPerformance({ min: 30, ...play }, pos)!.score,
+				).toBeGreaterThan(0);
+			}
+		},
+	);
+
+	test("blocked punts and return touchdowns are accounted for", () => {
+		const punts = { pnt: 5, pntYds: 220 };
+		expect(
+			gradeFootballPerformance({ ...punts, pntBlk: 1 }, "P")!.score,
+		).toBeLessThan(gradeFootballPerformance(punts, "P")!.score);
+		for (const [pos, key] of [
+			["KR", "kr"],
+			["PR", "pr"],
+		] as const) {
+			const line = { [key]: 3, [`${key}Yds`]: pos === "KR" ? 70 : 27 };
+			expect(
+				gradeFootballPerformance({ ...line, [`${key}TD`]: 1 }, pos)!.score,
+			).toBeGreaterThan(gradeFootballPerformance(line, pos)!.score);
+		}
+	});
+
 	test("does not confuse missing stats or one good pass with a full successful season", () => {
 		const empty = makePlayer("QB", 65);
 		const small = structuredClone(empty);

@@ -1,0 +1,5863 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>Starter Score scenario audit</title>
+		<style>
+			:root {
+				color-scheme: light dark;
+				font: 16px/1.55 system-ui;
+				--blue: light-dark(#175cb4, #7eb9ff);
+				--orange: light-dark(#a04400, #ffb279);
+			}
+			body {
+				margin: 0;
+				background: Canvas;
+				color: CanvasText;
+			}
+			main {
+				max-width: 1100px;
+				margin: auto;
+				padding: 32px 24px 80px;
+			}
+			h1 {
+				font-size: 2rem;
+				line-height: 1.15;
+			}
+			h2 {
+				margin-top: 40px;
+				font-size: 1.35rem;
+			}
+			p {
+				max-width: 85ch;
+			}
+			a {
+				color: var(--blue);
+			}
+			.table-wrap {
+				overflow: auto;
+				margin: 20px 0;
+			}
+			table {
+				border-collapse: collapse;
+				width: 100%;
+				font-variant-numeric: tabular-nums;
+				font-size: 14px;
+			}
+			th,
+			td {
+				padding: 10px 12px;
+				border-bottom: 1px solid color-mix(in srgb, CanvasText 25%, Canvas);
+				text-align: left;
+				vertical-align: top;
+			}
+			th {
+				font-weight: 650;
+			}
+			details {
+				border-top: 1px solid color-mix(in srgb, CanvasText 25%, Canvas);
+				padding: 16px 0;
+			}
+			summary {
+				cursor: pointer;
+				font-weight: 650;
+			}
+			svg {
+				display: block;
+				width: 100%;
+				max-width: 800px;
+				height: auto;
+			}
+			svg text {
+				fill: CanvasText;
+				font: 12px system-ui;
+			}
+			.frame {
+				fill: none;
+				stroke: color-mix(in srgb, CanvasText 35%, Canvas);
+			}
+			.series {
+				fill: none;
+				stroke-width: 2.5;
+			}
+			.s0 {
+				stroke: var(--blue);
+			}
+			.s1 {
+				stroke: var(--orange);
+			}
+			.dot.s0 {
+				fill: var(--blue);
+			}
+			.dot.s1 {
+				fill: var(--orange);
+			}
+			.label0 {
+				fill: var(--blue);
+			}
+			.label1 {
+				fill: var(--orange);
+			}
+			code {
+				font-size: 0.9em;
+			}
+			@media (max-width: 600px) {
+				main {
+					padding: 18px 12px;
+				}
+				h1 {
+					font-size: 1.65rem;
+				}
+			}
+			@media print {
+				details {
+					break-inside: avoid;
+				}
+				main {
+					max-width: none;
+				}
+				.table-wrap {
+					overflow: visible;
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<main>
+			<h1>Starter Score: dummy-roster scenario audit</h1>
+			<p>
+				Baseline: commit <code>1020dac55</code>. Revised model: October 5, 2026.
+				All numbers come from the production scoring and sorting functions, not
+				a second implementation of the formula.
+			</p>
+			<p>
+				<strong
+					>The original inertia was insufficient in the stress tests.</strong
+				>
+				The worst QB competition produced 15 changes in 17 games. After
+				preserving a minimum incumbent preference and slowing recent form, the
+				worst of the same 30 cases produces 4. This is a controlled diagnostic
+				grid, not an estimate of how frequently real simulated leagues will
+				change starters.
+			</p>
+			<p>
+				Synthetic box scores, not real historical player estimates or a
+				probabilistic football season. Uses production getStarterScore,
+				updateFootballForm, rosterAutoSort and acquisition evaluation.
+				Ratings/contract/team record held fixed to isolate performance; only
+				selected players accumulate stats except the explicitly listed cameos.
+				Selection at row N is for the game after N completed appearances/rounds.
+				Injuries affect availability separately from depth order. Fixed 100-yard
+				field. Scores rounded only for report display.
+			</p>
+			<h2>Decisions before and after</h2>
+			<div class="table-wrap">
+				<table>
+					<thead>
+						<tr>
+							<th>Scenario</th>
+							<th>Original model</th>
+							<th>Revised model</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>cameo</td>
+							<td>Starter initially; no changes in 17 games</td>
+							<td>Starter initially; no changes in 17 games</td>
+						</tr>
+						<tr>
+							<td>proven-slump</td>
+							<td>Veteran initially; Reserve after game 3</td>
+							<td>Veteran initially; Reserve after game 7</td>
+						</tr>
+						<tr>
+							<td>two-bad-games</td>
+							<td>Veteran initially; no changes in 17 games</td>
+							<td>Veteran initially; no changes in 17 games</td>
+						</tr>
+						<tr>
+							<td>unproven-slump</td>
+							<td>Unproven initially; Reserve after game 1</td>
+							<td>Unproven initially; Reserve after game 3</td>
+						</tr>
+						<tr>
+							<td>rookie-weak-backup</td>
+							<td>Prospect initially; no changes in 17 games</td>
+							<td>Prospect initially; no changes in 17 games</td>
+						</tr>
+						<tr>
+							<td>rookie-viable-backup</td>
+							<td>Veteran initially; no changes in 17 games</td>
+							<td>Prospect initially; Veteran after game 8</td>
+						</tr>
+						<tr>
+							<td>breakout-injury</td>
+							<td>Breakout initially; no changes in 17 games</td>
+							<td>Breakout initially; no changes in 17 games</td>
+						</tr>
+						<tr>
+							<td>bench-return</td>
+							<td>
+								Prospect initially; Veteran after game 2; Prospect after game 6
+							</td>
+							<td>
+								Prospect initially; Veteran after game 5; Prospect after game 6
+							</td>
+						</tr>
+						<tr>
+							<td>aging-contender</td>
+							<td>Veteran initially; no changes in 17 games</td>
+							<td>Veteran initially; no changes in 17 games</td>
+						</tr>
+						<tr>
+							<td>aging-rebuilder</td>
+							<td>Successor initially; no changes in 17 games</td>
+							<td>Successor initially; no changes in 17 games</td>
+						</tr>
+						<tr>
+							<td>mvp</td>
+							<td>MVP initially; no changes in 17 games</td>
+							<td>MVP initially; no changes in 17 games</td>
+						</tr>
+						<tr>
+							<td>exceptional-replacement</td>
+							<td>Exceptional pick initially; no changes in 17 games</td>
+							<td>Exceptional pick initially; no changes in 17 games</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<p>
+				The recovery scenario forces an injury opportunity for the prospect
+				after game 6. He earns the higher depth-chart position after game 9 and
+				retains it when the veteran becomes available after game 10. DNPs
+				themselves do not improve his form.
+			</p>
+			<h2>Weekly scores and thresholds</h2>
+			<p>
+				Expand a scenario for its player inputs, score curves, and complete
+				decision log. No real historical player's ratings were estimated.
+			</p>
+			<details>
+				<summary>QB box scores used in these scenarios</summary>
+				<div class="table-wrap">
+					<table>
+						<thead>
+							<tr>
+								<th>Line</th>
+								<th>Completions / attempts</th>
+								<th>Yards</th>
+								<th>TD</th>
+								<th>INT</th>
+								<th>Sacks / yards lost</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>cameo</td>
+								<td>2 / 3</td>
+								<td>40</td>
+								<td>1</td>
+								<td>0</td>
+								<td>0 / 0</td>
+							</tr>
+							<tr>
+								<td>steady</td>
+								<td>27 / 40</td>
+								<td>270</td>
+								<td>0</td>
+								<td>0</td>
+								<td>0 / 0</td>
+							</tr>
+							<tr>
+								<td>good</td>
+								<td>24 / 32</td>
+								<td>300</td>
+								<td>2</td>
+								<td>0</td>
+								<td>2 / 12</td>
+							</tr>
+							<tr>
+								<td>poor</td>
+								<td>18 / 35</td>
+								<td>150</td>
+								<td>0</td>
+								<td>2</td>
+								<td>3 / 20</td>
+							</tr>
+							<tr>
+								<td>ordinary</td>
+								<td>21 / 35</td>
+								<td>220</td>
+								<td>1</td>
+								<td>1</td>
+								<td>2 / 12</td>
+							</tr>
+							<tr>
+								<td>breakout</td>
+								<td>25 / 32</td>
+								<td>330</td>
+								<td>3</td>
+								<td>0</td>
+								<td>1 / 6</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</details>
+			<details>
+				<summary>cameo — Starter initially; no changes in 17 games</summary>
+				<p>
+					Equal ability; starter goes 27/40 for 270 yards and no TD each week.
+					Reserve goes 2/3 for 40 yards and a TD twice, then does not play.
+				</p>
+				<div class="table-wrap">
+					<table>
+						<thead>
+							<tr>
+								<th>Player</th>
+								<th>Ability</th>
+								<th>Potential</th>
+								<th>Age</th>
+								<th>Annual salary</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>Starter</td>
+								<td>65</td>
+								<td>65</td>
+								<td>28</td>
+								<td>$0.5m</td>
+							</tr>
+							<tr>
+								<td>Cameo</td>
+								<td>65</td>
+								<td>65</td>
+								<td>28</td>
+								<td>$0.5m</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<svg
+					viewBox="0 0 600 240"
+					role="img"
+					aria-label="cameo: weekly Starter Scores. Exact values are in the following table."
+				>
+					<rect x="65" y="35" width="500" height="155" class="frame" />
+					<text x="56" y="194" text-anchor="end">60.0</text>
+					<text x="56" y="155.25" text-anchor="end">65.0</text>
+					<text x="56" y="116.5" text-anchor="end">70.0</text>
+					<text x="56" y="77.75" text-anchor="end">75.0</text>
+					<text x="56" y="39" text-anchor="end">80.0</text>
+					<text x="65" y="208" text-anchor="middle">0</text>
+					<text x="182.6470588235294" y="208" text-anchor="middle">4</text>
+					<text x="300.2941176470588" y="208" text-anchor="middle">8</text>
+					<text x="417.94117647058823" y="208" text-anchor="middle">12</text>
+					<text x="535.5882352941176" y="208" text-anchor="middle">16</text>
+					<text x="315" y="233" text-anchor="middle">
+						Games completed · decision for the next game
+					</text>
+					<text
+						x="18"
+						y="118"
+						transform="rotate(-90 18 118)"
+						text-anchor="middle"
+					>
+						Starter Score
+					</text>
+					<polyline
+						class="series s0"
+						points="65,129.16250000000005 94.41176470588235,118.94025000000002 123.8235294117647,112.77900000000001 153.23529411764707,108.30725000000002 182.6470588235294,104.81975 212.05882352941177,102.01425000000003 241.47058823529412,99.71249999999996 270.88235294117646,97.81375000000003 300.2941176470588,96.2405 329.70588235294116,94.96174999999995 359.11764705882354,93.89999999999995 388.5294117647059,93.01650000000004 417.94117647058823,92.27250000000001 447.35294117647055,91.64474999999997 476.7647058823529,91.11775 506.1764705882353,90.66050000000001 535.5882352941176,90.27300000000004 565,89.93974999999999"
+					/>
+					<text x="65" y="20" class="label0">Starter</text>
+					<circle class="dot s0" cx="65" cy="129.16250000000005" r="3.5" />
+					<circle
+						class="dot s0"
+						cx="94.41176470588235"
+						cy="118.94025000000002"
+						r="3.5"
+					/>
+					<circle
+						class="dot s0"
+						cx="123.8235294117647"
+						cy="112.77900000000001"
+						r="3.5"
+					/>
+					<circle
+						class="dot s0"
+						cx="153.23529411764707"
+						cy="108.30725000000002"
+						r="3.5"
+					/>
+					<circle
+						class="dot s0"
+						cx="182.6470588235294"
+						cy="104.81975"
+						r="3.5"
+					/>
+					<circle
+						class="dot s0"
+						cx="212.05882352941177"
+						cy="102.01425000000003"
+						r="3.5"
+					/>
+					<circle
+						class="dot s0"
+						cx="241.47058823529412"
+						cy="99.71249999999996"
+						r="3.5"
+					/>
+					<circle
+						class="dot s0"
+						cx="270.88235294117646"
+						cy="97.81375000000003"
+						r="3.5"
+					/>
+					<circle class="dot s0" cx="300.2941176470588" cy="96.2405" r="3.5" />
+					<circle
+						class="dot s0"
+						cx="329.70588235294116"
+						cy="94.96174999999995"
+						r="3.5"
+					/>
+					<circle
+						class="dot s0"
+						cx="359.11764705882354"
+						cy="93.89999999999995"
+						r="3.5"
+					/>
+					<circle
+						class="dot s0"
+						cx="388.5294117647059"
+						cy="93.01650000000004"
+						r="3.5"
+					/>
+					<circle
+						class="dot s0"
+						cx="417.94117647058823"
+						cy="92.27250000000001"
+						r="3.5"
+					/>
+					<circle
+						class="dot s0"
+						cx="447.35294117647055"
+						cy="91.64474999999997"
+						r="3.5"
+					/>
+					<circle class="dot s0" cx="476.7647058823529" cy="91.11775" r="3.5" />
+					<circle
+						class="dot s0"
+						cx="506.1764705882353"
+						cy="90.66050000000001"
+						r="3.5"
+					/>
+					<circle
+						class="dot s0"
+						cx="535.5882352941176"
+						cy="90.27300000000004"
+						r="3.5"
+					/>
+					<circle class="dot s0" cx="565" cy="89.93974999999999" r="3.5" />
+					<polyline
+						class="series s1"
+						points="65,150.66875 94.41176470588235,147.84775000000005 123.8235294117647,145.18950000000004 153.23529411764707,145.18950000000004 182.6470588235294,145.18950000000004 212.05882352941177,145.18950000000004 241.47058823529412,145.18950000000004 270.88235294117646,145.18950000000004 300.2941176470588,145.18950000000004 329.70588235294116,145.18950000000004 359.11764705882354,145.18950000000004 388.5294117647059,145.18950000000004 417.94117647058823,145.18950000000004 447.35294117647055,145.18950000000004 476.7647058823529,145.18950000000004 506.1764705882353,145.18950000000004 535.5882352941176,145.18950000000004 565,145.18950000000004"
+					/>
+					<text x="325" y="20" class="label1">Cameo</text>
+				</svg>
+				<p>
+					Dots identify the available player selected for the next game. Injury
+					replacements can differ from the depth-chart leader. Scores are
+					evaluated before applying that row’s new depth order; the next
+					evaluation reflects the new incumbent.
+				</p>
+				<div class="table-wrap">
+					<table>
+						<thead>
+							<tr>
+								<th>After game</th>
+								<th>Selected</th>
+								<th>Depth leader</th>
+								<th>Score A</th>
+								<th>Score B</th>
+								<th>Performance A</th>
+								<th>Performance B</th>
+								<th>Continuity A</th>
+								<th>Continuity B</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>0</td>
+								<td>Starter</td>
+								<td>Starter</td>
+								<td>67.85</td>
+								<td>65.08</td>
+								<td>0.00</td>
+								<td>0.00</td>
+								<td>2.77</td>
+								<td>0.00</td>
+							</tr>
+							<tr>
+								<td>1</td>
+								<td>Starter</td>
+								<td>Starter</td>
+								<td>69.17</td>
+								<td>65.44</td>
+								<td>1.03</td>
+								<td>0.36</td>
+								<td>3.06</td>
+								<td>0.00</td>
+							</tr>
+							<tr>
+								<td>2</td>
+								<td>Starter</td>
+								<td>Starter</td>
+								<td>69.96</td>
+								<td>65.78</td>
+								<td>1.66</td>
+								<td>0.71</td>
+								<td>3.23</td>
+								<td>0.00</td>
+							</tr>
+							<tr>
+								<td>3</td>
+								<td>Starter</td>
+								<td>Starter</td>
+								<td>70.54</td>
+								<td>65.78</td>
+								<td>2.11</td>
+								<td>0.71</td>
+								<td>3.36</td>
+								<td>0.00</td>
+							</tr>
+							<tr>
+								<td>4</td>
+								<td>Starter</td>
+								<td>Starter</td>
+								<td>70.99</td>
+								<td>65.78</td>
+								<td>2.46</td>
+								<td>0.71</td>
+								<td>3.46</td>
+								<td>0.00</td>
+							</tr>
+							<tr>
+								<td>5</td>
+								<td>Starter</td>
+								<td>Starter</td>
+								<td>71.35</td>
+								<td>65.78</td>
+								<td>2.74</td>
+								<td>0.71</td>
+								<td>3.54</td>
+								<td>0.00</td>
+							</tr>
+							<tr>
+								<td>6</td>
+								<td>Starter</td>
+								<td>Starter</td>
+								<td>71.65</td>
+								<td>65.78</td>
+								<td>2.97</td>
+								<td>0.71</td>
+								<td>3.60</td>
+								<td>0.00</td>
+							</tr>
+							<tr>
+								<td>7</td>
+								<td>Starter</td>
+								<td>Starter</td>
+								<td>71.89</td>
+								<td>65.78</td>
+								<td>3.17</td>
+								<td>0.71</td>
+								<td>3.65</td>
+								<td>0.00</td>
+							</tr>
+							<tr>
+								<td>8</td>
+								<td>Starter</td>
+								<td>Starter</td>
+								<td>72.10</td>
+								<td>65.78</td>
+								<td>3.33</td>
+								<td>0.71</td>
+								<td>3.70</td>
+								<td>0.00</td>
+							</tr>
+							<tr>
+								<td>9</td>
+								<td>Starter</td>
+								<td>Starter</td>
+								<td>72.26</td>
+								<td>65.78</td>
+								<td>3.45</td>
+								<td>0.71</td>
+								<td>3.73</td>
+								<td>0.00</td>
+							</tr>
+							<tr>
+								<td>10</td>
+								<td>Starter</td>
+								<td>Starter</td>
+								<td>72.40</td>
+								<td>65.78</td>
+								<td>3.56</td>
+								<td>0.71</td>
+								<td>3.76</td>
+								<td>0.00</td>
+							</tr>
+							<tr>
+								<td>11</td>
+								<td>Starter</td>
+								<td>Starter</td>
+								<td>72.51</td>
+								<td>65.78</td>
+								<td>3.65</td>
+								<td>0.71</td>
+								<td>3.79</td>
+								<td>0.00</td>
+							</tr>
+							<tr>
+								<td>12</td>
+								<td>Starter</td>
+								<td>Starter</td>
+								<td>72.61</td>
+								<td>65.78</td>
+								<td>3.73</td>
+								<td>0.71</td>
+								<td>3.81</td>
+								<td>0.00</td>
+							</tr>
+							<tr>
+								<td>13</td>
+								<td>Starter</td>
+								<td>Starter</td>
+								<td>72.69</td>
+								<td>65.78</td>
+								<td>3.79</td>
+								<td>0.71</td>
+								<td>3.83</td>
+								<td>0.00</td>
+							</tr>
+							<tr>
+								<td>14</td>
+								<td>Starter</td>
+								<td>Starter</td>
+								<td>72.76</td>
+								<td>65.78</td>
+								<td>3.84</td>
+								<td>0.71</td>
+								<td>3.84</td>
+								<td>0.00</td>
+							</tr>
+							<tr>
+								<td>15</td>
+								<td>Starter</td>
+								<td>Starter</td>
+								<td>72.82</td>
+								<td>65.78</td>
+								<td>3.89</td>
+								<td>0.71</td>
+								<td>3.85</td>
+								<td>0.00</td>
+							</tr>
+							<tr>
+								<td>16</td>
+								<td>Starter</td>
+								<td>Starter</td>
+								<td>72.87</td>
+								<td>65.78</td>
+								<td>3.93</td>
+								<td>0.71</td>
+								<td>3.87</td>
+								<td>0.00</td>
+							</tr>
+							<tr>
+								<td>17</td>
+								<td>Starter</td>
+								<td>Starter</td>
+								<td>72.91</td>
+								<td>65.78</td>
+								<td>3.96</td>
+								<td>0.71</td>
+								<td>3.87</td>
+								<td>0.00</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</details>
+			<details>
+				<summary>
+					proven-slump — Veteran initially; Reserve after game 7
+				</summary>
+				<p>
+					67-rated veteran with a good prior season and $30m contract repeatedly
+					plays poorly; 64-rated reserve plays steady football if promoted.
+				</p>
+				<div class="table-wrap">
+					<table>
+						<thead>
+							<tr>
+								<th>Player</th>
+								<th>Ability</th>
+								<th>Potential</th>
+								<th>Age</th>
+								<th>Annual salary</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>Veteran</td>
+								<td>67</td>
+								<td>67</td>
+								<td>28</td>
+								<td>$30.0m</td>
+							</tr>
+							<tr>
+								<td>Reserve</td>
+								<td>64</td>
+								<td>64</td>
+								<td>28</td>
+								<td>$0.5m</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<svg
+					viewBox="0 0 600 240"
+					role="img"
+					aria-label="proven-slump: weekly Starter Scores. Exact values are in the following table."
+				>
+					<rect x="65" y="35" width="500" height="155" class="frame" />
+					<text x="56" y="194" text-anchor="end">55.0</text>
+					<text x="56" y="155.25" text-anchor="end">63.8</text>
+					<text x="56" y="116.5" text-anchor="end">72.5</text>
+					<text x="56" y="77.75" text-anchor="end">81.3</text>
+					<text x="56" y="39" text-anchor="end">90.0</text>
+					<text x="65" y="208" text-anchor="middle">0</text>
+					<text x="182.6470588235294" y="208" text-anchor="middle">4</text>
+					<text x="300.2941176470588" y="208" text-anchor="middle">8</text>
+					<text x="417.94117647058823" y="208" text-anchor="middle">12</text>
+					<text x="535.5882352941176" y="208" text-anchor="middle">16</text>
+					<text x="315" y="233" text-anchor="middle">
+						Games completed · decision for the next game
+					</text>
+					<text
+						x="18"
+						y="118"
+						transform="rotate(-90 18 118)"
+						text-anchor="middle"
+					>
+						Starter Score
+					</text>
+					<polyline
+						class="series s0"
+						points="65,63.00628571428571 94.41176470588235,97.96542857142857 123.8235294117647,117.78771428571429 153.23529411764707,128.89457142857142 182.6470588235294,136.95899999999997 212.05882352941177,143.1412857142857 241.47058823529412,148.03485714285716 270.88235294117646,151.98514285714285 300.2941176470588,164.2744285714286 329.70588235294116,164.2744285714286 359.11764705882354,164.2744285714286 388.5294117647059,164.2744285714286 417.94117647058823,164.2744285714286 447.35294117647055,164.2744285714286 476.7647058823529,164.2744285714286 506.1764705882353,164.2744285714286 535.5882352941176,164.2744285714286 565,164.2744285714286"
+					/>
+					<text x="65" y="20" class="label0">Veteran</text>
+					<circle class="dot s0" cx="65" cy="63.00628571428571" r="3.5" />
+					<circle
+						class="dot s0"
+						cx="94.41176470588235"
+						cy="97.96542857142857"
+						r="3.5"
+					/>
+					<circle
+						class="dot s0"
+						cx="123.8235294117647"
+						cy="117.78771428571429"
+						r="3.5"
+					/>
+					<circle
+						class="dot s0"
+						cx="153.23529411764707"
+						cy="128.89457142857142"
+						r="3.5"
+					/>
+					<circle
+						class="dot s0"
+						cx="182.6470588235294"
+						cy="136.95899999999997"
+						r="3.5"
+					/>
+					<circle
+						class="dot s0"
+						cx="212.05882352941177"
+						cy="143.1412857142857"
+						r="3.5"
+					/>
+					<circle
+						class="dot s0"
+						cx="241.47058823529412"
+						cy="148.03485714285716"
+						r="3.5"
+					/>
+					<polyline
+						class="series s1"
+						points="65,149.81071428571428 94.41176470588235,149.81071428571428 123.8235294117647,149.81071428571428 153.23529411764707,149.81071428571428 182.6470588235294,149.81071428571428 212.05882352941177,149.81071428571428 241.47058823529412,149.81071428571428 270.88235294117646,149.81071428571428 300.2941176470588,131.68014285714287 329.70588235294116,128.15942857142858 359.11764705882354,125.60414285714288 388.5294117647059,123.61128571428571 417.94117647058823,122.00814285714289 447.35294117647055,120.69285714285712 476.7647058823529,119.60785714285716 506.1764705882353,118.70885714285716 535.5882352941176,117.97814285714284 565,117.37142857142854"
+					/>
+					<text x="325" y="20" class="label1">Reserve</text>
+					<circle
+						class="dot s1"
+						cx="270.88235294117646"
+						cy="149.81071428571428"
+						r="3.5"
+					/>
+					<circle
+						class="dot s1"
+						cx="300.2941176470588"
+						cy="131.68014285714287"
+						r="3.5"
+					/>
+					<circle
+						class="dot s1"
+						cx="329.70588235294116"
+						cy="128.15942857142858"
+						r="3.5"
+					/>
+					<circle
+						class="dot s1"
+						cx="359.11764705882354"
+						cy="125.60414285714288"
+						r="3.5"
+					/>
+					<circle
+						class="dot s1"
+						cx="388.5294117647059"
+						cy="123.61128571428571"
+						r="3.5"
+					/>
+					<circle
+						class="dot s1"
+						cx="417.94117647058823"
+						cy="122.00814285714289"
+						r="3.5"
+					/>
+					<circle
+						class="dot s1"
+						cx="447.35294117647055"
+						cy="120.69285714285712"
+						r="3.5"
+					/>
+					<circle
+						class="dot s1"
+						cx="476.7647058823529"
+						cy="119.60785714285716"
+						r="3.5"
+					/>
+					<circle
+						class="dot s1"
+						cx="506.1764705882353"
+						cy="118.70885714285716"
+						r="3.5"
+					/>
+					<circle
+						class="dot s1"
+						cx="535.5882352941176"
+						cy="117.97814285714284"
+						r="3.5"
+					/>
+					<circle class="dot s1" cx="565" cy="117.37142857142854" r="3.5" />
+				</svg>
+				<p>
+					Dots identify the available player selected for the next game. Injury
+					replacements can differ from the depth-chart leader. Scores are
+					evaluated before applying that row’s new depth order; the next
+					evaluation reflects the new incumbent.
+				</p>
+				<div class="table-wrap">
+					<table>
+						<thead>
+							<tr>
+								<th>After game</th>
+								<th>Selected</th>
+								<th>Depth leader</th>
+								<th>Score A</th>
+								<th>Score B</th>
+								<th>Performance A</th>
+								<th>Performance B</th>
+								<th>Continuity A</th>
+								<th>Continuity B</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>0</td>
+								<td>Veteran</td>
+								<td>Veteran</td>
+								<td>83.68</td>
+								<td>64.08</td>
+								<td>9.51</td>
+								<td>0.00</td>
+								<td>4.16</td>
+								<td>0.00</td>
+							</tr>
+							<tr>
+								<td>1</td>
+								<td>Veteran</td>
+								<td>Veteran</td>
+								<td>75.78</td>
+								<td>64.08</td>
+								<td>2.35</td>
+								<td>0.00</td>
+								<td>3.43</td>
+								<td>0.00</td>
+							</tr>
+							<tr>
+								<td>2</td>
+								<td>Veteran</td>
+								<td>Veteran</td>
+								<td>71.31</td>
+								<td>64.08</td>
+								<td>-1.47</td>
+								<td>0.00</td>
+								<td>2.77</td>
+								<td>0.00</td>
+							</tr>
+							<tr>
+								<td>3</td>
+								<td>Veteran</td>
+								<td>Veteran</td>
+								<td>68.80</td>
+								<td>64.08</td>
+								<td>-3.98</td>
+								<td>0.00</td>
+								<td>2.77</td>
+								<td>0.00</td>
+							</tr>
+							<tr>
+								<td>4</td>
+								<td>Veteran</td>
+								<td>Veteran</td>
+								<td>66.98</td>
+								<td>64.08</td>
+								<td>-5.80</td>
+								<td>0.00</td>
+								<td>2.77</td>
+								<td>0.00</td>
+							</tr>
+							<tr>
+								<td>5</td>
+								<td>Veteran</td>
+								<td>Veteran</td>
+								<td>65.58</td>
+								<td>64.08</td>
+								<td>-7.19</td>
+								<td>0.00</td>
+								<td>2.77</td>
+								<td>0.00</td>
+							</tr>
+							<tr>
+								<td>6</td>
+								<td>Veteran</td>
+								<td>Veteran</td>
+								<td>64.48</td>
+								<td>64.08</td>
+								<td>-8.30</td>
+								<td>0.00</td>
+								<td>2.77</td>
+								<td>0.00</td>
+							</tr>
+							<tr>
+								<td>7</td>
+								<td>Reserve</td>
+								<td>Reserve</td>
+								<td>63.58</td>
+								<td>64.08</td>
+								<td>-9.19</td>
+								<td>0.00</td>
+								<td>2.77</td>
+								<td>0.00</td>
+							</tr>
+							<tr>
+								<td>8</td>
+								<td>Reserve</td>
+								<td>Reserve</td>
+								<td>60.81</td>
+								<td>68.17</td>
+								<td>-9.19</td>
+								<td>1.03</td>
+								<td>0.00</td>
+								<td>3.06</td>
+							</tr>
+							<tr>
+								<td>9</td>
+								<td>Reserve</td>
+								<td>Reserve</td>
+								<td>60.81</td>
+								<td>68.96</td>
+								<td>-9.19</td>
+								<td>1.66</td>
+								<td>0.00</td>
+								<td>3.23</td>
+							</tr>
+							<tr>
+								<td>10</td>
+								<td>Reserve</td>
+								<td>Reserve</td>
+								<td>60.81</td>
+								<td>69.54</td>
+								<td>-9.19</td>
+								<td>2.11</td>
+								<td>0.00</td>
+								<td>3.36</td>
+							</tr>
+							<tr>
+								<td>11</td>
+								<td>Reserve</td>
+								<td>Reserve</td>
+								<td>60.81</td>
+								<td>69.99</td>
+								<td>-9.19</td>
+								<td>2.46</td>
+								<td>0.00</td>
+								<td>3.46</td>
+							</tr>
+							<tr>
+								<td>12</td>
+								<td>Reserve</td>
+								<td>Reserve</td>
+								<td>60.81</td>
+								<td>70.35</td>
+								<td>-9.19</td>
+								<td>2.74</td>
+								<td>0.00</td>
+								<td>3.54</td>
+							</tr>
+							<tr>
+								<td>13</td>
+								<td>Reserve</td>
+								<td>Reserve</td>
+								<td>60.81</td>
+								<td>70.65</td>
+								<td>-9.19</td>
+								<td>2.97</td>
+								<td>0.00</td>
+								<td>3.60</td>
+							</tr>
+							<tr>
+								<td>14</td>
+								<td>Reserve</td>
+								<td>Reserve</td>
+								<td>60.81</td>
+								<td>70.89</td>
+								<td>-9.19</td>
+								<td>3.17</td>
+								<td>0.00</td>
+								<td>3.65</td>
+							</tr>
+							<tr>
+								<td>15</td>
+								<td>Reserve</td>
+								<td>Reserve</td>
+								<td>60.81</td>
+								<td>71.10</td>
+								<td>-9.19</td>
+								<td>3.33</td>
+								<td>0.00</td>
+								<td>3.70</td>
+							</tr>
+							<tr>
+								<td>16</td>
+								<td>Reserve</td>
+								<td>Reserve</td>
+								<td>60.81</td>
+								<td>71.26</td>
+								<td>-9.19</td>
+								<td>3.45</td>
+								<td>0.00</td>
+								<td>3.73</td>
+							</tr>
+							<tr>
+								<td>17</td>
+								<td>Reserve</td>
+								<td>Reserve</td>
+								<td>60.81</td>
+								<td>71.40</td>
+								<td>-9.19</td>
+								<td>3.56</td>
+								<td>0.00</td>
+								<td>3.76</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</details>
+			<details>
+				<summary>
+					two-bad-games — Veteran initially; no changes in 17 games
+				</summary>
+				<p>
+					Same veteran: two poor games, then good play. Reserve only plays if
+					promoted.
+				</p>
+				<div class="table-wrap">
+					<table>
+						<thead>
+							<tr>
+								<th>Player</th>
+								<th>Ability</th>
+								<th>Potential</th>
+								<th>Age</th>
+								<th>Annual salary</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>Veteran</td>
+								<td>67</td>
+								<td>67</td>
+								<td>28</td>
+								<td>$30.0m</td>
+							</tr>
+							<tr>
+								<td>Reserve</td>
+								<td>64</td>
+								<td>64</td>
+								<td>28</td>
+								<td>$0.5m</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<svg
+					viewBox="0 0 600 240"
+					role="img"
+					aria-label="two-bad-games: weekly Starter Scores. Exact values are in the following table."
+				>
+					<rect x="65" y="35" width="500" height="155" class="frame" />
+					<text x="56" y="194" text-anchor="end">60.0</text>
+					<text x="56" y="155.25" text-anchor="end">67.5</text>
+					<text x="56" y="116.5" text-anchor="end">75.0</text>
+					<text x="56" y="77.75" text-anchor="end">82.5</text>
+					<text x="56" y="39" text-anchor="end">90.0</text>
+					<text x="65" y="208" text-anchor="middle">0</text>
+					<text x="182.6470588235294" y="208" text-anchor="middle">4</text>
+					<text x="300.2941176470588" y="208" text-anchor="middle">8</text>
+					<text x="417.94117647058823" y="208" text-anchor="middle">12</text>
+					<text x="535.5882352941176" y="208" text-anchor="middle">16</text>
+					<text x="315" y="233" text-anchor="middle">
+						Games completed · decision for the next game
+					</text>
+					<text
+						x="18"
+						y="118"
+						transform="rotate(-90 18 118)"
+						text-anchor="middle"
+					>
+						Starter Score
+					</text>
+					<polyline
+						class="series s0"
+						points="65,67.67399999999999 94.41176470588235,108.45966666666668 123.8235294117647,131.58566666666667 153.23529411764707,119.06166666666665 182.6470588235294,105.97966666666666 212.05882352941177,95.02633333333331 241.47058823529412,86.96116666666667 270.88235294117646,80.93166666666667 300.2941176470588,75.86833333333333 329.70588235294116,71.7143333333333 359.11764705882354,68.2526666666667 388.5294117647059,65.35933333333337 417.94117647058823,62.925833333333344 447.35294117647055,60.869500000000016 476.7647058823529,59.12833333333333 506.1764705882353,57.64033333333336 535.5882352941176,56.369333333333316 565,55.27400000000003"
+					/>
+					<text x="65" y="20" class="label0">Veteran</text>
+					<circle class="dot s0" cx="65" cy="67.67399999999999" r="3.5" />
+					<circle
+						class="dot s0"
+						cx="94.41176470588235"
+						cy="108.45966666666668"
+						r="3.5"
+					/>
+					<circle
+						class="dot s0"
+						cx="123.8235294117647"
+						cy="131.58566666666667"
+						r="3.5"
+					/>
+					<circle
+						class="dot s0"
+						cx="153.23529411764707"
+						cy="119.06166666666665"
+						r="3.5"
+					/>
+					<circle
+						class="dot s0"
+						cx="182.6470588235294"
+						cy="105.97966666666666"
+						r="3.5"
+					/>
+					<circle
+						class="dot s0"
+						cx="212.05882352941177"
+						cy="95.02633333333331"
+						r="3.5"
+					/>
+					<circle
+						class="dot s0"
+						cx="241.47058823529412"
+						cy="86.96116666666667"
+						r="3.5"
+					/>
+					<circle
+						class="dot s0"
+						cx="270.88235294117646"
+						cy="80.93166666666667"
+						r="3.5"
+					/>
+					<circle
+						class="dot s0"
+						cx="300.2941176470588"
+						cy="75.86833333333333"
+						r="3.5"
+					/>
+					<circle
+						class="dot s0"
+						cx="329.70588235294116"
+						cy="71.7143333333333"
+						r="3.5"
+					/>
+					<circle
+						class="dot s0"
+						cx="359.11764705882354"
+						cy="68.2526666666667"
+						r="3.5"
+					/>
+					<circle
+						class="dot s0"
+						cx="388.5294117647059"
+						cy="65.35933333333337"
+						r="3.5"
+					/>
+					<circle
+						class="dot s0"
+						cx="417.94117647058823"
+						cy="62.925833333333344"
+						r="3.5"
+					/>
+					<circle
+						class="dot s0"
+						cx="447.35294117647055"
+						cy="60.869500000000016"
+						r="3.5"
+					/>
+					<circle
+						class="dot s0"
+						cx="476.7647058823529"
+						cy="59.12833333333333"
+						r="3.5"
+					/>
+					<circle
+						class="dot s0"
+						cx="506.1764705882353"
+						cy="57.64033333333336"
+						r="3.5"
+					/>
+					<circle
+						class="dot s0"
+						cx="535.5882352941176"
+						cy="56.369333333333316"
+						r="3.5"
+					/>
+					<circle class="dot s0" cx="565" cy="55.27400000000003" r="3.5" />
+					<polyline
+						class="series s1"
+						points="65,168.94583333333333 94.41176470588235,168.94583333333333 123.8235294117647,168.94583333333333 153.23529411764707,168.94583333333333 182.6470588235294,168.94583333333333 212.05882352941177,168.94583333333333 241.47058823529412,168.94583333333333 270.88235294117646,168.94583333333333 300.2941176470588,168.94583333333333 329.70588235294116,168.94583333333333 359.11764705882354,168.94583333333333 388.5294117647059,168.94583333333333 417.94117647058823,168.94583333333333 447.35294117647055,168.94583333333333 476.7647058823529,168.94583333333333 506.1764705882353,168.94583333333333 535.5882352941176,168.94583333333333 565,168.94583333333333"
+					/>
+					<text x="325" y="20" class="label1">Reserve</text>
+				</svg>
+				<p>
+					Dots identify the available player selected for the next game. Injury
+					replacements can differ from the depth-chart leader. Scores are
+					evaluated before applying that row’s new depth order; the next
+					evaluation reflects the new incumbent.
+				</p>
+				<div class="table-wrap">
+					<table>
+						<thead>
+							<tr>
+								<th>After game</th>
+								<th>Selected</th>
+								<th>Depth leader</th>
+								<th>Score A</th>
+								<th>Score B</th>
+								<th>Performance A</th>
+								<th>Performance B</th>
+								<th>Continuity A</th>
+								<th>Continuity B</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>0</td>
+								<td>Veteran</td>
+								<td>Veteran</td>
+								<td>83.68</td>
+								<td>64.08</td>
+								<td>9.51</td>
+								<td>0.00</td>
+								<td>4.16</td>
+								<td>0.00</td>
+							</tr>
+							<tr>
+								<td>1</td>
+								<td>Veteran</td>
+								<td>Veteran</td>
+								<td>75.78</td>
+								<td>64.08</td>
+								<td>2.35</td>
+								<td>0.00</td>
+								<td>3.43</td>
+								<td>0.00</td>
+							</tr>
+							<tr>
+								<td>2</td>
+								<td>Veteran</td>
+								<td>Veteran</td>
+								<td>71.31</td>
+								<td>64.08</td>
+								<td>-1.47</td>
+								<td>0.00</td>
+								<td>2.77</td>
+								<td>0.00</td>
+							</tr>
+							<tr>
+								<td>3</td>
+								<td>Veteran</td>
+								<td>Veteran</td>
+								<td>73.73</td>
+								<td>64.08</td>
+								<td>0.75</td>
+								<td>0.00</td>
+								<td>2.98</td>
+								<td>0.00</td>
+							</tr>
+							<tr>
+								<td>4</td>
+								<td>Veteran</td>
+								<td>Veteran</td>
+								<td>76.26</td>
+								<td>64.08</td>
+								<td>2.73</td>
+								<td>0.00</td>
+								<td>3.53</td>
+								<td>0.00</td>
+							</tr>
+							<tr>
+								<td>5</td>
+								<td>Veteran</td>
+								<td>Veteran</td>
+								<td>78.38</td>
+								<td>64.08</td>
+								<td>4.39</td>
+								<td>0.00</td>
+								<td>3.99</td>
+								<td>0.00</td>
+							</tr>
+							<tr>
+								<td>6</td>
+								<td>Veteran</td>
+								<td>Veteran</td>
+								<td>79.94</td>
+								<td>64.08</td>
+								<td>5.78</td>
+								<td>0.00</td>
+								<td>4.16</td>
+								<td>0.00</td>
+							</tr>
+							<tr>
+								<td>7</td>
+								<td>Veteran</td>
+								<td>Veteran</td>
+								<td>81.11</td>
+								<td>64.08</td>
+								<td>6.95</td>
+								<td>0.00</td>
+								<td>4.16</td>
+								<td>0.00</td>
+							</tr>
+							<tr>
+								<td>8</td>
+								<td>Veteran</td>
+								<td>Veteran</td>
+								<td>82.09</td>
+								<td>64.08</td>
+								<td>7.93</td>
+								<td>0.00</td>
+								<td>4.16</td>
+								<td>0.00</td>
+							</tr>
+							<tr>
+								<td>9</td>
+								<td>Veteran</td>
+								<td>Veteran</td>
+								<td>82.89</td>
+								<td>64.08</td>
+								<td>8.73</td>
+								<td>0.00</td>
+								<td>4.16</td>
+								<td>0.00</td>
+							</tr>
+							<tr>
+								<td>10</td>
+								<td>Veteran</td>
+								<td>Veteran</td>
+								<td>83.56</td>
+								<td>64.08</td>
+								<td>9.40</td>
+								<td>0.00</td>
+								<td>4.16</td>
+								<td>0.00</td>
+							</tr>
+							<tr>
+								<td>11</td>
+								<td>Veteran</td>
+								<td>Veteran</td>
+								<td>84.12</td>
+								<td>64.08</td>
+								<td>9.96</td>
+								<td>0.00</td>
+								<td>4.16</td>
+								<td>0.00</td>
+							</tr>
+							<tr>
+								<td>12</td>
+								<td>Veteran</td>
+								<td>Veteran</td>
+								<td>84.59</td>
+								<td>64.08</td>
+								<td>10.43</td>
+								<td>0.00</td>
+								<td>4.16</td>
+								<td>0.00</td>
+							</tr>
+							<tr>
+								<td>13</td>
+								<td>Veteran</td>
+								<td>Veteran</td>
+								<td>84.99</td>
+								<td>64.08</td>
+								<td>10.83</td>
+								<td>0.00</td>
+								<td>4.16</td>
+								<td>0.00</td>
+							</tr>
+							<tr>
+								<td>14</td>
+								<td>Veteran</td>
+								<td>Veteran</td>
+								<td>85.33</td>
+								<td>64.08</td>
+								<td>11.17</td>
+								<td>0.00</td>
+								<td>4.16</td>
+								<td>0.00</td>
+							</tr>
+							<tr>
+								<td>15</td>
+								<td>Veteran</td>
+								<td>Veteran</td>
+								<td>85.62</td>
+								<td>64.08</td>
+								<td>11.46</td>
+								<td>0.00</td>
+								<td>4.16</td>
+								<td>0.00</td>
+							</tr>
+							<tr>
+								<td>16</td>
+								<td>Veteran</td>
+								<td>Veteran</td>
+								<td>85.86</td>
+								<td>64.08</td>
+								<td>11.70</td>
+								<td>0.00</td>
+								<td>4.16</td>
+								<td>0.00</td>
+							</tr>
+							<tr>
+								<td>17</td>
+								<td>Veteran</td>
+								<td>Veteran</td>
+								<td>86.08</td>
+								<td>64.08</td>
+								<td>11.91</td>
+								<td>0.00</td>
+								<td>4.16</td>
+								<td>0.00</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</details>
+			<details>
+				<summary>
+					unproven-slump — Unproven initially; Reserve after game 3
+				</summary>
+				<p>
+					67-rated incumbent without prior results or a large contract; 64-rated
+					reserve available. Incumbent plays poorly repeatedly.
+				</p>
+				<div class="table-wrap">
+					<table>
+						<thead>
+							<tr>
+								<th>Player</th>
+								<th>Ability</th>
+								<th>Potential</th>
+								<th>Age</th>
+								<th>Annual salary</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>Unproven</td>
+								<td>67</td>
+								<td>67</td>
+								<td>28</td>
+								<td>$0.5m</td>
+							</tr>
+							<tr>
+								<td>Reserve</td>
+								<td>64</td>
+								<td>64</td>
+								<td>28</td>
+								<td>$0.5m</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<svg
+					viewBox="0 0 600 240"
+					role="img"
+					aria-label="unproven-slump: weekly Starter Scores. Exact values are in the following table."
+				>
+					<rect x="65" y="35" width="500" height="155" class="frame" />
+					<text x="56" y="194" text-anchor="end">55.0</text>
+					<text x="56" y="155.25" text-anchor="end">60.0</text>
+					<text x="56" y="116.5" text-anchor="end">65.0</text>
+					<text x="56" y="77.75" text-anchor="end">70.0</text>
+					<text x="56" y="39" text-anchor="end">75.0</text>
+					<text x="65" y="208" text-anchor="middle">0</text>
+					<text x="182.6470588235294" y="208" text-anchor="middle">4</text>
+					<text x="300.2941176470588" y="208" text-anchor="middle">8</text>
+					<text x="417.94117647058823" y="208" text-anchor="middle">12</text>
+					<text x="535.5882352941176" y="208" text-anchor="middle">16</text>
+					<text x="315" y="233" text-anchor="middle">
+						Games completed · decision for the next game
+					</text>
+					<text
+						x="18"
+						y="118"
+						transform="rotate(-90 18 118)"
+						text-anchor="middle"
+					>
+						Starter Score
+					</text>
+					<polyline
+						class="series s0"
+						points="65,74.91250000000005 94.41176470588235,101.46399999999994 123.8235294117647,117.89399999999998 153.23529411764707,129.9375 182.6470588235294,151.44375 212.05882352941177,151.44375 241.47058823529412,151.44375 270.88235294117646,151.44375 300.2941176470588,151.44375 329.70588235294116,151.44375 359.11764705882354,151.44375 388.5294117647059,151.44375 417.94117647058823,151.44375 447.35294117647055,151.44375 476.7647058823529,151.44375 506.1764705882353,151.44375 535.5882352941176,151.44375 565,151.44375"
+					/>
+					<text x="65" y="20" class="label0">Unproven</text>
+					<circle class="dot s0" cx="65" cy="74.91250000000005" r="3.5" />
+					<circle
+						class="dot s0"
+						cx="94.41176470588235"
+						cy="101.46399999999994"
+						r="3.5"
+					/>
+					<circle
+						class="dot s0"
+						cx="123.8235294117647"
+						cy="117.89399999999998"
+						r="3.5"
+					/>
+					<polyline
+						class="series s1"
+						points="65,119.66874999999997 94.41176470588235,119.66874999999997 123.8235294117647,119.66874999999997 153.23529411764707,119.66874999999997 182.6470588235294,87.94025000000002 212.05882352941177,81.77900000000001 241.47058823529412,77.30725000000002 270.88235294117646,73.81975000000001 300.2941176470588,71.01425000000005 329.70588235294116,68.71249999999995 359.11764705882354,66.81375000000003 388.5294117647059,65.24050000000001 417.94117647058823,63.96174999999997 447.35294117647055,62.89999999999995 476.7647058823529,62.016500000000036 506.1764705882353,61.27250000000001 535.5882352941176,60.64474999999999 565,60.11775"
+					/>
+					<text x="325" y="20" class="label1">Reserve</text>
+					<circle
+						class="dot s1"
+						cx="153.23529411764707"
+						cy="119.66874999999997"
+						r="3.5"
+					/>
+					<circle
+						class="dot s1"
+						cx="182.6470588235294"
+						cy="87.94025000000002"
+						r="3.5"
+					/>
+					<circle
+						class="dot s1"
+						cx="212.05882352941177"
+						cy="81.77900000000001"
+						r="3.5"
+					/>
+					<circle
+						class="dot s1"
+						cx="241.47058823529412"
+						cy="77.30725000000002"
+						r="3.5"
+					/>
+					<circle
+						class="dot s1"
+						cx="270.88235294117646"
+						cy="73.81975000000001"
+						r="3.5"
+					/>
+					<circle
+						class="dot s1"
+						cx="300.2941176470588"
+						cy="71.01425000000005"
+						r="3.5"
+					/>
+					<circle
+						class="dot s1"
+						cx="329.70588235294116"
+						cy="68.71249999999995"
+						r="3.5"
+					/>
+					<circle
+						class="dot s1"
+						cx="359.11764705882354"
+						cy="66.81375000000003"
+						r="3.5"
+					/>
+					<circle
+						class="dot s1"
+						cx="388.5294117647059"
+						cy="65.24050000000001"
+						r="3.5"
+					/>
+					<circle
+						class="dot s1"
+						cx="417.94117647058823"
+						cy="63.96174999999997"
+						r="3.5"
+					/>
+					<circle
+						class="dot s1"
+						cx="447.35294117647055"
+						cy="62.89999999999995"
+						r="3.5"
+					/>
+					<circle
+						class="dot s1"
+						cx="476.7647058823529"
+						cy="62.016500000000036"
+						r="3.5"
+					/>
+					<circle
+						class="dot s1"
+						cx="506.1764705882353"
+						cy="61.27250000000001"
+						r="3.5"
+					/>
+					<circle
+						class="dot s1"
+						cx="535.5882352941176"
+						cy="60.64474999999999"
+						r="3.5"
+					/>
+					<circle class="dot s1" cx="565" cy="60.11775" r="3.5" />
+				</svg>
+				<p>
+					Dots identify the available player selected for the next game. Injury
+					replacements can differ from the depth-chart leader. Scores are
+					evaluated before applying that row’s new depth order; the next
+					evaluation reflects the new incumbent.
+				</p>
+				<div class="table-wrap">
+					<table>
+						<thead>
+							<tr>
+								<th>After game</th>
+								<th>Selected</th>
+								<th>Depth leader</th>
+								<th>Score A</th>
+								<th>Score B</th>
+								<th>Performance A</th>
+								<th>Performance B</th>
+								<th>Continuity A</th>
+								<th>Continuity B</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>0</td>
+								<td>Unproven</td>
+								<td>Unproven</td>
+								<td>69.85</td>
+								<td>64.08</td>
+								<td>0.00</td>
+								<td>0.00</td>
+								<td>2.77</td>
+								<td>0.00</td>
+							</tr>
+							<tr>
+								<td>1</td>
+								<td>Unproven</td>
+								<td>Unproven</td>
+								<td>66.42</td>
+								<td>64.08</td>
+								<td>-3.43</td>
+								<td>0.00</td>
+								<td>2.77</td>
+								<td>0.00</td>
+							</tr>
+							<tr>
+								<td>2</td>
+								<td>Unproven</td>
+								<td>Unproven</td>
+								<td>64.30</td>
+								<td>64.08</td>
+								<td>-5.55</td>
+								<td>0.00</td>
+								<td>2.77</td>
+								<td>0.00</td>
+							</tr>
+							<tr>
+								<td>3</td>
+								<td>Reserve</td>
+								<td>Reserve</td>
+								<td>62.75</td>
+								<td>64.08</td>
+								<td>-7.10</td>
+								<td>0.00</td>
+								<td>2.77</td>
+								<td>0.00</td>
+							</tr>
+							<tr>
+								<td>4</td>
+								<td>Reserve</td>
+								<td>Reserve</td>
+								<td>59.98</td>
+								<td>68.17</td>
+								<td>-7.10</td>
+								<td>1.03</td>
+								<td>0.00</td>
+								<td>3.06</td>
+							</tr>
+							<tr>
+								<td>5</td>
+								<td>Reserve</td>
+								<td>Reserve</td>
+								<td>59.98</td>
+								<td>68.96</td>
+								<td>-7.10</td>
+								<td>1.66</td>
+								<td>0.00</td>
+								<td>3.23</td>
+							</tr>
+							<tr>
+								<td>6</td>
+								<td>Reserve</td>
+								<td>Reserve</td>
+								<td>59.98</td>
+								<td>69.54</td>
+								<td>-7.10</td>
+								<td>2.11</td>
+								<td>0.00</td>
+								<td>3.36</td>
+							</tr>
+							<tr>
+								<td>7</td>
+								<td>Reserve</td>
+								<td>Reserve</td>
+								<td>59.98</td>
+								<td>69.99</td>
+								<td>-7.10</td>
+								<td>2.46</td>
+								<td>0.00</td>
+								<td>3.46</td>
+							</tr>
+							<tr>
+								<td>8</td>
+								<td>Reserve</td>
+								<td>Reserve</td>
+								<td>59.98</td>
+								<td>70.35</td>
+								<td>-7.10</td>
+								<td>2.74</td>
+								<td>0.00</td>
+								<td>3.54</td>
+							</tr>
+							<tr>
+								<td>9</td>
+								<td>Reserve</td>
+								<td>Reserve</td>
+								<td>59.98</td>
+								<td>70.65</td>
+								<td>-7.10</td>
+								<td>2.97</td>
+								<td>0.00</td>
+								<td>3.60</td>
+							</tr>
+							<tr>
+								<td>10</td>
+								<td>Reserve</td>
+								<td>Reserve</td>
+								<td>59.98</td>
+								<td>70.89</td>
+								<td>-7.10</td>
+								<td>3.17</td>
+								<td>0.00</td>
+								<td>3.65</td>
+							</tr>
+							<tr>
+								<td>11</td>
+								<td>Reserve</td>
+								<td>Reserve</td>
+								<td>59.98</td>
+								<td>71.10</td>
+								<td>-7.10</td>
+								<td>3.33</td>
+								<td>0.00</td>
+								<td>3.70</td>
+							</tr>
+							<tr>
+								<td>12</td>
+								<td>Reserve</td>
+								<td>Reserve</td>
+								<td>59.98</td>
+								<td>71.26</td>
+								<td>-7.10</td>
+								<td>3.45</td>
+								<td>0.00</td>
+								<td>3.73</td>
+							</tr>
+							<tr>
+								<td>13</td>
+								<td>Reserve</td>
+								<td>Reserve</td>
+								<td>59.98</td>
+								<td>71.40</td>
+								<td>-7.10</td>
+								<td>3.56</td>
+								<td>0.00</td>
+								<td>3.76</td>
+							</tr>
+							<tr>
+								<td>14</td>
+								<td>Reserve</td>
+								<td>Reserve</td>
+								<td>59.98</td>
+								<td>71.51</td>
+								<td>-7.10</td>
+								<td>3.65</td>
+								<td>0.00</td>
+								<td>3.79</td>
+							</tr>
+							<tr>
+								<td>15</td>
+								<td>Reserve</td>
+								<td>Reserve</td>
+								<td>59.98</td>
+								<td>71.61</td>
+								<td>-7.10</td>
+								<td>3.73</td>
+								<td>0.00</td>
+								<td>3.81</td>
+							</tr>
+							<tr>
+								<td>16</td>
+								<td>Reserve</td>
+								<td>Reserve</td>
+								<td>59.98</td>
+								<td>71.69</td>
+								<td>-7.10</td>
+								<td>3.79</td>
+								<td>0.00</td>
+								<td>3.83</td>
+							</tr>
+							<tr>
+								<td>17</td>
+								<td>Reserve</td>
+								<td>Reserve</td>
+								<td>59.98</td>
+								<td>71.76</td>
+								<td>-7.10</td>
+								<td>3.84</td>
+								<td>0.00</td>
+								<td>3.84</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</details>
+			<details>
+				<summary>
+					rookie-weak-backup — Prospect initially; no changes in 17 games
+				</summary>
+				<p>
+					Second-year first-rounder, 58 ability/82 potential, prior poor season,
+					$9m contract; 45-rated backup. Starter continues struggling.
+				</p>
+				<div class="table-wrap">
+					<table>
+						<thead>
+							<tr>
+								<th>Player</th>
+								<th>Ability</th>
+								<th>Potential</th>
+								<th>Age</th>
+								<th>Annual salary</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>Prospect</td>
+								<td>58</td>
+								<td>82</td>
+								<td>23</td>
+								<td>$9.0m</td>
+							</tr>
+							<tr>
+								<td>Backup</td>
+								<td>45</td>
+								<td>45</td>
+								<td>28</td>
+								<td>$0.5m</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<svg
+					viewBox="0 0 600 240"
+					role="img"
+					aria-label="rookie-weak-backup: weekly Starter Scores. Exact values are in the following table."
+				>
+					<rect x="65" y="35" width="500" height="155" class="frame" />
+					<text x="56" y="194" text-anchor="end">40.0</text>
+					<text x="56" y="155.25" text-anchor="end">47.5</text>
+					<text x="56" y="116.5" text-anchor="end">55.0</text>
+					<text x="56" y="77.75" text-anchor="end">62.5</text>
+					<text x="56" y="39" text-anchor="end">70.0</text>
+					<text x="65" y="208" text-anchor="middle">0</text>
+					<text x="182.6470588235294" y="208" text-anchor="middle">4</text>
+					<text x="300.2941176470588" y="208" text-anchor="middle">8</text>
+					<text x="417.94117647058823" y="208" text-anchor="middle">12</text>
+					<text x="535.5882352941176" y="208" text-anchor="middle">16</text>
+					<text x="315" y="233" text-anchor="middle">
+						Games completed · decision for the next game
+					</text>
+					<text
+						x="18"
+						y="118"
+						transform="rotate(-90 18 118)"
+						text-anchor="middle"
+					>
+						Starter Score
+					</text>
+					<polyline
+						class="series s0"
+						points="65,72.49449999999999 94.41176470588235,69.875 123.8235294117647,71.55933333333333 153.23529411764707,74.39066666666668 182.6470588235294,77.3925 212.05882352941177,80.2135 241.47058823529412,82.73483333333333 270.88235294117646,84.93583333333332 300.2941176470588,86.82683333333333 329.70588235294116,88.50600000000001 359.11764705882354,89.89066666666668 388.5294117647059,91.03766666666665 417.94117647058823,91.98833333333334 447.35294117647055,92.77883333333334 476.7647058823529,93.44016666666667 506.1764705882353,93.993 535.5882352941176,94.45283333333333 565,94.8455"
+					/>
+					<text x="65" y="20" class="label0">Prospect</text>
+					<circle class="dot s0" cx="65" cy="72.49449999999999" r="3.5" />
+					<circle class="dot s0" cx="94.41176470588235" cy="69.875" r="3.5" />
+					<circle
+						class="dot s0"
+						cx="123.8235294117647"
+						cy="71.55933333333333"
+						r="3.5"
+					/>
+					<circle
+						class="dot s0"
+						cx="153.23529411764707"
+						cy="74.39066666666668"
+						r="3.5"
+					/>
+					<circle class="dot s0" cx="182.6470588235294" cy="77.3925" r="3.5" />
+					<circle class="dot s0" cx="212.05882352941177" cy="80.2135" r="3.5" />
+					<circle
+						class="dot s0"
+						cx="241.47058823529412"
+						cy="82.73483333333333"
+						r="3.5"
+					/>
+					<circle
+						class="dot s0"
+						cx="270.88235294117646"
+						cy="84.93583333333332"
+						r="3.5"
+					/>
+					<circle
+						class="dot s0"
+						cx="300.2941176470588"
+						cy="86.82683333333333"
+						r="3.5"
+					/>
+					<circle
+						class="dot s0"
+						cx="329.70588235294116"
+						cy="88.50600000000001"
+						r="3.5"
+					/>
+					<circle
+						class="dot s0"
+						cx="359.11764705882354"
+						cy="89.89066666666668"
+						r="3.5"
+					/>
+					<circle
+						class="dot s0"
+						cx="388.5294117647059"
+						cy="91.03766666666665"
+						r="3.5"
+					/>
+					<circle
+						class="dot s0"
+						cx="417.94117647058823"
+						cy="91.98833333333334"
+						r="3.5"
+					/>
+					<circle
+						class="dot s0"
+						cx="447.35294117647055"
+						cy="92.77883333333334"
+						r="3.5"
+					/>
+					<circle
+						class="dot s0"
+						cx="476.7647058823529"
+						cy="93.44016666666667"
+						r="3.5"
+					/>
+					<circle class="dot s0" cx="506.1764705882353" cy="93.993" r="3.5" />
+					<circle
+						class="dot s0"
+						cx="535.5882352941176"
+						cy="94.45283333333333"
+						r="3.5"
+					/>
+					<circle class="dot s0" cx="565" cy="94.8455" r="3.5" />
+					<polyline
+						class="series s1"
+						points="65,163.77916666666664 94.41176470588235,163.77916666666664 123.8235294117647,163.77916666666664 153.23529411764707,163.77916666666664 182.6470588235294,163.77916666666664 212.05882352941177,163.77916666666664 241.47058823529412,163.77916666666664 270.88235294117646,163.77916666666664 300.2941176470588,163.77916666666664 329.70588235294116,163.77916666666664 359.11764705882354,163.77916666666664 388.5294117647059,163.77916666666664 417.94117647058823,163.77916666666664 447.35294117647055,163.77916666666664 476.7647058823529,163.77916666666664 506.1764705882353,163.77916666666664 535.5882352941176,163.77916666666664 565,163.77916666666664"
+					/>
+					<text x="325" y="20" class="label1">Backup</text>
+				</svg>
+				<p>
+					Dots identify the available player selected for the next game. Injury
+					replacements can differ from the depth-chart leader. Scores are
+					evaluated before applying that row’s new depth order; the next
+					evaluation reflects the new incumbent.
+				</p>
+				<div class="table-wrap">
+					<table>
+						<thead>
+							<tr>
+								<th>After game</th>
+								<th>Selected</th>
+								<th>Depth leader</th>
+								<th>Score A</th>
+								<th>Score B</th>
+								<th>Performance A</th>
+								<th>Performance B</th>
+								<th>Continuity A</th>
+								<th>Continuity B</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>0</td>
+								<td>Prospect</td>
+								<td>Prospect</td>
+								<td>62.74</td>
+								<td>45.08</td>
+								<td>-10.02</td>
+								<td>0.00</td>
+								<td>2.77</td>
+								<td>0.00</td>
+							</tr>
+							<tr>
+								<td>1</td>
+								<td>Prospect</td>
+								<td>Prospect</td>
+								<td>63.25</td>
+								<td>45.08</td>
+								<td>-9.52</td>
+								<td>0.00</td>
+								<td>2.77</td>
+								<td>0.00</td>
+							</tr>
+							<tr>
+								<td>2</td>
+								<td>Prospect</td>
+								<td>Prospect</td>
+								<td>62.92</td>
+								<td>45.08</td>
+								<td>-9.84</td>
+								<td>0.00</td>
+								<td>2.77</td>
+								<td>0.00</td>
+							</tr>
+							<tr>
+								<td>3</td>
+								<td>Prospect</td>
+								<td>Prospect</td>
+								<td>62.38</td>
+								<td>45.08</td>
+								<td>-10.39</td>
+								<td>0.00</td>
+								<td>2.77</td>
+								<td>0.00</td>
+							</tr>
+							<tr>
+								<td>4</td>
+								<td>Prospect</td>
+								<td>Prospect</td>
+								<td>61.80</td>
+								<td>45.08</td>
+								<td>-10.97</td>
+								<td>0.00</td>
+								<td>2.77</td>
+								<td>0.00</td>
+							</tr>
+							<tr>
+								<td>5</td>
+								<td>Prospect</td>
+								<td>Prospect</td>
+								<td>61.25</td>
+								<td>45.08</td>
+								<td>-11.52</td>
+								<td>0.00</td>
+								<td>2.77</td>
+								<td>0.00</td>
+							</tr>
+							<tr>
+								<td>6</td>
+								<td>Prospect</td>
+								<td>Prospect</td>
+								<td>60.76</td>
+								<td>45.08</td>
+								<td>-12.00</td>
+								<td>0.00</td>
+								<td>2.77</td>
+								<td>0.00</td>
+							</tr>
+							<tr>
+								<td>7</td>
+								<td>Prospect</td>
+								<td>Prospect</td>
+								<td>60.34</td>
+								<td>45.08</td>
+								<td>-12.43</td>
+								<td>0.00</td>
+								<td>2.77</td>
+								<td>0.00</td>
+							</tr>
+							<tr>
+								<td>8</td>
+								<td>Prospect</td>
+								<td>Prospect</td>
+								<td>59.97</td>
+								<td>45.08</td>
+								<td>-12.80</td>
+								<td>0.00</td>
+								<td>2.77</td>
+								<td>0.00</td>
+							</tr>
+							<tr>
+								<td>9</td>
+								<td>Prospect</td>
+								<td>Prospect</td>
+								<td>59.64</td>
+								<td>45.08</td>
+								<td>-13.12</td>
+								<td>0.00</td>
+								<td>2.77</td>
+								<td>0.00</td>
+							</tr>
+							<tr>
+								<td>10</td>
+								<td>Prospect</td>
+								<td>Prospect</td>
+								<td>59.38</td>
+								<td>45.08</td>
+								<td>-13.39</td>
+								<td>0.00</td>
+								<td>2.77</td>
+								<td>0.00</td>
+							</tr>
+							<tr>
+								<td>11</td>
+								<td>Prospect</td>
+								<td>Prospect</td>
+								<td>59.15</td>
+								<td>45.08</td>
+								<td>-13.61</td>
+								<td>0.00</td>
+								<td>2.77</td>
+								<td>0.00</td>
+							</tr>
+							<tr>
+								<td>12</td>
+								<td>Prospect</td>
+								<td>Prospect</td>
+								<td>58.97</td>
+								<td>45.08</td>
+								<td>-13.79</td>
+								<td>0.00</td>
+								<td>2.77</td>
+								<td>0.00</td>
+							</tr>
+							<tr>
+								<td>13</td>
+								<td>Prospect</td>
+								<td>Prospect</td>
+								<td>58.82</td>
+								<td>45.08</td>
+								<td>-13.95</td>
+								<td>0.00</td>
+								<td>2.77</td>
+								<td>0.00</td>
+							</tr>
+							<tr>
+								<td>14</td>
+								<td>Prospect</td>
+								<td>Prospect</td>
+								<td>58.69</td>
+								<td>45.08</td>
+								<td>-14.08</td>
+								<td>0.00</td>
+								<td>2.77</td>
+								<td>0.00</td>
+							</tr>
+							<tr>
+								<td>15</td>
+								<td>Prospect</td>
+								<td>Prospect</td>
+								<td>58.58</td>
+								<td>45.08</td>
+								<td>-14.18</td>
+								<td>0.00</td>
+								<td>2.77</td>
+								<td>0.00</td>
+							</tr>
+							<tr>
+								<td>16</td>
+								<td>Prospect</td>
+								<td>Prospect</td>
+								<td>58.49</td>
+								<td>45.08</td>
+								<td>-14.27</td>
+								<td>0.00</td>
+								<td>2.77</td>
+								<td>0.00</td>
+							</tr>
+							<tr>
+								<td>17</td>
+								<td>Prospect</td>
+								<td>Prospect</td>
+								<td>58.42</td>
+								<td>45.08</td>
+								<td>-14.35</td>
+								<td>0.00</td>
+								<td>2.77</td>
+								<td>0.00</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</details>
+			<details>
+				<summary>
+					rookie-viable-backup — Prospect initially; Veteran after game 8
+				</summary>
+				<p>
+					Same prospect with a credible 60-rated veteran available; the veteran
+					produces steady games when selected.
+				</p>
+				<div class="table-wrap">
+					<table>
+						<thead>
+							<tr>
+								<th>Player</th>
+								<th>Ability</th>
+								<th>Potential</th>
+								<th>Age</th>
+								<th>Annual salary</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>Prospect</td>
+								<td>58</td>
+								<td>82</td>
+								<td>23</td>
+								<td>$9.0m</td>
+							</tr>
+							<tr>
+								<td>Veteran</td>
+								<td>60</td>
+								<td>60</td>
+								<td>32</td>
+								<td>$0.5m</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<svg
+					viewBox="0 0 600 240"
+					role="img"
+					aria-label="rookie-viable-backup: weekly Starter Scores. Exact values are in the following table."
+				>
+					<rect x="65" y="35" width="500" height="155" class="frame" />
+					<text x="56" y="194" text-anchor="end">50.0</text>
+					<text x="56" y="155.25" text-anchor="end">56.3</text>
+					<text x="56" y="116.5" text-anchor="end">62.5</text>
+					<text x="56" y="77.75" text-anchor="end">68.8</text>
+					<text x="56" y="39" text-anchor="end">75.0</text>
+					<text x="65" y="208" text-anchor="middle">0</text>
+					<text x="182.6470588235294" y="208" text-anchor="middle">4</text>
+					<text x="300.2941176470588" y="208" text-anchor="middle">8</text>
+					<text x="417.94117647058823" y="208" text-anchor="middle">12</text>
+					<text x="535.5882352941176" y="208" text-anchor="middle">16</text>
+					<text x="315" y="233" text-anchor="middle">
+						Games completed · decision for the next game
+					</text>
+					<text
+						x="18"
+						y="118"
+						transform="rotate(-90 18 118)"
+						text-anchor="middle"
+					>
+						Starter Score
+					</text>
+					<polyline
+						class="series s0"
+						points="65,110.9934 94.41176470588235,107.85 123.8235294117647,109.8712 153.23529411764707,113.26880000000001 182.6470588235294,116.871 212.05882352941177,120.25619999999999 241.47058823529412,123.28179999999999 270.88235294117646,125.92299999999999 300.2941176470588,128.19219999999999 329.70588235294116,145.3972 359.11764705882354,145.3972 388.5294117647059,145.3972 417.94117647058823,145.3972 447.35294117647055,145.3972 476.7647058823529,145.3972 506.1764705882353,145.3972 535.5882352941176,145.3972 565,145.3972"
+					/>
+					<text x="65" y="20" class="label0">Prospect</text>
+					<circle class="dot s0" cx="65" cy="110.9934" r="3.5" />
+					<circle class="dot s0" cx="94.41176470588235" cy="107.85" r="3.5" />
+					<circle class="dot s0" cx="123.8235294117647" cy="109.8712" r="3.5" />
+					<circle
+						class="dot s0"
+						cx="153.23529411764707"
+						cy="113.26880000000001"
+						r="3.5"
+					/>
+					<circle class="dot s0" cx="182.6470588235294" cy="116.871" r="3.5" />
+					<circle
+						class="dot s0"
+						cx="212.05882352941177"
+						cy="120.25619999999999"
+						r="3.5"
+					/>
+					<circle
+						class="dot s0"
+						cx="241.47058823529412"
+						cy="123.28179999999999"
+						r="3.5"
+					/>
+					<circle
+						class="dot s0"
+						cx="270.88235294117646"
+						cy="125.92299999999999"
+						r="3.5"
+					/>
+					<polyline
+						class="series s1"
+						points="65,127.53499999999998 94.41176470588235,127.53499999999998 123.8235294117647,127.53499999999998 153.23529411764707,127.53499999999998 182.6470588235294,127.53499999999998 212.05882352941177,127.53499999999998 241.47058823529412,127.53499999999998 270.88235294117646,127.53499999999998 300.2941176470588,127.53499999999998 329.70588235294116,102.15220000000001 359.11764705882354,97.2232 388.5294117647059,93.64580000000002 417.94117647058823,90.8558 447.35294117647055,88.61140000000003 476.7647058823529,86.76999999999995 506.1764705882353,85.25100000000002 535.5882352941176,83.9924 565,82.96939999999996"
+					/>
+					<text x="325" y="20" class="label1">Veteran</text>
+					<circle
+						class="dot s1"
+						cx="300.2941176470588"
+						cy="127.53499999999998"
+						r="3.5"
+					/>
+					<circle
+						class="dot s1"
+						cx="329.70588235294116"
+						cy="102.15220000000001"
+						r="3.5"
+					/>
+					<circle class="dot s1" cx="359.11764705882354" cy="97.2232" r="3.5" />
+					<circle
+						class="dot s1"
+						cx="388.5294117647059"
+						cy="93.64580000000002"
+						r="3.5"
+					/>
+					<circle class="dot s1" cx="417.94117647058823" cy="90.8558" r="3.5" />
+					<circle
+						class="dot s1"
+						cx="447.35294117647055"
+						cy="88.61140000000003"
+						r="3.5"
+					/>
+					<circle
+						class="dot s1"
+						cx="476.7647058823529"
+						cy="86.76999999999995"
+						r="3.5"
+					/>
+					<circle
+						class="dot s1"
+						cx="506.1764705882353"
+						cy="85.25100000000002"
+						r="3.5"
+					/>
+					<circle class="dot s1" cx="535.5882352941176" cy="83.9924" r="3.5" />
+					<circle class="dot s1" cx="565" cy="82.96939999999996" r="3.5" />
+				</svg>
+				<p>
+					Dots identify the available player selected for the next game. Injury
+					replacements can differ from the depth-chart leader. Scores are
+					evaluated before applying that row’s new depth order; the next
+					evaluation reflects the new incumbent.
+				</p>
+				<div class="table-wrap">
+					<table>
+						<thead>
+							<tr>
+								<th>After game</th>
+								<th>Selected</th>
+								<th>Depth leader</th>
+								<th>Score A</th>
+								<th>Score B</th>
+								<th>Performance A</th>
+								<th>Performance B</th>
+								<th>Continuity A</th>
+								<th>Continuity B</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>0</td>
+								<td>Prospect</td>
+								<td>Prospect</td>
+								<td>62.74</td>
+								<td>60.08</td>
+								<td>-10.02</td>
+								<td>0.00</td>
+								<td>2.77</td>
+								<td>0.00</td>
+							</tr>
+							<tr>
+								<td>1</td>
+								<td>Prospect</td>
+								<td>Prospect</td>
+								<td>63.25</td>
+								<td>60.08</td>
+								<td>-9.52</td>
+								<td>0.00</td>
+								<td>2.77</td>
+								<td>0.00</td>
+							</tr>
+							<tr>
+								<td>2</td>
+								<td>Prospect</td>
+								<td>Prospect</td>
+								<td>62.92</td>
+								<td>60.08</td>
+								<td>-9.84</td>
+								<td>0.00</td>
+								<td>2.77</td>
+								<td>0.00</td>
+							</tr>
+							<tr>
+								<td>3</td>
+								<td>Prospect</td>
+								<td>Prospect</td>
+								<td>62.38</td>
+								<td>60.08</td>
+								<td>-10.39</td>
+								<td>0.00</td>
+								<td>2.77</td>
+								<td>0.00</td>
+							</tr>
+							<tr>
+								<td>4</td>
+								<td>Prospect</td>
+								<td>Prospect</td>
+								<td>61.80</td>
+								<td>60.08</td>
+								<td>-10.97</td>
+								<td>0.00</td>
+								<td>2.77</td>
+								<td>0.00</td>
+							</tr>
+							<tr>
+								<td>5</td>
+								<td>Prospect</td>
+								<td>Prospect</td>
+								<td>61.25</td>
+								<td>60.08</td>
+								<td>-11.52</td>
+								<td>0.00</td>
+								<td>2.77</td>
+								<td>0.00</td>
+							</tr>
+							<tr>
+								<td>6</td>
+								<td>Prospect</td>
+								<td>Prospect</td>
+								<td>60.76</td>
+								<td>60.08</td>
+								<td>-12.00</td>
+								<td>0.00</td>
+								<td>2.77</td>
+								<td>0.00</td>
+							</tr>
+							<tr>
+								<td>7</td>
+								<td>Prospect</td>
+								<td>Prospect</td>
+								<td>60.34</td>
+								<td>60.08</td>
+								<td>-12.43</td>
+								<td>0.00</td>
+								<td>2.77</td>
+								<td>0.00</td>
+							</tr>
+							<tr>
+								<td>8</td>
+								<td>Veteran</td>
+								<td>Veteran</td>
+								<td>59.97</td>
+								<td>60.08</td>
+								<td>-12.80</td>
+								<td>0.00</td>
+								<td>2.77</td>
+								<td>0.00</td>
+							</tr>
+							<tr>
+								<td>9</td>
+								<td>Veteran</td>
+								<td>Veteran</td>
+								<td>57.19</td>
+								<td>64.17</td>
+								<td>-12.80</td>
+								<td>1.03</td>
+								<td>0.00</td>
+								<td>3.06</td>
+							</tr>
+							<tr>
+								<td>10</td>
+								<td>Veteran</td>
+								<td>Veteran</td>
+								<td>57.19</td>
+								<td>64.96</td>
+								<td>-12.80</td>
+								<td>1.66</td>
+								<td>0.00</td>
+								<td>3.23</td>
+							</tr>
+							<tr>
+								<td>11</td>
+								<td>Veteran</td>
+								<td>Veteran</td>
+								<td>57.19</td>
+								<td>65.54</td>
+								<td>-12.80</td>
+								<td>2.11</td>
+								<td>0.00</td>
+								<td>3.36</td>
+							</tr>
+							<tr>
+								<td>12</td>
+								<td>Veteran</td>
+								<td>Veteran</td>
+								<td>57.19</td>
+								<td>65.99</td>
+								<td>-12.80</td>
+								<td>2.46</td>
+								<td>0.00</td>
+								<td>3.46</td>
+							</tr>
+							<tr>
+								<td>13</td>
+								<td>Veteran</td>
+								<td>Veteran</td>
+								<td>57.19</td>
+								<td>66.35</td>
+								<td>-12.80</td>
+								<td>2.74</td>
+								<td>0.00</td>
+								<td>3.54</td>
+							</tr>
+							<tr>
+								<td>14</td>
+								<td>Veteran</td>
+								<td>Veteran</td>
+								<td>57.19</td>
+								<td>66.65</td>
+								<td>-12.80</td>
+								<td>2.97</td>
+								<td>0.00</td>
+								<td>3.60</td>
+							</tr>
+							<tr>
+								<td>15</td>
+								<td>Veteran</td>
+								<td>Veteran</td>
+								<td>57.19</td>
+								<td>66.89</td>
+								<td>-12.80</td>
+								<td>3.17</td>
+								<td>0.00</td>
+								<td>3.65</td>
+							</tr>
+							<tr>
+								<td>16</td>
+								<td>Veteran</td>
+								<td>Veteran</td>
+								<td>57.19</td>
+								<td>67.10</td>
+								<td>-12.80</td>
+								<td>3.33</td>
+								<td>0.00</td>
+								<td>3.70</td>
+							</tr>
+							<tr>
+								<td>17</td>
+								<td>Veteran</td>
+								<td>Veteran</td>
+								<td>57.19</td>
+								<td>67.26</td>
+								<td>-12.80</td>
+								<td>3.45</td>
+								<td>0.00</td>
+								<td>3.73</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</details>
+			<details>
+				<summary>
+					breakout-injury — Breakout initially; no changes in 17 games
+				</summary>
+				<p>
+					68-rated veteran misses weeks 1–6; 63-rated, 24-year-old backup posts
+					breakout games. Injury recovery after week 6 tests whether the job is
+					earned.
+				</p>
+				<div class="table-wrap">
+					<table>
+						<thead>
+							<tr>
+								<th>Player</th>
+								<th>Ability</th>
+								<th>Potential</th>
+								<th>Age</th>
+								<th>Annual salary</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>Veteran</td>
+								<td>68</td>
+								<td>68</td>
+								<td>32</td>
+								<td>$25.0m</td>
+							</tr>
+							<tr>
+								<td>Breakout</td>
+								<td>63</td>
+								<td>78</td>
+								<td>24</td>
+								<td>$0.5m</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<svg
+					viewBox="0 0 600 240"
+					role="img"
+					aria-label="breakout-injury: weekly Starter Scores. Exact values are in the following table."
+				>
+					<rect x="65" y="35" width="500" height="155" class="frame" />
+					<text x="56" y="194" text-anchor="end">60.0</text>
+					<text x="56" y="155.25" text-anchor="end">67.5</text>
+					<text x="56" y="116.5" text-anchor="end">75.0</text>
+					<text x="56" y="77.75" text-anchor="end">82.5</text>
+					<text x="56" y="39" text-anchor="end">90.0</text>
+					<text x="65" y="208" text-anchor="middle">0</text>
+					<text x="182.6470588235294" y="208" text-anchor="middle">4</text>
+					<text x="300.2941176470588" y="208" text-anchor="middle">8</text>
+					<text x="417.94117647058823" y="208" text-anchor="middle">12</text>
+					<text x="535.5882352941176" y="208" text-anchor="middle">16</text>
+					<text x="315" y="233" text-anchor="middle">
+						Games completed · decision for the next game
+					</text>
+					<text
+						x="18"
+						y="118"
+						transform="rotate(-90 18 118)"
+						text-anchor="middle"
+					>
+						Starter Score
+					</text>
+					<polyline
+						class="series s0"
+						points="65,125.49416666666667 94.41176470588235,125.49416666666667 123.8235294117647,125.49416666666667 153.23529411764707,125.49416666666667 182.6470588235294,125.49416666666667 212.05882352941177,139.8316666666667 241.47058823529412,139.8316666666667 270.88235294117646,139.8316666666667 300.2941176470588,139.8316666666667 329.70588235294116,139.8316666666667 359.11764705882354,139.8316666666667 388.5294117647059,139.8316666666667 417.94117647058823,139.8316666666667 447.35294117647055,139.8316666666667 476.7647058823529,139.8316666666667 506.1764705882353,139.8316666666667 535.5882352941176,139.8316666666667 565,139.8316666666667"
+					/>
+					<text x="65" y="20" class="label0">Veteran</text>
+					<polyline
+						class="series s1"
+						points="65,161.51616666666663 94.41176470588235,145.35483333333332 123.8235294117647,134.64950000000005 153.23529411764707,126.57916666666664 182.6470588235294,120.1776666666667 212.05882352941177,93.47116666666663 241.47058823529412,89.1983333333333 270.88235294117646,85.65916666666669 300.2941176470588,82.70899999999997 329.70588235294116,80.34266666666664 359.11764705882354,78.37416666666664 388.5294117647059,76.71566666666665 417.94117647058823,75.32066666666668 447.35294117647055,74.14266666666664 476.7647058823529,73.13516666666666 506.1764705882353,72.27233333333332 535.5882352941176,71.52833333333331 565,70.88766666666666"
+					/>
+					<text x="325" y="20" class="label1">Breakout</text>
+					<circle class="dot s1" cx="65" cy="161.51616666666663" r="3.5" />
+					<circle
+						class="dot s1"
+						cx="94.41176470588235"
+						cy="145.35483333333332"
+						r="3.5"
+					/>
+					<circle
+						class="dot s1"
+						cx="123.8235294117647"
+						cy="134.64950000000005"
+						r="3.5"
+					/>
+					<circle
+						class="dot s1"
+						cx="153.23529411764707"
+						cy="126.57916666666664"
+						r="3.5"
+					/>
+					<circle
+						class="dot s1"
+						cx="182.6470588235294"
+						cy="120.1776666666667"
+						r="3.5"
+					/>
+					<circle
+						class="dot s1"
+						cx="212.05882352941177"
+						cy="93.47116666666663"
+						r="3.5"
+					/>
+					<circle
+						class="dot s1"
+						cx="241.47058823529412"
+						cy="89.1983333333333"
+						r="3.5"
+					/>
+					<circle
+						class="dot s1"
+						cx="270.88235294117646"
+						cy="85.65916666666669"
+						r="3.5"
+					/>
+					<circle
+						class="dot s1"
+						cx="300.2941176470588"
+						cy="82.70899999999997"
+						r="3.5"
+					/>
+					<circle
+						class="dot s1"
+						cx="329.70588235294116"
+						cy="80.34266666666664"
+						r="3.5"
+					/>
+					<circle
+						class="dot s1"
+						cx="359.11764705882354"
+						cy="78.37416666666664"
+						r="3.5"
+					/>
+					<circle
+						class="dot s1"
+						cx="388.5294117647059"
+						cy="76.71566666666665"
+						r="3.5"
+					/>
+					<circle
+						class="dot s1"
+						cx="417.94117647058823"
+						cy="75.32066666666668"
+						r="3.5"
+					/>
+					<circle
+						class="dot s1"
+						cx="447.35294117647055"
+						cy="74.14266666666664"
+						r="3.5"
+					/>
+					<circle
+						class="dot s1"
+						cx="476.7647058823529"
+						cy="73.13516666666666"
+						r="3.5"
+					/>
+					<circle
+						class="dot s1"
+						cx="506.1764705882353"
+						cy="72.27233333333332"
+						r="3.5"
+					/>
+					<circle
+						class="dot s1"
+						cx="535.5882352941176"
+						cy="71.52833333333331"
+						r="3.5"
+					/>
+					<circle class="dot s1" cx="565" cy="70.88766666666666" r="3.5" />
+				</svg>
+				<p>
+					Dots identify the available player selected for the next game. Injury
+					replacements can differ from the depth-chart leader. Scores are
+					evaluated before applying that row’s new depth order; the next
+					evaluation reflects the new incumbent.
+				</p>
+				<div class="table-wrap">
+					<table>
+						<thead>
+							<tr>
+								<th>After game</th>
+								<th>Selected</th>
+								<th>Depth leader</th>
+								<th>Score A</th>
+								<th>Score B</th>
+								<th>Performance A</th>
+								<th>Performance B</th>
+								<th>Continuity A</th>
+								<th>Continuity B</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>0</td>
+								<td>Breakout</td>
+								<td>Veteran</td>
+								<td>72.48</td>
+								<td>65.51</td>
+								<td>-1.29</td>
+								<td>0.00</td>
+								<td>2.77</td>
+								<td>0.00</td>
+							</tr>
+							<tr>
+								<td>1</td>
+								<td>Breakout</td>
+								<td>Veteran</td>
+								<td>72.48</td>
+								<td>68.64</td>
+								<td>-1.29</td>
+								<td>3.13</td>
+								<td>2.77</td>
+								<td>0.00</td>
+							</tr>
+							<tr>
+								<td>2</td>
+								<td>Breakout</td>
+								<td>Veteran</td>
+								<td>72.48</td>
+								<td>70.71</td>
+								<td>-1.29</td>
+								<td>5.20</td>
+								<td>2.77</td>
+								<td>0.00</td>
+							</tr>
+							<tr>
+								<td>3</td>
+								<td>Breakout</td>
+								<td>Veteran</td>
+								<td>72.48</td>
+								<td>72.28</td>
+								<td>-1.29</td>
+								<td>6.76</td>
+								<td>2.77</td>
+								<td>0.00</td>
+							</tr>
+							<tr>
+								<td>4</td>
+								<td>Breakout</td>
+								<td>Breakout</td>
+								<td>72.48</td>
+								<td>73.51</td>
+								<td>-1.29</td>
+								<td>8.00</td>
+								<td>2.77</td>
+								<td>0.00</td>
+							</tr>
+							<tr>
+								<td>5</td>
+								<td>Breakout</td>
+								<td>Breakout</td>
+								<td>69.71</td>
+								<td>78.68</td>
+								<td>-1.29</td>
+								<td>9.01</td>
+								<td>0.00</td>
+								<td>4.16</td>
+							</tr>
+							<tr>
+								<td>6</td>
+								<td>Breakout</td>
+								<td>Breakout</td>
+								<td>69.71</td>
+								<td>79.51</td>
+								<td>-1.29</td>
+								<td>9.84</td>
+								<td>0.00</td>
+								<td>4.16</td>
+							</tr>
+							<tr>
+								<td>7</td>
+								<td>Breakout</td>
+								<td>Breakout</td>
+								<td>69.71</td>
+								<td>80.19</td>
+								<td>-1.29</td>
+								<td>10.52</td>
+								<td>0.00</td>
+								<td>4.16</td>
+							</tr>
+							<tr>
+								<td>8</td>
+								<td>Breakout</td>
+								<td>Breakout</td>
+								<td>69.71</td>
+								<td>80.77</td>
+								<td>-1.29</td>
+								<td>11.09</td>
+								<td>0.00</td>
+								<td>4.16</td>
+							</tr>
+							<tr>
+								<td>9</td>
+								<td>Breakout</td>
+								<td>Breakout</td>
+								<td>69.71</td>
+								<td>81.22</td>
+								<td>-1.29</td>
+								<td>11.55</td>
+								<td>0.00</td>
+								<td>4.16</td>
+							</tr>
+							<tr>
+								<td>10</td>
+								<td>Breakout</td>
+								<td>Breakout</td>
+								<td>69.71</td>
+								<td>81.61</td>
+								<td>-1.29</td>
+								<td>11.93</td>
+								<td>0.00</td>
+								<td>4.16</td>
+							</tr>
+							<tr>
+								<td>11</td>
+								<td>Breakout</td>
+								<td>Breakout</td>
+								<td>69.71</td>
+								<td>81.93</td>
+								<td>-1.29</td>
+								<td>12.25</td>
+								<td>0.00</td>
+								<td>4.16</td>
+							</tr>
+							<tr>
+								<td>12</td>
+								<td>Breakout</td>
+								<td>Breakout</td>
+								<td>69.71</td>
+								<td>82.20</td>
+								<td>-1.29</td>
+								<td>12.52</td>
+								<td>0.00</td>
+								<td>4.16</td>
+							</tr>
+							<tr>
+								<td>13</td>
+								<td>Breakout</td>
+								<td>Breakout</td>
+								<td>69.71</td>
+								<td>82.42</td>
+								<td>-1.29</td>
+								<td>12.75</td>
+								<td>0.00</td>
+								<td>4.16</td>
+							</tr>
+							<tr>
+								<td>14</td>
+								<td>Breakout</td>
+								<td>Breakout</td>
+								<td>69.71</td>
+								<td>82.62</td>
+								<td>-1.29</td>
+								<td>12.94</td>
+								<td>0.00</td>
+								<td>4.16</td>
+							</tr>
+							<tr>
+								<td>15</td>
+								<td>Breakout</td>
+								<td>Breakout</td>
+								<td>69.71</td>
+								<td>82.79</td>
+								<td>-1.29</td>
+								<td>13.11</td>
+								<td>0.00</td>
+								<td>4.16</td>
+							</tr>
+							<tr>
+								<td>16</td>
+								<td>Breakout</td>
+								<td>Breakout</td>
+								<td>69.71</td>
+								<td>82.93</td>
+								<td>-1.29</td>
+								<td>13.26</td>
+								<td>0.00</td>
+								<td>4.16</td>
+							</tr>
+							<tr>
+								<td>17</td>
+								<td>Breakout</td>
+								<td>Breakout</td>
+								<td>69.71</td>
+								<td>83.05</td>
+								<td>-1.29</td>
+								<td>13.38</td>
+								<td>0.00</td>
+								<td>4.16</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</details>
+			<details>
+				<summary>
+					bench-return — Prospect initially; Veteran after game 5; Prospect
+					after game 6
+				</summary>
+				<p>
+					Young first-rounder struggles; veteran gets the job. Veteran then
+					misses weeks 7–10, giving the prospect a real chance to recover with
+					breakout performances.
+				</p>
+				<div class="table-wrap">
+					<table>
+						<thead>
+							<tr>
+								<th>Player</th>
+								<th>Ability</th>
+								<th>Potential</th>
+								<th>Age</th>
+								<th>Annual salary</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>Prospect</td>
+								<td>59</td>
+								<td>78</td>
+								<td>23</td>
+								<td>$0.5m</td>
+							</tr>
+							<tr>
+								<td>Veteran</td>
+								<td>63</td>
+								<td>63</td>
+								<td>32</td>
+								<td>$0.5m</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<svg
+					viewBox="0 0 600 240"
+					role="img"
+					aria-label="bench-return: weekly Starter Scores. Exact values are in the following table."
+				>
+					<rect x="65" y="35" width="500" height="155" class="frame" />
+					<text x="56" y="194" text-anchor="end">55.0</text>
+					<text x="56" y="155.25" text-anchor="end">63.8</text>
+					<text x="56" y="116.5" text-anchor="end">72.5</text>
+					<text x="56" y="77.75" text-anchor="end">81.3</text>
+					<text x="56" y="39" text-anchor="end">90.0</text>
+					<text x="65" y="208" text-anchor="middle">0</text>
+					<text x="182.6470588235294" y="208" text-anchor="middle">4</text>
+					<text x="300.2941176470588" y="208" text-anchor="middle">8</text>
+					<text x="417.94117647058823" y="208" text-anchor="middle">12</text>
+					<text x="535.5882352941176" y="208" text-anchor="middle">16</text>
+					<text x="315" y="233" text-anchor="middle">
+						Games completed · decision for the next game
+					</text>
+					<text
+						x="18"
+						y="118"
+						transform="rotate(-90 18 118)"
+						text-anchor="middle"
+					>
+						Starter Score
+					</text>
+					<polyline
+						class="series s0"
+						points="65,114.98 94.41176470588235,130.15228571428574 123.8235294117647,139.54085714285713 153.23529411764707,146.42285714285714 182.6470588235294,151.8124285714286 212.05882352941177,156.16128571428573 241.47058823529412,168.45057142857144 270.88235294117646,153.2827142857143 300.2941176470588,139.904 329.70588235294116,128.70857142857142 359.11764705882354,105.06885714285715 388.5294117647059,95.21971428571429 417.94117647058823,86.92057142857145 447.35294117647055,81.37157142857144 476.7647058823529,76.68614285714284 506.1764705882353,72.67828571428569 535.5882352941176,69.22842857142857 565,66.24799999999998"
+					/>
+					<text x="65" y="20" class="label0">Prospect</text>
+					<circle class="dot s0" cx="65" cy="114.98" r="3.5" />
+					<circle
+						class="dot s0"
+						cx="94.41176470588235"
+						cy="130.15228571428574"
+						r="3.5"
+					/>
+					<circle
+						class="dot s0"
+						cx="123.8235294117647"
+						cy="139.54085714285713"
+						r="3.5"
+					/>
+					<circle
+						class="dot s0"
+						cx="153.23529411764707"
+						cy="146.42285714285714"
+						r="3.5"
+					/>
+					<circle
+						class="dot s0"
+						cx="182.6470588235294"
+						cy="151.8124285714286"
+						r="3.5"
+					/>
+					<circle
+						class="dot s0"
+						cx="241.47058823529412"
+						cy="168.45057142857144"
+						r="3.5"
+					/>
+					<circle
+						class="dot s0"
+						cx="270.88235294117646"
+						cy="153.2827142857143"
+						r="3.5"
+					/>
+					<circle class="dot s0" cx="300.2941176470588" cy="139.904" r="3.5" />
+					<circle
+						class="dot s0"
+						cx="329.70588235294116"
+						cy="128.70857142857142"
+						r="3.5"
+					/>
+					<circle
+						class="dot s0"
+						cx="359.11764705882354"
+						cy="105.06885714285715"
+						r="3.5"
+					/>
+					<circle
+						class="dot s0"
+						cx="388.5294117647059"
+						cy="95.21971428571429"
+						r="3.5"
+					/>
+					<circle
+						class="dot s0"
+						cx="417.94117647058823"
+						cy="86.92057142857145"
+						r="3.5"
+					/>
+					<circle
+						class="dot s0"
+						cx="447.35294117647055"
+						cy="81.37157142857144"
+						r="3.5"
+					/>
+					<circle
+						class="dot s0"
+						cx="476.7647058823529"
+						cy="76.68614285714284"
+						r="3.5"
+					/>
+					<circle
+						class="dot s0"
+						cx="506.1764705882353"
+						cy="72.67828571428569"
+						r="3.5"
+					/>
+					<circle
+						class="dot s0"
+						cx="535.5882352941176"
+						cy="69.22842857142857"
+						r="3.5"
+					/>
+					<circle class="dot s0" cx="565" cy="66.24799999999998" r="3.5" />
+					<polyline
+						class="series s1"
+						points="65,154.2392857142857 94.41176470588235,154.2392857142857 123.8235294117647,154.2392857142857 153.23529411764707,154.2392857142857 182.6470588235294,154.2392857142857 212.05882352941177,154.2392857142857 241.47058823529412,136.1087142857143 270.88235294117646,136.1087142857143 300.2941176470588,136.1087142857143 329.70588235294116,136.1087142857143 359.11764705882354,149.6645714285714 388.5294117647059,149.6645714285714 417.94117647058823,149.6645714285714 447.35294117647055,149.6645714285714 476.7647058823529,149.6645714285714 506.1764705882353,149.6645714285714 535.5882352941176,149.6645714285714 565,149.6645714285714"
+					/>
+					<text x="325" y="20" class="label1">Veteran</text>
+					<circle
+						class="dot s1"
+						cx="212.05882352941177"
+						cy="154.2392857142857"
+						r="3.5"
+					/>
+				</svg>
+				<p>
+					Dots identify the available player selected for the next game. Injury
+					replacements can differ from the depth-chart leader. Scores are
+					evaluated before applying that row’s new depth order; the next
+					evaluation reflects the new incumbent.
+				</p>
+				<div class="table-wrap">
+					<table>
+						<thead>
+							<tr>
+								<th>After game</th>
+								<th>Selected</th>
+								<th>Depth leader</th>
+								<th>Score A</th>
+								<th>Score B</th>
+								<th>Performance A</th>
+								<th>Performance B</th>
+								<th>Continuity A</th>
+								<th>Continuity B</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>0</td>
+								<td>Prospect</td>
+								<td>Prospect</td>
+								<td>71.94</td>
+								<td>63.08</td>
+								<td>0.00</td>
+								<td>0.00</td>
+								<td>2.77</td>
+								<td>0.00</td>
+							</tr>
+							<tr>
+								<td>1</td>
+								<td>Prospect</td>
+								<td>Prospect</td>
+								<td>68.51</td>
+								<td>63.08</td>
+								<td>-3.43</td>
+								<td>0.00</td>
+								<td>2.77</td>
+								<td>0.00</td>
+							</tr>
+							<tr>
+								<td>2</td>
+								<td>Prospect</td>
+								<td>Prospect</td>
+								<td>66.39</td>
+								<td>63.08</td>
+								<td>-5.55</td>
+								<td>0.00</td>
+								<td>2.77</td>
+								<td>0.00</td>
+							</tr>
+							<tr>
+								<td>3</td>
+								<td>Prospect</td>
+								<td>Prospect</td>
+								<td>64.84</td>
+								<td>63.08</td>
+								<td>-7.10</td>
+								<td>0.00</td>
+								<td>2.77</td>
+								<td>0.00</td>
+							</tr>
+							<tr>
+								<td>4</td>
+								<td>Prospect</td>
+								<td>Prospect</td>
+								<td>63.62</td>
+								<td>63.08</td>
+								<td>-8.32</td>
+								<td>0.00</td>
+								<td>2.77</td>
+								<td>0.00</td>
+							</tr>
+							<tr>
+								<td>5</td>
+								<td>Veteran</td>
+								<td>Veteran</td>
+								<td>62.64</td>
+								<td>63.08</td>
+								<td>-9.30</td>
+								<td>0.00</td>
+								<td>2.77</td>
+								<td>0.00</td>
+							</tr>
+							<tr>
+								<td>6</td>
+								<td>Prospect</td>
+								<td>Veteran</td>
+								<td>59.87</td>
+								<td>67.17</td>
+								<td>-9.30</td>
+								<td>1.03</td>
+								<td>0.00</td>
+								<td>3.06</td>
+							</tr>
+							<tr>
+								<td>7</td>
+								<td>Prospect</td>
+								<td>Veteran</td>
+								<td>63.29</td>
+								<td>67.17</td>
+								<td>-5.87</td>
+								<td>1.03</td>
+								<td>0.00</td>
+								<td>3.06</td>
+							</tr>
+							<tr>
+								<td>8</td>
+								<td>Prospect</td>
+								<td>Veteran</td>
+								<td>66.31</td>
+								<td>67.17</td>
+								<td>-2.85</td>
+								<td>1.03</td>
+								<td>0.00</td>
+								<td>3.06</td>
+							</tr>
+							<tr>
+								<td>9</td>
+								<td>Prospect</td>
+								<td>Prospect</td>
+								<td>68.84</td>
+								<td>67.17</td>
+								<td>-0.33</td>
+								<td>1.03</td>
+								<td>0.00</td>
+								<td>3.06</td>
+							</tr>
+							<tr>
+								<td>10</td>
+								<td>Prospect</td>
+								<td>Prospect</td>
+								<td>74.18</td>
+								<td>64.11</td>
+								<td>1.75</td>
+								<td>1.03</td>
+								<td>3.26</td>
+								<td>0.00</td>
+							</tr>
+							<tr>
+								<td>11</td>
+								<td>Prospect</td>
+								<td>Prospect</td>
+								<td>76.40</td>
+								<td>64.11</td>
+								<td>3.49</td>
+								<td>1.03</td>
+								<td>3.74</td>
+								<td>0.00</td>
+							</tr>
+							<tr>
+								<td>12</td>
+								<td>Prospect</td>
+								<td>Prospect</td>
+								<td>78.28</td>
+								<td>64.11</td>
+								<td>4.96</td>
+								<td>1.03</td>
+								<td>4.15</td>
+								<td>0.00</td>
+							</tr>
+							<tr>
+								<td>13</td>
+								<td>Prospect</td>
+								<td>Prospect</td>
+								<td>79.53</td>
+								<td>64.11</td>
+								<td>6.20</td>
+								<td>1.03</td>
+								<td>4.16</td>
+								<td>0.00</td>
+							</tr>
+							<tr>
+								<td>14</td>
+								<td>Prospect</td>
+								<td>Prospect</td>
+								<td>80.59</td>
+								<td>64.11</td>
+								<td>7.26</td>
+								<td>1.03</td>
+								<td>4.16</td>
+								<td>0.00</td>
+							</tr>
+							<tr>
+								<td>15</td>
+								<td>Prospect</td>
+								<td>Prospect</td>
+								<td>81.49</td>
+								<td>64.11</td>
+								<td>8.16</td>
+								<td>1.03</td>
+								<td>4.16</td>
+								<td>0.00</td>
+							</tr>
+							<tr>
+								<td>16</td>
+								<td>Prospect</td>
+								<td>Prospect</td>
+								<td>82.27</td>
+								<td>64.11</td>
+								<td>8.94</td>
+								<td>1.03</td>
+								<td>4.16</td>
+								<td>0.00</td>
+							</tr>
+							<tr>
+								<td>17</td>
+								<td>Prospect</td>
+								<td>Prospect</td>
+								<td>82.94</td>
+								<td>64.11</td>
+								<td>9.62</td>
+								<td>1.03</td>
+								<td>4.16</td>
+								<td>0.00</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</details>
+			<details>
+				<summary>
+					aging-contender — Veteran initially; no changes in 17 games
+				</summary>
+				<p>
+					38-year-old 70-rated QB versus 23-year-old 62/85 successor. Team is
+					10–2, veteran has an ordinary prior season.
+				</p>
+				<div class="table-wrap">
+					<table>
+						<thead>
+							<tr>
+								<th>Player</th>
+								<th>Ability</th>
+								<th>Potential</th>
+								<th>Age</th>
+								<th>Annual salary</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>Veteran</td>
+								<td>70</td>
+								<td>70</td>
+								<td>38</td>
+								<td>$30.0m</td>
+							</tr>
+							<tr>
+								<td>Successor</td>
+								<td>62</td>
+								<td>85</td>
+								<td>23</td>
+								<td>$0.5m</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<svg
+					viewBox="0 0 600 240"
+					role="img"
+					aria-label="aging-contender: weekly Starter Scores. Exact values are in the following table."
+				>
+					<rect x="65" y="35" width="500" height="155" class="frame" />
+					<text x="56" y="194" text-anchor="end">60.0</text>
+					<text x="56" y="155.25" text-anchor="end">65.0</text>
+					<text x="56" y="116.5" text-anchor="end">70.0</text>
+					<text x="56" y="77.75" text-anchor="end">75.0</text>
+					<text x="56" y="39" text-anchor="end">80.0</text>
+					<text x="65" y="208" text-anchor="middle">0</text>
+					<text x="182.6470588235294" y="208" text-anchor="middle">4</text>
+					<text x="300.2941176470588" y="208" text-anchor="middle">8</text>
+					<text x="417.94117647058823" y="208" text-anchor="middle">12</text>
+					<text x="535.5882352941176" y="208" text-anchor="middle">16</text>
+					<text x="315" y="233" text-anchor="middle">
+						Games completed · decision for the next game
+					</text>
+					<text
+						x="18"
+						y="118"
+						transform="rotate(-90 18 118)"
+						text-anchor="middle"
+					>
+						Starter Score
+					</text>
+					<polyline
+						class="series s0"
+						points="65,93.08625000000004 94.41176470588235,92.57475000000001 123.8235294117647,92.90799999999996 153.23529411764707,93.45825000000005 182.6470588235294,94.04725 212.05882352941177,94.59749999999998 241.47058823529412,95.09350000000003 270.88235294117646,95.51974999999997 300.2941176470588,95.89174999999999 329.70588235294116,96.21725 359.11764705882354,96.48849999999997 388.5294117647059,96.70550000000001 417.94117647058823,96.89150000000004 447.35294117647055,97.0465 476.7647058823529,97.17824999999996 506.1764705882353,97.28675000000004 535.5882352941176,97.37200000000001 565,97.44950000000006"
+					/>
+					<text x="65" y="20" class="label0">Veteran</text>
+					<circle class="dot s0" cx="65" cy="93.08625000000004" r="3.5" />
+					<circle
+						class="dot s0"
+						cx="94.41176470588235"
+						cy="92.57475000000001"
+						r="3.5"
+					/>
+					<circle
+						class="dot s0"
+						cx="123.8235294117647"
+						cy="92.90799999999996"
+						r="3.5"
+					/>
+					<circle
+						class="dot s0"
+						cx="153.23529411764707"
+						cy="93.45825000000005"
+						r="3.5"
+					/>
+					<circle class="dot s0" cx="182.6470588235294" cy="94.04725" r="3.5" />
+					<circle
+						class="dot s0"
+						cx="212.05882352941177"
+						cy="94.59749999999998"
+						r="3.5"
+					/>
+					<circle
+						class="dot s0"
+						cx="241.47058823529412"
+						cy="95.09350000000003"
+						r="3.5"
+					/>
+					<circle
+						class="dot s0"
+						cx="270.88235294117646"
+						cy="95.51974999999997"
+						r="3.5"
+					/>
+					<circle
+						class="dot s0"
+						cx="300.2941176470588"
+						cy="95.89174999999999"
+						r="3.5"
+					/>
+					<circle
+						class="dot s0"
+						cx="329.70588235294116"
+						cy="96.21725"
+						r="3.5"
+					/>
+					<circle
+						class="dot s0"
+						cx="359.11764705882354"
+						cy="96.48849999999997"
+						r="3.5"
+					/>
+					<circle
+						class="dot s0"
+						cx="388.5294117647059"
+						cy="96.70550000000001"
+						r="3.5"
+					/>
+					<circle
+						class="dot s0"
+						cx="417.94117647058823"
+						cy="96.89150000000004"
+						r="3.5"
+					/>
+					<circle class="dot s0" cx="447.35294117647055" cy="97.0465" r="3.5" />
+					<circle
+						class="dot s0"
+						cx="476.7647058823529"
+						cy="97.17824999999996"
+						r="3.5"
+					/>
+					<circle
+						class="dot s0"
+						cx="506.1764705882353"
+						cy="97.28675000000004"
+						r="3.5"
+					/>
+					<circle
+						class="dot s0"
+						cx="535.5882352941176"
+						cy="97.37200000000001"
+						r="3.5"
+					/>
+					<circle class="dot s0" cx="565" cy="97.44950000000006" r="3.5" />
+					<polyline
+						class="series s1"
+						points="65,141.91125 94.41176470588235,141.91125 123.8235294117647,141.91125 153.23529411764707,141.91125 182.6470588235294,141.91125 212.05882352941177,141.91125 241.47058823529412,141.91125 270.88235294117646,141.91125 300.2941176470588,141.91125 329.70588235294116,141.91125 359.11764705882354,141.91125 388.5294117647059,141.91125 417.94117647058823,141.91125 447.35294117647055,141.91125 476.7647058823529,141.91125 506.1764705882353,141.91125 535.5882352941176,141.91125 565,141.91125"
+					/>
+					<text x="325" y="20" class="label1">Successor</text>
+				</svg>
+				<p>
+					Dots identify the available player selected for the next game. Injury
+					replacements can differ from the depth-chart leader. Scores are
+					evaluated before applying that row’s new depth order; the next
+					evaluation reflects the new incumbent.
+				</p>
+				<div class="table-wrap">
+					<table>
+						<thead>
+							<tr>
+								<th>After game</th>
+								<th>Selected</th>
+								<th>Depth leader</th>
+								<th>Score A</th>
+								<th>Score B</th>
+								<th>Performance A</th>
+								<th>Performance B</th>
+								<th>Continuity A</th>
+								<th>Continuity B</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>0</td>
+								<td>Veteran</td>
+								<td>Veteran</td>
+								<td>72.50</td>
+								<td>66.20</td>
+								<td>-1.29</td>
+								<td>0.00</td>
+								<td>2.77</td>
+								<td>0.00</td>
+							</tr>
+							<tr>
+								<td>1</td>
+								<td>Veteran</td>
+								<td>Veteran</td>
+								<td>72.57</td>
+								<td>66.20</td>
+								<td>-1.22</td>
+								<td>0.00</td>
+								<td>2.77</td>
+								<td>0.00</td>
+							</tr>
+							<tr>
+								<td>2</td>
+								<td>Veteran</td>
+								<td>Veteran</td>
+								<td>72.53</td>
+								<td>66.20</td>
+								<td>-1.27</td>
+								<td>0.00</td>
+								<td>2.77</td>
+								<td>0.00</td>
+							</tr>
+							<tr>
+								<td>3</td>
+								<td>Veteran</td>
+								<td>Veteran</td>
+								<td>72.46</td>
+								<td>66.20</td>
+								<td>-1.34</td>
+								<td>0.00</td>
+								<td>2.77</td>
+								<td>0.00</td>
+							</tr>
+							<tr>
+								<td>4</td>
+								<td>Veteran</td>
+								<td>Veteran</td>
+								<td>72.38</td>
+								<td>66.20</td>
+								<td>-1.41</td>
+								<td>0.00</td>
+								<td>2.77</td>
+								<td>0.00</td>
+							</tr>
+							<tr>
+								<td>5</td>
+								<td>Veteran</td>
+								<td>Veteran</td>
+								<td>72.31</td>
+								<td>66.20</td>
+								<td>-1.49</td>
+								<td>0.00</td>
+								<td>2.77</td>
+								<td>0.00</td>
+							</tr>
+							<tr>
+								<td>6</td>
+								<td>Veteran</td>
+								<td>Veteran</td>
+								<td>72.25</td>
+								<td>66.20</td>
+								<td>-1.55</td>
+								<td>0.00</td>
+								<td>2.77</td>
+								<td>0.00</td>
+							</tr>
+							<tr>
+								<td>7</td>
+								<td>Veteran</td>
+								<td>Veteran</td>
+								<td>72.19</td>
+								<td>66.20</td>
+								<td>-1.60</td>
+								<td>0.00</td>
+								<td>2.77</td>
+								<td>0.00</td>
+							</tr>
+							<tr>
+								<td>8</td>
+								<td>Veteran</td>
+								<td>Veteran</td>
+								<td>72.14</td>
+								<td>66.20</td>
+								<td>-1.65</td>
+								<td>0.00</td>
+								<td>2.77</td>
+								<td>0.00</td>
+							</tr>
+							<tr>
+								<td>9</td>
+								<td>Veteran</td>
+								<td>Veteran</td>
+								<td>72.10</td>
+								<td>66.20</td>
+								<td>-1.69</td>
+								<td>0.00</td>
+								<td>2.77</td>
+								<td>0.00</td>
+							</tr>
+							<tr>
+								<td>10</td>
+								<td>Veteran</td>
+								<td>Veteran</td>
+								<td>72.07</td>
+								<td>66.20</td>
+								<td>-1.73</td>
+								<td>0.00</td>
+								<td>2.77</td>
+								<td>0.00</td>
+							</tr>
+							<tr>
+								<td>11</td>
+								<td>Veteran</td>
+								<td>Veteran</td>
+								<td>72.04</td>
+								<td>66.20</td>
+								<td>-1.76</td>
+								<td>0.00</td>
+								<td>2.77</td>
+								<td>0.00</td>
+							</tr>
+							<tr>
+								<td>12</td>
+								<td>Veteran</td>
+								<td>Veteran</td>
+								<td>72.01</td>
+								<td>66.20</td>
+								<td>-1.78</td>
+								<td>0.00</td>
+								<td>2.77</td>
+								<td>0.00</td>
+							</tr>
+							<tr>
+								<td>13</td>
+								<td>Veteran</td>
+								<td>Veteran</td>
+								<td>71.99</td>
+								<td>66.20</td>
+								<td>-1.80</td>
+								<td>0.00</td>
+								<td>2.77</td>
+								<td>0.00</td>
+							</tr>
+							<tr>
+								<td>14</td>
+								<td>Veteran</td>
+								<td>Veteran</td>
+								<td>71.98</td>
+								<td>66.20</td>
+								<td>-1.82</td>
+								<td>0.00</td>
+								<td>2.77</td>
+								<td>0.00</td>
+							</tr>
+							<tr>
+								<td>15</td>
+								<td>Veteran</td>
+								<td>Veteran</td>
+								<td>71.96</td>
+								<td>66.20</td>
+								<td>-1.83</td>
+								<td>0.00</td>
+								<td>2.77</td>
+								<td>0.00</td>
+							</tr>
+							<tr>
+								<td>16</td>
+								<td>Veteran</td>
+								<td>Veteran</td>
+								<td>71.95</td>
+								<td>66.20</td>
+								<td>-1.84</td>
+								<td>0.00</td>
+								<td>2.77</td>
+								<td>0.00</td>
+							</tr>
+							<tr>
+								<td>17</td>
+								<td>Veteran</td>
+								<td>Veteran</td>
+								<td>71.94</td>
+								<td>66.20</td>
+								<td>-1.85</td>
+								<td>0.00</td>
+								<td>2.77</td>
+								<td>0.00</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</details>
+			<details>
+				<summary>
+					aging-rebuilder — Successor initially; no changes in 17 games
+				</summary>
+				<p>Same players on a 2–10 rebuilding team.</p>
+				<div class="table-wrap">
+					<table>
+						<thead>
+							<tr>
+								<th>Player</th>
+								<th>Ability</th>
+								<th>Potential</th>
+								<th>Age</th>
+								<th>Annual salary</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>Veteran</td>
+								<td>70</td>
+								<td>70</td>
+								<td>38</td>
+								<td>$30.0m</td>
+							</tr>
+							<tr>
+								<td>Successor</td>
+								<td>62</td>
+								<td>85</td>
+								<td>23</td>
+								<td>$0.5m</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<svg
+					viewBox="0 0 600 240"
+					role="img"
+					aria-label="aging-rebuilder: weekly Starter Scores. Exact values are in the following table."
+				>
+					<rect x="65" y="35" width="500" height="155" class="frame" />
+					<text x="56" y="194" text-anchor="end">60.0</text>
+					<text x="56" y="155.25" text-anchor="end">63.8</text>
+					<text x="56" y="116.5" text-anchor="end">67.5</text>
+					<text x="56" y="77.75" text-anchor="end">71.3</text>
+					<text x="56" y="39" text-anchor="end">75.0</text>
+					<text x="65" y="208" text-anchor="middle">0</text>
+					<text x="182.6470588235294" y="208" text-anchor="middle">4</text>
+					<text x="300.2941176470588" y="208" text-anchor="middle">8</text>
+					<text x="417.94117647058823" y="208" text-anchor="middle">12</text>
+					<text x="535.5882352941176" y="208" text-anchor="middle">16</text>
+					<text x="315" y="233" text-anchor="middle">
+						Games completed · decision for the next game
+					</text>
+					<text
+						x="18"
+						y="118"
+						transform="rotate(-90 18 118)"
+						text-anchor="middle"
+					>
+						Starter Score
+					</text>
+					<polyline
+						class="series s0"
+						points="65,137.19666666666666 94.41176470588235,152.69666666666666 123.8235294117647,152.69666666666666 153.23529411764707,152.69666666666666 182.6470588235294,152.69666666666666 212.05882352941177,152.69666666666666 241.47058823529412,152.69666666666666 270.88235294117646,152.69666666666666 300.2941176470588,152.69666666666666 329.70588235294116,152.69666666666666 359.11764705882354,152.69666666666666 388.5294117647059,152.69666666666666 417.94117647058823,152.69666666666666 447.35294117647055,152.69666666666666 476.7647058823529,152.69666666666666 506.1764705882353,152.69666666666666 535.5882352941176,152.69666666666666 565,152.69666666666666"
+					/>
+					<text x="65" y="20" class="label0">Veteran</text>
+					<polyline
+						class="series s1"
+						points="65,85.47833333333338 94.41176470588235,74.47333333333327 123.8235294117647,77.29433333333337 153.23529411764707,79.38166666666669 182.6470588235294,81.01433333333335 212.05882352941177,82.32666666666665 241.47058823529412,83.41166666666669 270.88235294117646,84.30033333333334 300.2941176470588,85.04433333333337 329.70588235294116,85.64366666666663 359.11764705882354,86.13966666666664 388.5294117647059,86.56333333333328 417.94117647058823,86.91466666666668 447.35294117647055,87.20400000000006 476.7647058823529,87.46233333333332 506.1764705882353,87.66899999999994 535.5882352941176,87.85499999999995 565,88.02033333333333"
+					/>
+					<text x="325" y="20" class="label1">Successor</text>
+					<circle class="dot s1" cx="65" cy="85.47833333333338" r="3.5" />
+					<circle
+						class="dot s1"
+						cx="94.41176470588235"
+						cy="74.47333333333327"
+						r="3.5"
+					/>
+					<circle
+						class="dot s1"
+						cx="123.8235294117647"
+						cy="77.29433333333337"
+						r="3.5"
+					/>
+					<circle
+						class="dot s1"
+						cx="153.23529411764707"
+						cy="79.38166666666669"
+						r="3.5"
+					/>
+					<circle
+						class="dot s1"
+						cx="182.6470588235294"
+						cy="81.01433333333335"
+						r="3.5"
+					/>
+					<circle
+						class="dot s1"
+						cx="212.05882352941177"
+						cy="82.32666666666665"
+						r="3.5"
+					/>
+					<circle
+						class="dot s1"
+						cx="241.47058823529412"
+						cy="83.41166666666669"
+						r="3.5"
+					/>
+					<circle
+						class="dot s1"
+						cx="270.88235294117646"
+						cy="84.30033333333334"
+						r="3.5"
+					/>
+					<circle
+						class="dot s1"
+						cx="300.2941176470588"
+						cy="85.04433333333337"
+						r="3.5"
+					/>
+					<circle
+						class="dot s1"
+						cx="329.70588235294116"
+						cy="85.64366666666663"
+						r="3.5"
+					/>
+					<circle
+						class="dot s1"
+						cx="359.11764705882354"
+						cy="86.13966666666664"
+						r="3.5"
+					/>
+					<circle
+						class="dot s1"
+						cx="388.5294117647059"
+						cy="86.56333333333328"
+						r="3.5"
+					/>
+					<circle
+						class="dot s1"
+						cx="417.94117647058823"
+						cy="86.91466666666668"
+						r="3.5"
+					/>
+					<circle
+						class="dot s1"
+						cx="447.35294117647055"
+						cy="87.20400000000006"
+						r="3.5"
+					/>
+					<circle
+						class="dot s1"
+						cx="476.7647058823529"
+						cy="87.46233333333332"
+						r="3.5"
+					/>
+					<circle
+						class="dot s1"
+						cx="506.1764705882353"
+						cy="87.66899999999994"
+						r="3.5"
+					/>
+					<circle
+						class="dot s1"
+						cx="535.5882352941176"
+						cy="87.85499999999995"
+						r="3.5"
+					/>
+					<circle class="dot s1" cx="565" cy="88.02033333333333" r="3.5" />
+				</svg>
+				<p>
+					Dots identify the available player selected for the next game. Injury
+					replacements can differ from the depth-chart leader. Scores are
+					evaluated before applying that row’s new depth order; the next
+					evaluation reflects the new incumbent.
+				</p>
+				<div class="table-wrap">
+					<table>
+						<thead>
+							<tr>
+								<th>After game</th>
+								<th>Selected</th>
+								<th>Depth leader</th>
+								<th>Score A</th>
+								<th>Score B</th>
+								<th>Performance A</th>
+								<th>Performance B</th>
+								<th>Continuity A</th>
+								<th>Continuity B</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>0</td>
+								<td>Successor</td>
+								<td>Successor</td>
+								<td>65.11</td>
+								<td>70.11</td>
+								<td>-1.29</td>
+								<td>0.00</td>
+								<td>1.50</td>
+								<td>0.00</td>
+							</tr>
+							<tr>
+								<td>1</td>
+								<td>Successor</td>
+								<td>Successor</td>
+								<td>63.61</td>
+								<td>71.18</td>
+								<td>-1.29</td>
+								<td>-0.43</td>
+								<td>0.00</td>
+								<td>1.50</td>
+							</tr>
+							<tr>
+								<td>2</td>
+								<td>Successor</td>
+								<td>Successor</td>
+								<td>63.61</td>
+								<td>70.91</td>
+								<td>-1.29</td>
+								<td>-0.71</td>
+								<td>0.00</td>
+								<td>1.50</td>
+							</tr>
+							<tr>
+								<td>3</td>
+								<td>Successor</td>
+								<td>Successor</td>
+								<td>63.61</td>
+								<td>70.70</td>
+								<td>-1.29</td>
+								<td>-0.91</td>
+								<td>0.00</td>
+								<td>1.50</td>
+							</tr>
+							<tr>
+								<td>4</td>
+								<td>Successor</td>
+								<td>Successor</td>
+								<td>63.61</td>
+								<td>70.55</td>
+								<td>-1.29</td>
+								<td>-1.07</td>
+								<td>0.00</td>
+								<td>1.50</td>
+							</tr>
+							<tr>
+								<td>5</td>
+								<td>Successor</td>
+								<td>Successor</td>
+								<td>63.61</td>
+								<td>70.42</td>
+								<td>-1.29</td>
+								<td>-1.20</td>
+								<td>0.00</td>
+								<td>1.50</td>
+							</tr>
+							<tr>
+								<td>6</td>
+								<td>Successor</td>
+								<td>Successor</td>
+								<td>63.61</td>
+								<td>70.31</td>
+								<td>-1.29</td>
+								<td>-1.30</td>
+								<td>0.00</td>
+								<td>1.50</td>
+							</tr>
+							<tr>
+								<td>7</td>
+								<td>Successor</td>
+								<td>Successor</td>
+								<td>63.61</td>
+								<td>70.23</td>
+								<td>-1.29</td>
+								<td>-1.39</td>
+								<td>0.00</td>
+								<td>1.50</td>
+							</tr>
+							<tr>
+								<td>8</td>
+								<td>Successor</td>
+								<td>Successor</td>
+								<td>63.61</td>
+								<td>70.16</td>
+								<td>-1.29</td>
+								<td>-1.46</td>
+								<td>0.00</td>
+								<td>1.50</td>
+							</tr>
+							<tr>
+								<td>9</td>
+								<td>Successor</td>
+								<td>Successor</td>
+								<td>63.61</td>
+								<td>70.10</td>
+								<td>-1.29</td>
+								<td>-1.52</td>
+								<td>0.00</td>
+								<td>1.50</td>
+							</tr>
+							<tr>
+								<td>10</td>
+								<td>Successor</td>
+								<td>Successor</td>
+								<td>63.61</td>
+								<td>70.05</td>
+								<td>-1.29</td>
+								<td>-1.56</td>
+								<td>0.00</td>
+								<td>1.50</td>
+							</tr>
+							<tr>
+								<td>11</td>
+								<td>Successor</td>
+								<td>Successor</td>
+								<td>63.61</td>
+								<td>70.01</td>
+								<td>-1.29</td>
+								<td>-1.60</td>
+								<td>0.00</td>
+								<td>1.50</td>
+							</tr>
+							<tr>
+								<td>12</td>
+								<td>Successor</td>
+								<td>Successor</td>
+								<td>63.61</td>
+								<td>69.98</td>
+								<td>-1.29</td>
+								<td>-1.64</td>
+								<td>0.00</td>
+								<td>1.50</td>
+							</tr>
+							<tr>
+								<td>13</td>
+								<td>Successor</td>
+								<td>Successor</td>
+								<td>63.61</td>
+								<td>69.95</td>
+								<td>-1.29</td>
+								<td>-1.67</td>
+								<td>0.00</td>
+								<td>1.50</td>
+							</tr>
+							<tr>
+								<td>14</td>
+								<td>Successor</td>
+								<td>Successor</td>
+								<td>63.61</td>
+								<td>69.92</td>
+								<td>-1.29</td>
+								<td>-1.69</td>
+								<td>0.00</td>
+								<td>1.50</td>
+							</tr>
+							<tr>
+								<td>15</td>
+								<td>Successor</td>
+								<td>Successor</td>
+								<td>63.61</td>
+								<td>69.90</td>
+								<td>-1.29</td>
+								<td>-1.71</td>
+								<td>0.00</td>
+								<td>1.50</td>
+							</tr>
+							<tr>
+								<td>16</td>
+								<td>Successor</td>
+								<td>Successor</td>
+								<td>63.61</td>
+								<td>69.89</td>
+								<td>-1.29</td>
+								<td>-1.73</td>
+								<td>0.00</td>
+								<td>1.50</td>
+							</tr>
+							<tr>
+								<td>17</td>
+								<td>Successor</td>
+								<td>Successor</td>
+								<td>63.61</td>
+								<td>69.87</td>
+								<td>-1.29</td>
+								<td>-1.75</td>
+								<td>0.00</td>
+								<td>1.50</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</details>
+			<details>
+				<summary>mvp — MVP initially; no changes in 17 games</summary>
+				<p>
+					68-rated reigning MVP with a good prior season versus a newly drafted
+					first-rounder rated 72/85. MVP continues good play.
+				</p>
+				<div class="table-wrap">
+					<table>
+						<thead>
+							<tr>
+								<th>Player</th>
+								<th>Ability</th>
+								<th>Potential</th>
+								<th>Age</th>
+								<th>Annual salary</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>MVP</td>
+								<td>68</td>
+								<td>68</td>
+								<td>34</td>
+								<td>$30.0m</td>
+							</tr>
+							<tr>
+								<td>Rookie</td>
+								<td>72</td>
+								<td>85</td>
+								<td>22</td>
+								<td>$9.0m</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<svg
+					viewBox="0 0 600 240"
+					role="img"
+					aria-label="mvp: weekly Starter Scores. Exact values are in the following table."
+				>
+					<rect x="65" y="35" width="500" height="155" class="frame" />
+					<text x="56" y="194" text-anchor="end">80.0</text>
+					<text x="56" y="155.25" text-anchor="end">83.8</text>
+					<text x="56" y="116.5" text-anchor="end">87.5</text>
+					<text x="56" y="77.75" text-anchor="end">91.3</text>
+					<text x="56" y="39" text-anchor="end">95.0</text>
+					<text x="65" y="208" text-anchor="middle">0</text>
+					<text x="182.6470588235294" y="208" text-anchor="middle">4</text>
+					<text x="300.2941176470588" y="208" text-anchor="middle">8</text>
+					<text x="417.94117647058823" y="208" text-anchor="middle">12</text>
+					<text x="535.5882352941176" y="208" text-anchor="middle">16</text>
+					<text x="315" y="233" text-anchor="middle">
+						Games completed · decision for the next game
+					</text>
+					<text
+						x="18"
+						y="118"
+						transform="rotate(-90 18 118)"
+						text-anchor="middle"
+					>
+						Starter Score
+					</text>
+					<polyline
+						class="series s0"
+						points="65,86.50133333333328 94.41176470588235,105.32866666666665 123.8235294117647,110.59866666666669 153.23529411764707,110.96033333333332 182.6470588235294,109.42066666666665 212.05882352941177,107.21966666666671 241.47058823529412,104.90500000000002 270.88235294117646,102.72466666666669 300.2941176470588,100.782 329.70588235294116,98.9943333333333 359.11764705882354,97.55800000000002 388.5294117647059,96.4006666666666 417.94117647058823,95.49133333333333 447.35294117647055,94.77833333333331 476.7647058823529,94.22033333333329 506.1764705882353,93.79666666666664 535.5882352941176,93.48666666666662 565,93.24900000000001"
+					/>
+					<text x="65" y="20" class="label0">MVP</text>
+					<circle class="dot s0" cx="65" cy="86.50133333333328" r="3.5" />
+					<circle
+						class="dot s0"
+						cx="94.41176470588235"
+						cy="105.32866666666665"
+						r="3.5"
+					/>
+					<circle
+						class="dot s0"
+						cx="123.8235294117647"
+						cy="110.59866666666669"
+						r="3.5"
+					/>
+					<circle
+						class="dot s0"
+						cx="153.23529411764707"
+						cy="110.96033333333332"
+						r="3.5"
+					/>
+					<circle
+						class="dot s0"
+						cx="182.6470588235294"
+						cy="109.42066666666665"
+						r="3.5"
+					/>
+					<circle
+						class="dot s0"
+						cx="212.05882352941177"
+						cy="107.21966666666671"
+						r="3.5"
+					/>
+					<circle
+						class="dot s0"
+						cx="241.47058823529412"
+						cy="104.90500000000002"
+						r="3.5"
+					/>
+					<circle
+						class="dot s0"
+						cx="270.88235294117646"
+						cy="102.72466666666669"
+						r="3.5"
+					/>
+					<circle class="dot s0" cx="300.2941176470588" cy="100.782" r="3.5" />
+					<circle
+						class="dot s0"
+						cx="329.70588235294116"
+						cy="98.9943333333333"
+						r="3.5"
+					/>
+					<circle
+						class="dot s0"
+						cx="359.11764705882354"
+						cy="97.55800000000002"
+						r="3.5"
+					/>
+					<circle
+						class="dot s0"
+						cx="388.5294117647059"
+						cy="96.4006666666666"
+						r="3.5"
+					/>
+					<circle
+						class="dot s0"
+						cx="417.94117647058823"
+						cy="95.49133333333333"
+						r="3.5"
+					/>
+					<circle
+						class="dot s0"
+						cx="447.35294117647055"
+						cy="94.77833333333331"
+						r="3.5"
+					/>
+					<circle
+						class="dot s0"
+						cx="476.7647058823529"
+						cy="94.22033333333329"
+						r="3.5"
+					/>
+					<circle
+						class="dot s0"
+						cx="506.1764705882353"
+						cy="93.79666666666664"
+						r="3.5"
+					/>
+					<circle
+						class="dot s0"
+						cx="535.5882352941176"
+						cy="93.48666666666662"
+						r="3.5"
+					/>
+					<circle class="dot s0" cx="565" cy="93.24900000000001" r="3.5" />
+					<polyline
+						class="series s1"
+						points="65,136.91766666666666 94.41176470588235,136.91766666666666 123.8235294117647,136.91766666666666 153.23529411764707,136.91766666666666 182.6470588235294,136.91766666666666 212.05882352941177,136.91766666666666 241.47058823529412,136.91766666666666 270.88235294117646,136.91766666666666 300.2941176470588,136.91766666666666 329.70588235294116,136.91766666666666 359.11764705882354,136.91766666666666 388.5294117647059,136.91766666666666 417.94117647058823,136.91766666666666 447.35294117647055,136.91766666666666 476.7647058823529,136.91766666666666 506.1764705882353,136.91766666666666 535.5882352941176,136.91766666666666 565,136.91766666666666"
+					/>
+					<text x="325" y="20" class="label1">Rookie</text>
+				</svg>
+				<p>
+					Dots identify the available player selected for the next game. Injury
+					replacements can differ from the depth-chart leader. Scores are
+					evaluated before applying that row’s new depth order; the next
+					evaluation reflects the new incumbent.
+				</p>
+				<div class="table-wrap">
+					<table>
+						<thead>
+							<tr>
+								<th>After game</th>
+								<th>Selected</th>
+								<th>Depth leader</th>
+								<th>Score A</th>
+								<th>Score B</th>
+								<th>Performance A</th>
+								<th>Performance B</th>
+								<th>Continuity A</th>
+								<th>Continuity B</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>0</td>
+								<td>MVP</td>
+								<td>MVP</td>
+								<td>90.02</td>
+								<td>85.14</td>
+								<td>9.51</td>
+								<td>0.00</td>
+								<td>4.16</td>
+								<td>0.00</td>
+							</tr>
+							<tr>
+								<td>1</td>
+								<td>MVP</td>
+								<td>MVP</td>
+								<td>88.19</td>
+								<td>85.14</td>
+								<td>9.02</td>
+								<td>0.00</td>
+								<td>4.16</td>
+								<td>0.00</td>
+							</tr>
+							<tr>
+								<td>2</td>
+								<td>MVP</td>
+								<td>MVP</td>
+								<td>87.68</td>
+								<td>85.14</td>
+								<td>9.35</td>
+								<td>0.00</td>
+								<td>4.16</td>
+								<td>0.00</td>
+							</tr>
+							<tr>
+								<td>3</td>
+								<td>MVP</td>
+								<td>MVP</td>
+								<td>87.65</td>
+								<td>85.14</td>
+								<td>9.90</td>
+								<td>0.00</td>
+								<td>4.16</td>
+								<td>0.00</td>
+							</tr>
+							<tr>
+								<td>4</td>
+								<td>MVP</td>
+								<td>MVP</td>
+								<td>87.80</td>
+								<td>85.14</td>
+								<td>10.48</td>
+								<td>0.00</td>
+								<td>4.16</td>
+								<td>0.00</td>
+							</tr>
+							<tr>
+								<td>5</td>
+								<td>MVP</td>
+								<td>MVP</td>
+								<td>88.01</td>
+								<td>85.14</td>
+								<td>11.03</td>
+								<td>0.00</td>
+								<td>4.16</td>
+								<td>0.00</td>
+							</tr>
+							<tr>
+								<td>6</td>
+								<td>MVP</td>
+								<td>MVP</td>
+								<td>88.23</td>
+								<td>85.14</td>
+								<td>11.51</td>
+								<td>0.00</td>
+								<td>4.16</td>
+								<td>0.00</td>
+							</tr>
+							<tr>
+								<td>7</td>
+								<td>MVP</td>
+								<td>MVP</td>
+								<td>88.45</td>
+								<td>85.14</td>
+								<td>11.93</td>
+								<td>0.00</td>
+								<td>4.16</td>
+								<td>0.00</td>
+							</tr>
+							<tr>
+								<td>8</td>
+								<td>MVP</td>
+								<td>MVP</td>
+								<td>88.63</td>
+								<td>85.14</td>
+								<td>12.29</td>
+								<td>0.00</td>
+								<td>4.16</td>
+								<td>0.00</td>
+							</tr>
+							<tr>
+								<td>9</td>
+								<td>MVP</td>
+								<td>MVP</td>
+								<td>88.81</td>
+								<td>85.14</td>
+								<td>12.61</td>
+								<td>0.00</td>
+								<td>4.16</td>
+								<td>0.00</td>
+							</tr>
+							<tr>
+								<td>10</td>
+								<td>MVP</td>
+								<td>MVP</td>
+								<td>88.95</td>
+								<td>85.14</td>
+								<td>12.88</td>
+								<td>0.00</td>
+								<td>4.16</td>
+								<td>0.00</td>
+							</tr>
+							<tr>
+								<td>11</td>
+								<td>MVP</td>
+								<td>MVP</td>
+								<td>89.06</td>
+								<td>85.14</td>
+								<td>13.10</td>
+								<td>0.00</td>
+								<td>4.16</td>
+								<td>0.00</td>
+							</tr>
+							<tr>
+								<td>12</td>
+								<td>MVP</td>
+								<td>MVP</td>
+								<td>89.15</td>
+								<td>85.14</td>
+								<td>13.28</td>
+								<td>0.00</td>
+								<td>4.16</td>
+								<td>0.00</td>
+							</tr>
+							<tr>
+								<td>13</td>
+								<td>MVP</td>
+								<td>MVP</td>
+								<td>89.22</td>
+								<td>85.14</td>
+								<td>13.43</td>
+								<td>0.00</td>
+								<td>4.16</td>
+								<td>0.00</td>
+							</tr>
+							<tr>
+								<td>14</td>
+								<td>MVP</td>
+								<td>MVP</td>
+								<td>89.27</td>
+								<td>85.14</td>
+								<td>13.56</td>
+								<td>0.00</td>
+								<td>4.16</td>
+								<td>0.00</td>
+							</tr>
+							<tr>
+								<td>15</td>
+								<td>MVP</td>
+								<td>MVP</td>
+								<td>89.31</td>
+								<td>85.14</td>
+								<td>13.66</td>
+								<td>0.00</td>
+								<td>4.16</td>
+								<td>0.00</td>
+							</tr>
+							<tr>
+								<td>16</td>
+								<td>MVP</td>
+								<td>MVP</td>
+								<td>89.34</td>
+								<td>85.14</td>
+								<td>13.75</td>
+								<td>0.00</td>
+								<td>4.16</td>
+								<td>0.00</td>
+							</tr>
+							<tr>
+								<td>17</td>
+								<td>MVP</td>
+								<td>MVP</td>
+								<td>89.36</td>
+								<td>85.14</td>
+								<td>13.83</td>
+								<td>0.00</td>
+								<td>4.16</td>
+								<td>0.00</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</details>
+			<details>
+				<summary>
+					exceptional-replacement — Exceptional pick initially; no changes in 17
+					games
+				</summary>
+				<p>
+					Struggling second-year first-rounder rated 54/68 versus an exceptional
+					new first-rounder rated 78/92.
+				</p>
+				<div class="table-wrap">
+					<table>
+						<thead>
+							<tr>
+								<th>Player</th>
+								<th>Ability</th>
+								<th>Potential</th>
+								<th>Age</th>
+								<th>Annual salary</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>Struggling pick</td>
+								<td>54</td>
+								<td>68</td>
+								<td>23</td>
+								<td>$9.0m</td>
+							</tr>
+							<tr>
+								<td>Exceptional pick</td>
+								<td>78</td>
+								<td>92</td>
+								<td>22</td>
+								<td>$9.0m</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<svg
+					viewBox="0 0 600 240"
+					role="img"
+					aria-label="exceptional-replacement: weekly Starter Scores. Exact values are in the following table."
+				>
+					<rect x="65" y="35" width="500" height="155" class="frame" />
+					<text x="56" y="194" text-anchor="end">50.0</text>
+					<text x="56" y="155.25" text-anchor="end">62.5</text>
+					<text x="56" y="116.5" text-anchor="end">75.0</text>
+					<text x="56" y="77.75" text-anchor="end">87.5</text>
+					<text x="56" y="39" text-anchor="end">100.0</text>
+					<text x="65" y="208" text-anchor="middle">0</text>
+					<text x="182.6470588235294" y="208" text-anchor="middle">4</text>
+					<text x="300.2941176470588" y="208" text-anchor="middle">8</text>
+					<text x="417.94117647058823" y="208" text-anchor="middle">12</text>
+					<text x="535.5882352941176" y="208" text-anchor="middle">16</text>
+					<text x="315" y="233" text-anchor="middle">
+						Games completed · decision for the next game
+					</text>
+					<text
+						x="18"
+						y="118"
+						transform="rotate(-90 18 118)"
+						text-anchor="middle"
+					>
+						Starter Score
+					</text>
+					<polyline
+						class="series s0"
+						points="65,166.3067 94.41176470588235,174.9092 123.8235294117647,174.9092 153.23529411764707,174.9092 182.6470588235294,174.9092 212.05882352941177,174.9092 241.47058823529412,174.9092 270.88235294117646,174.9092 300.2941176470588,174.9092 329.70588235294116,174.9092 359.11764705882354,174.9092 388.5294117647059,174.9092 417.94117647058823,174.9092 447.35294117647055,174.9092 476.7647058823529,174.9092 506.1764705882353,174.9092 535.5882352941176,174.9092 565,174.9092"
+					/>
+					<text x="65" y="20" class="label0">Struggling pick</text>
+					<polyline
+						class="series s1"
+						points="65,62.047499999999985 94.41176470588235,54.79350000000002 123.8235294117647,55.63980000000001 153.23529411764707,56.26599999999999 182.6470588235294,56.755799999999994 212.05882352941177,57.14949999999999 241.47058823529412,57.474999999999994 270.88235294117646,57.741600000000005 300.2941176470588,57.9648 329.70588235294116,58.1446 359.11764705882354,58.29339999999999 388.5294117647059,58.42050000000003 417.94117647058823,58.52590000000001 447.35294117647055,58.61270000000002 476.7647058823529,58.690199999999976 506.1764705882353,58.752200000000016 535.5882352941176,58.80800000000002 565,58.85759999999999"
+					/>
+					<text x="325" y="20" class="label1">Exceptional pick</text>
+					<circle class="dot s1" cx="65" cy="62.047499999999985" r="3.5" />
+					<circle
+						class="dot s1"
+						cx="94.41176470588235"
+						cy="54.79350000000002"
+						r="3.5"
+					/>
+					<circle
+						class="dot s1"
+						cx="123.8235294117647"
+						cy="55.63980000000001"
+						r="3.5"
+					/>
+					<circle
+						class="dot s1"
+						cx="153.23529411764707"
+						cy="56.26599999999999"
+						r="3.5"
+					/>
+					<circle
+						class="dot s1"
+						cx="182.6470588235294"
+						cy="56.755799999999994"
+						r="3.5"
+					/>
+					<circle
+						class="dot s1"
+						cx="212.05882352941177"
+						cy="57.14949999999999"
+						r="3.5"
+					/>
+					<circle
+						class="dot s1"
+						cx="241.47058823529412"
+						cy="57.474999999999994"
+						r="3.5"
+					/>
+					<circle
+						class="dot s1"
+						cx="270.88235294117646"
+						cy="57.741600000000005"
+						r="3.5"
+					/>
+					<circle class="dot s1" cx="300.2941176470588" cy="57.9648" r="3.5" />
+					<circle class="dot s1" cx="329.70588235294116" cy="58.1446" r="3.5" />
+					<circle
+						class="dot s1"
+						cx="359.11764705882354"
+						cy="58.29339999999999"
+						r="3.5"
+					/>
+					<circle
+						class="dot s1"
+						cx="388.5294117647059"
+						cy="58.42050000000003"
+						r="3.5"
+					/>
+					<circle
+						class="dot s1"
+						cx="417.94117647058823"
+						cy="58.52590000000001"
+						r="3.5"
+					/>
+					<circle
+						class="dot s1"
+						cx="447.35294117647055"
+						cy="58.61270000000002"
+						r="3.5"
+					/>
+					<circle
+						class="dot s1"
+						cx="476.7647058823529"
+						cy="58.690199999999976"
+						r="3.5"
+					/>
+					<circle
+						class="dot s1"
+						cx="506.1764705882353"
+						cy="58.752200000000016"
+						r="3.5"
+					/>
+					<circle
+						class="dot s1"
+						cx="535.5882352941176"
+						cy="58.80800000000002"
+						r="3.5"
+					/>
+					<circle class="dot s1" cx="565" cy="58.85759999999999" r="3.5" />
+				</svg>
+				<p>
+					Dots identify the available player selected for the next game. Injury
+					replacements can differ from the depth-chart leader. Scores are
+					evaluated before applying that row’s new depth order; the next
+					evaluation reflects the new incumbent.
+				</p>
+				<div class="table-wrap">
+					<table>
+						<thead>
+							<tr>
+								<th>After game</th>
+								<th>Selected</th>
+								<th>Depth leader</th>
+								<th>Score A</th>
+								<th>Score B</th>
+								<th>Performance A</th>
+								<th>Performance B</th>
+								<th>Continuity A</th>
+								<th>Continuity B</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>0</td>
+								<td>Exceptional pick</td>
+								<td>Exceptional pick</td>
+								<td>57.64</td>
+								<td>91.28</td>
+								<td>-10.02</td>
+								<td>0.00</td>
+								<td>2.77</td>
+								<td>0.00</td>
+							</tr>
+							<tr>
+								<td>1</td>
+								<td>Exceptional pick</td>
+								<td>Exceptional pick</td>
+								<td>54.87</td>
+								<td>93.61</td>
+								<td>-10.02</td>
+								<td>-0.43</td>
+								<td>0.00</td>
+								<td>2.77</td>
+							</tr>
+							<tr>
+								<td>2</td>
+								<td>Exceptional pick</td>
+								<td>Exceptional pick</td>
+								<td>54.87</td>
+								<td>93.34</td>
+								<td>-10.02</td>
+								<td>-0.71</td>
+								<td>0.00</td>
+								<td>2.77</td>
+							</tr>
+							<tr>
+								<td>3</td>
+								<td>Exceptional pick</td>
+								<td>Exceptional pick</td>
+								<td>54.87</td>
+								<td>93.14</td>
+								<td>-10.02</td>
+								<td>-0.91</td>
+								<td>0.00</td>
+								<td>2.77</td>
+							</tr>
+							<tr>
+								<td>4</td>
+								<td>Exceptional pick</td>
+								<td>Exceptional pick</td>
+								<td>54.87</td>
+								<td>92.98</td>
+								<td>-10.02</td>
+								<td>-1.07</td>
+								<td>0.00</td>
+								<td>2.77</td>
+							</tr>
+							<tr>
+								<td>5</td>
+								<td>Exceptional pick</td>
+								<td>Exceptional pick</td>
+								<td>54.87</td>
+								<td>92.86</td>
+								<td>-10.02</td>
+								<td>-1.20</td>
+								<td>0.00</td>
+								<td>2.77</td>
+							</tr>
+							<tr>
+								<td>6</td>
+								<td>Exceptional pick</td>
+								<td>Exceptional pick</td>
+								<td>54.87</td>
+								<td>92.75</td>
+								<td>-10.02</td>
+								<td>-1.30</td>
+								<td>0.00</td>
+								<td>2.77</td>
+							</tr>
+							<tr>
+								<td>7</td>
+								<td>Exceptional pick</td>
+								<td>Exceptional pick</td>
+								<td>54.87</td>
+								<td>92.66</td>
+								<td>-10.02</td>
+								<td>-1.39</td>
+								<td>0.00</td>
+								<td>2.77</td>
+							</tr>
+							<tr>
+								<td>8</td>
+								<td>Exceptional pick</td>
+								<td>Exceptional pick</td>
+								<td>54.87</td>
+								<td>92.59</td>
+								<td>-10.02</td>
+								<td>-1.46</td>
+								<td>0.00</td>
+								<td>2.77</td>
+							</tr>
+							<tr>
+								<td>9</td>
+								<td>Exceptional pick</td>
+								<td>Exceptional pick</td>
+								<td>54.87</td>
+								<td>92.53</td>
+								<td>-10.02</td>
+								<td>-1.52</td>
+								<td>0.00</td>
+								<td>2.77</td>
+							</tr>
+							<tr>
+								<td>10</td>
+								<td>Exceptional pick</td>
+								<td>Exceptional pick</td>
+								<td>54.87</td>
+								<td>92.49</td>
+								<td>-10.02</td>
+								<td>-1.56</td>
+								<td>0.00</td>
+								<td>2.77</td>
+							</tr>
+							<tr>
+								<td>11</td>
+								<td>Exceptional pick</td>
+								<td>Exceptional pick</td>
+								<td>54.87</td>
+								<td>92.44</td>
+								<td>-10.02</td>
+								<td>-1.60</td>
+								<td>0.00</td>
+								<td>2.77</td>
+							</tr>
+							<tr>
+								<td>12</td>
+								<td>Exceptional pick</td>
+								<td>Exceptional pick</td>
+								<td>54.87</td>
+								<td>92.41</td>
+								<td>-10.02</td>
+								<td>-1.64</td>
+								<td>0.00</td>
+								<td>2.77</td>
+							</tr>
+							<tr>
+								<td>13</td>
+								<td>Exceptional pick</td>
+								<td>Exceptional pick</td>
+								<td>54.87</td>
+								<td>92.38</td>
+								<td>-10.02</td>
+								<td>-1.67</td>
+								<td>0.00</td>
+								<td>2.77</td>
+							</tr>
+							<tr>
+								<td>14</td>
+								<td>Exceptional pick</td>
+								<td>Exceptional pick</td>
+								<td>54.87</td>
+								<td>92.36</td>
+								<td>-10.02</td>
+								<td>-1.69</td>
+								<td>0.00</td>
+								<td>2.77</td>
+							</tr>
+							<tr>
+								<td>15</td>
+								<td>Exceptional pick</td>
+								<td>Exceptional pick</td>
+								<td>54.87</td>
+								<td>92.34</td>
+								<td>-10.02</td>
+								<td>-1.71</td>
+								<td>0.00</td>
+								<td>2.77</td>
+							</tr>
+							<tr>
+								<td>16</td>
+								<td>Exceptional pick</td>
+								<td>Exceptional pick</td>
+								<td>54.87</td>
+								<td>92.32</td>
+								<td>-10.02</td>
+								<td>-1.73</td>
+								<td>0.00</td>
+								<td>2.77</td>
+							</tr>
+							<tr>
+								<td>17</td>
+								<td>Exceptional pick</td>
+								<td>Exceptional pick</td>
+								<td>54.87</td>
+								<td>92.30</td>
+								<td>-10.02</td>
+								<td>-1.75</td>
+								<td>0.00</td>
+								<td>2.77</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</details>
+			<h2>Every position</h2>
+			<p>
+				Score columns compare an otherwise identical 65-rated player after eight
+				repeated good or poor games. “Added” includes the secondary production
+				listed below. The benching threshold is a separate test: a 67-rated
+				incumbent with a good prior season and $4m contract against a 64-rated
+				reserve. Other starting slots are filled, so WR, OL and defensive groups
+				are not treated as one-player positions. Quiet defensive stat lines are
+				not proof of poor defense.
+			</p>
+			<div class="table-wrap">
+				<table>
+					<thead>
+						<tr>
+							<th>Role</th>
+							<th>No evidence</th>
+							<th>Good</th>
+							<th>Poor/quiet</th>
+							<th>Good + added</th>
+							<th>Poor games before benching</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>QB</td>
+							<td>67.85</td>
+							<td>80.02</td>
+							<td>56.53</td>
+							<td>80.71</td>
+							<td>5</td>
+						</tr>
+						<tr>
+							<td>RB</td>
+							<td>67.52</td>
+							<td>72.62</td>
+							<td>56.29</td>
+							<td>76.04</td>
+							<td>4</td>
+						</tr>
+						<tr>
+							<td>WR</td>
+							<td>67.85</td>
+							<td>80.82</td>
+							<td>58.07</td>
+							<td>81.09</td>
+							<td>6</td>
+						</tr>
+						<tr>
+							<td>TE</td>
+							<td>67.85</td>
+							<td>79.80</td>
+							<td>60.20</td>
+							<td>79.02</td>
+							<td>9</td>
+						</tr>
+						<tr>
+							<td>OL</td>
+							<td>67.85</td>
+							<td>75.61</td>
+							<td>60.13</td>
+							<td>—</td>
+							<td>7</td>
+						</tr>
+						<tr>
+							<td>DL</td>
+							<td>67.85</td>
+							<td>71.76</td>
+							<td>65.66</td>
+							<td>73.43</td>
+							<td>No switch in 17</td>
+						</tr>
+						<tr>
+							<td>LB</td>
+							<td>67.85</td>
+							<td>69.53</td>
+							<td>65.66</td>
+							<td>73.43</td>
+							<td>No switch in 17</td>
+						</tr>
+						<tr>
+							<td>CB</td>
+							<td>67.85</td>
+							<td>70.08</td>
+							<td>67.85</td>
+							<td>73.43</td>
+							<td>No switch in 17</td>
+						</tr>
+						<tr>
+							<td>S</td>
+							<td>67.85</td>
+							<td>69.53</td>
+							<td>67.85</td>
+							<td>73.43</td>
+							<td>No switch in 17</td>
+						</tr>
+						<tr>
+							<td>K</td>
+							<td>67.85</td>
+							<td>75.13</td>
+							<td>56.49</td>
+							<td>—</td>
+							<td>4</td>
+						</tr>
+						<tr>
+							<td>P</td>
+							<td>67.85</td>
+							<td>73.06</td>
+							<td>60.27</td>
+							<td>—</td>
+							<td>7</td>
+						</tr>
+						<tr>
+							<td>KR</td>
+							<td>52.77</td>
+							<td>58.64</td>
+							<td>45.34</td>
+							<td>63.12</td>
+							<td>7</td>
+						</tr>
+						<tr>
+							<td>PR</td>
+							<td>52.77</td>
+							<td>58.83</td>
+							<td>45.85</td>
+							<td>65.09</td>
+							<td>8</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<p>
+				KR/PR fixtures use wide receivers with return-role ability. Their lower
+				absolute scores include the existing 15-point preference for a player's
+				primary position; compare players within a role, rather than comparing
+				these scores directly with quarterbacks.
+			</p>
+			<details>
+				<summary>QB — inputs and limitations</summary>
+				<p>
+					Passing yards/TD/INT/sacks, rushing yards/TD, lost fumbles. Completion
+					percentage is not a separate bonus; sack rate and yardage efficiency
+					already contribute.
+				</p>
+				<div class="table-wrap">
+					<table>
+						<thead>
+							<tr>
+								<th>Condition</th>
+								<th>Per-game input</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>good</td>
+								<td>
+									pssCmp=24, pss=32, pssYds=300, pssTD=2, pssSk=2, pssSkYds=12
+								</td>
+							</tr>
+							<tr>
+								<td>poor</td>
+								<td>
+									pssCmp=18, pss=35, pssYds=150, pssInt=2, pssSk=3, pssSkYds=20
+								</td>
+							</tr>
+							<tr>
+								<td>added</td>
+								<td>rus=8, rusYds=65, rusTD=1</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</details>
+			<details>
+				<summary>RB — inputs and limitations</summary>
+				<p>
+					Rushing plus receiving yards and TDs, targets (including
+					incompletions), and lost fumbles. Lower receiving baseline than WR
+					reflects shorter routes.
+				</p>
+				<div class="table-wrap">
+					<table>
+						<thead>
+							<tr>
+								<th>Condition</th>
+								<th>Per-game input</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>good</td>
+								<td>rus=18, rusYds=95, rusTD=1</td>
+							</tr>
+							<tr>
+								<td>poor</td>
+								<td>rus=18, rusYds=40, fmbLost=1</td>
+							</tr>
+							<tr>
+								<td>added</td>
+								<td>tgt=7, rec=6, recYds=65, recTD=1</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</details>
+			<details>
+				<summary>WR — inputs and limitations</summary>
+				<p>
+					Receiving per target, rushing/end-arounds, both kinds of TD, lost
+					fumbles. No reliable drop or route-separation data.
+				</p>
+				<div class="table-wrap">
+					<table>
+						<thead>
+							<tr>
+								<th>Condition</th>
+								<th>Per-game input</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>good</td>
+								<td>tgt=9, rec=6, recYds=100, recTD=1</td>
+							</tr>
+							<tr>
+								<td>poor</td>
+								<td>tgt=9, rec=3, recYds=25</td>
+							</tr>
+							<tr>
+								<td>added</td>
+								<td>rus=2, rusYds=30, rusTD=1</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</details>
+			<details>
+				<summary>TE — inputs and limitations</summary>
+				<p>
+					Receiving, rushing, fumbles, and pass/run blocking. Blocking
+					opportunities carry one tenth the sample weight of targets.
+					Good-but-less-exceptional blocking can dilute exceptional receiving
+					efficiency.
+				</p>
+				<div class="table-wrap">
+					<table>
+						<thead>
+							<tr>
+								<th>Condition</th>
+								<th>Per-game input</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>good</td>
+								<td>tgt=6, rec=5, recYds=65</td>
+							</tr>
+							<tr>
+								<td>poor</td>
+								<td>tgt=6, rec=2, recYds=15</td>
+							</tr>
+							<tr>
+								<td>added</td>
+								<td>pba=12, pbw=11, rba=18, rbw=16</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</details>
+			<details>
+				<summary>OL — inputs and limitations</summary>
+				<p>
+					Pass/run block wins, attempts, sacks allowed. Current benchmark
+					combines pass and run blocking; scheme/opponent adjustments remain
+					absent.
+				</p>
+				<div class="table-wrap">
+					<table>
+						<thead>
+							<tr>
+								<th>Condition</th>
+								<th>Per-game input</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>good</td>
+								<td>pba=35, pbw=31, rba=25, rbw=22</td>
+							</tr>
+							<tr>
+								<td>poor</td>
+								<td>pba=35, pbw=18, rba=25, rbw=13, skAlw=3</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</details>
+			<details>
+				<summary>DL — inputs and limitations</summary>
+				<p>
+					Tackles, sacks, non-sack TFL, INT, defended passes, forced/recovered
+					fumbles, safeties. Low production is only a modest negative proxy; no
+					pressures or double-team data.
+				</p>
+				<div class="table-wrap">
+					<table>
+						<thead>
+							<tr>
+								<th>Condition</th>
+								<th>Per-game input</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>good</td>
+								<td>
+									min=30, defTckSolo=3, defTckAst=2, defSk=1, defTckLoss=2
+								</td>
+							</tr>
+							<tr>
+								<td>poor</td>
+								<td>min=30, defTckSolo=1</td>
+							</tr>
+							<tr>
+								<td>added</td>
+								<td>defFmbFrc=1, defFmbRec=1</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</details>
+			<details>
+				<summary>LB — inputs and limitations</summary>
+				<p>
+					Same recorded defensive contributions with a different tackle
+					baseline. No missed-tackle or assignment-error data; negative
+					influence is deliberately limited.
+				</p>
+				<div class="table-wrap">
+					<table>
+						<thead>
+							<tr>
+								<th>Condition</th>
+								<th>Per-game input</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>good</td>
+								<td>min=30, defTckSolo=6, defTckAst=4, defTckLoss=1</td>
+							</tr>
+							<tr>
+								<td>poor</td>
+								<td>min=30, defTckSolo=2</td>
+							</tr>
+							<tr>
+								<td>added</td>
+								<td>defSk=1, defInt=1</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</details>
+			<details>
+				<summary>CB — inputs and limitations</summary>
+				<p>
+					Recorded tackles and disruptive plays earn credit. Quiet coverage is
+					neutral because targets and yards/TD allowed are not recorded.
+				</p>
+				<div class="table-wrap">
+					<table>
+						<thead>
+							<tr>
+								<th>Condition</th>
+								<th>Per-game input</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>good</td>
+								<td>min=30, defTckSolo=3, defTckAst=1, defPssDef=2</td>
+							</tr>
+							<tr>
+								<td>poor</td>
+								<td>min=30</td>
+							</tr>
+							<tr>
+								<td>added</td>
+								<td>defSk=1, defTckLoss=1, defInt=1</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</details>
+			<details>
+				<summary>S — inputs and limitations</summary>
+				<p>
+					Same conservative coverage treatment as CB. Tackles, sacks and
+					turnovers count, but box scores cannot detect blown coverages.
+				</p>
+				<div class="table-wrap">
+					<table>
+						<thead>
+							<tr>
+								<th>Condition</th>
+								<th>Per-game input</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>good</td>
+								<td>min=30, defTckSolo=5, defTckAst=2, defPssDef=1</td>
+							</tr>
+							<tr>
+								<td>poor</td>
+								<td>min=30, defTckSolo=1</td>
+							</tr>
+							<tr>
+								<td>added</td>
+								<td>defFmbFrc=1, defInt=1</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</details>
+			<details>
+				<summary>K — inputs and limitations</summary>
+				<p>
+					FG success against distance-bucket expectations, plus extra points.
+					Kickoffs are not graded because touchbacks alone do not establish good
+					placement.
+				</p>
+				<div class="table-wrap">
+					<table>
+						<thead>
+							<tr>
+								<th>Condition</th>
+								<th>Per-game input</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>good</td>
+								<td>fga30=1, fg30=1, fga40=2, fg40=2, xpa=3, xp=3</td>
+							</tr>
+							<tr>
+								<td>poor</td>
+								<td>fga30=1, fg30=0, fga40=2, fg40=0, xpa=3, xp=2</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</details>
+			<details>
+				<summary>P — inputs and limitations</summary>
+				<p>
+					Punt distance, inside-20 placements, touchbacks, and blocked punts
+					when recorded. No net-return yardage or situational field-position
+					normalization.
+				</p>
+				<div class="table-wrap">
+					<table>
+						<thead>
+							<tr>
+								<th>Condition</th>
+								<th>Per-game input</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>good</td>
+								<td>pnt=5, pntYds=240, pntIn20=2</td>
+							</tr>
+							<tr>
+								<td>poor</td>
+								<td>pnt=5, pntYds=160, pntTB=2</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</details>
+			<details>
+				<summary>KR — inputs and limitations</summary>
+				<p>
+					Return yards and TDs with return-count confidence. No
+					starting-field-position or blocking-quality adjustment.
+				</p>
+				<div class="table-wrap">
+					<table>
+						<thead>
+							<tr>
+								<th>Condition</th>
+								<th>Per-game input</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>good</td>
+								<td>kr=3, krYds=90</td>
+							</tr>
+							<tr>
+								<td>poor</td>
+								<td>kr=3, krYds=35</td>
+							</tr>
+							<tr>
+								<td>added</td>
+								<td>krTD=1</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</details>
+			<details>
+				<summary>PR — inputs and limitations</summary>
+				<p>
+					Return yards and TDs. Yardage deviations have a larger scale than KR.
+					Fumbles are not assigned here because the stored total does not
+					identify return fumbles.
+				</p>
+				<div class="table-wrap">
+					<table>
+						<thead>
+							<tr>
+								<th>Condition</th>
+								<th>Per-game input</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>good</td>
+								<td>pr=3, prYds=40</td>
+							</tr>
+							<tr>
+								<td>poor</td>
+								<td>pr=3, prYds=8</td>
+							</tr>
+							<tr>
+								<td>added</td>
+								<td>prTD=1</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</details>
+			<h2>Roster-building choice</h2>
+			<p>
+				The team already has a productive 73-rated QB and a newly drafted 60/85
+				successor, but five 40-rated starting linemen. It compares another 70/85
+				QB asking $15m, a 65/80 OL asking $10m, and a 100-rated punter asking
+				the minimum. Numbers below are changes in weighted team utility derived
+				from Starter Scores; they are not extra player ratings.
+			</p>
+			<div class="table-wrap">
+				<table>
+					<thead>
+						<tr>
+							<th>Candidate</th>
+							<th>Roster improvement</th>
+							<th>Draft weight before exponent</th>
+							<th>Starter gain</th>
+							<th>Affordable for role</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>Another QB</td>
+							<td>0.04</td>
+							<td>2.11</td>
+							<td>0.00</td>
+							<td>No</td>
+						</tr>
+						<tr>
+							<td>OL upgrade</td>
+							<td>3.26</td>
+							<td>4.50</td>
+							<td>28.99</td>
+							<td>Yes</td>
+						</tr>
+						<tr>
+							<td>Elite punter</td>
+							<td>2.50</td>
+							<td>0.45</td>
+							<td>100.00</td>
+							<td>Yes</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<p>
+				Free-agent choice: <strong>OL upgrade</strong>. Adding the young
+				successor reduces another QB's roster improvement from 1.87 to 0.04. The
+				real draft applies its existing randomized selection exponent to the
+				draft weights. A missing position now gets its ordinary vacancy value
+				without being counted again as injury cover.
+			</p>
+			<h2>30-case QB churn stress test</h2>
+			<p>
+				Ability gap is incumbent minus challenger. History belongs to the
+				incumbent; the challenger starts without recorded performance. Whichever
+				player starts receives the specified full-game line. “Alternating” means
+				good and poor games by calendar week; “poor” means both quarterbacks
+				struggle whenever used. Record remains fixed at 8–4 to isolate score
+				behavior.
+			</p>
+			<div class="table-wrap">
+				<table>
+					<thead>
+						<tr>
+							<th>Ability gap</th>
+							<th>Prior history</th>
+							<th>Pattern</th>
+							<th>Original switches</th>
+							<th>Revised switches</th>
+							<th>Revised switch after games</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>-6</td>
+							<td>none</td>
+							<td>poor</td>
+							<td>4</td>
+							<td>2</td>
+							<td>5, 8</td>
+						</tr>
+						<tr>
+							<td>-6</td>
+							<td>none</td>
+							<td>alternating</td>
+							<td>0</td>
+							<td>0</td>
+							<td>None</td>
+						</tr>
+						<tr>
+							<td>-6</td>
+							<td>ordinary</td>
+							<td>poor</td>
+							<td>4</td>
+							<td>2</td>
+							<td>6, 9</td>
+						</tr>
+						<tr>
+							<td>-6</td>
+							<td>ordinary</td>
+							<td>alternating</td>
+							<td>0</td>
+							<td>0</td>
+							<td>None</td>
+						</tr>
+						<tr>
+							<td>-6</td>
+							<td>good</td>
+							<td>poor</td>
+							<td>7</td>
+							<td>4</td>
+							<td>1, 4, 6, 16</td>
+						</tr>
+						<tr>
+							<td>-6</td>
+							<td>good</td>
+							<td>alternating</td>
+							<td>1</td>
+							<td>1</td>
+							<td>4</td>
+						</tr>
+						<tr>
+							<td>-3</td>
+							<td>none</td>
+							<td>poor</td>
+							<td>8</td>
+							<td>3</td>
+							<td>3, 6, 16</td>
+						</tr>
+						<tr>
+							<td>-3</td>
+							<td>none</td>
+							<td>alternating</td>
+							<td>0</td>
+							<td>0</td>
+							<td>None</td>
+						</tr>
+						<tr>
+							<td>-3</td>
+							<td>ordinary</td>
+							<td>poor</td>
+							<td>7</td>
+							<td>2</td>
+							<td>3, 6</td>
+						</tr>
+						<tr>
+							<td>-3</td>
+							<td>ordinary</td>
+							<td>alternating</td>
+							<td>0</td>
+							<td>0</td>
+							<td>None</td>
+						</tr>
+						<tr>
+							<td>-3</td>
+							<td>good</td>
+							<td>poor</td>
+							<td>11</td>
+							<td>3</td>
+							<td>2, 6, 10</td>
+						</tr>
+						<tr>
+							<td>-3</td>
+							<td>good</td>
+							<td>alternating</td>
+							<td>1</td>
+							<td>1</td>
+							<td>10</td>
+						</tr>
+						<tr>
+							<td>0</td>
+							<td>none</td>
+							<td>poor</td>
+							<td>9</td>
+							<td>3</td>
+							<td>1, 4, 9</td>
+						</tr>
+						<tr>
+							<td>0</td>
+							<td>none</td>
+							<td>alternating</td>
+							<td>0</td>
+							<td>0</td>
+							<td>None</td>
+						</tr>
+						<tr>
+							<td>0</td>
+							<td>ordinary</td>
+							<td>poor</td>
+							<td>15</td>
+							<td>3</td>
+							<td>1, 4, 9</td>
+						</tr>
+						<tr>
+							<td>0</td>
+							<td>ordinary</td>
+							<td>alternating</td>
+							<td>0</td>
+							<td>0</td>
+							<td>None</td>
+						</tr>
+						<tr>
+							<td>0</td>
+							<td>good</td>
+							<td>poor</td>
+							<td>13</td>
+							<td>3</td>
+							<td>3, 6, 11</td>
+						</tr>
+						<tr>
+							<td>0</td>
+							<td>good</td>
+							<td>alternating</td>
+							<td>0</td>
+							<td>0</td>
+							<td>None</td>
+						</tr>
+						<tr>
+							<td>3</td>
+							<td>none</td>
+							<td>poor</td>
+							<td>8</td>
+							<td>3</td>
+							<td>3, 6, 16</td>
+						</tr>
+						<tr>
+							<td>3</td>
+							<td>none</td>
+							<td>alternating</td>
+							<td>0</td>
+							<td>0</td>
+							<td>None</td>
+						</tr>
+						<tr>
+							<td>3</td>
+							<td>ordinary</td>
+							<td>poor</td>
+							<td>8</td>
+							<td>3</td>
+							<td>2, 5, 16</td>
+						</tr>
+						<tr>
+							<td>3</td>
+							<td>ordinary</td>
+							<td>alternating</td>
+							<td>0</td>
+							<td>0</td>
+							<td>None</td>
+						</tr>
+						<tr>
+							<td>3</td>
+							<td>good</td>
+							<td>poor</td>
+							<td>6</td>
+							<td>2</td>
+							<td>4, 7</td>
+						</tr>
+						<tr>
+							<td>3</td>
+							<td>good</td>
+							<td>alternating</td>
+							<td>0</td>
+							<td>0</td>
+							<td>None</td>
+						</tr>
+						<tr>
+							<td>6</td>
+							<td>none</td>
+							<td>poor</td>
+							<td>4</td>
+							<td>2</td>
+							<td>5, 8</td>
+						</tr>
+						<tr>
+							<td>6</td>
+							<td>none</td>
+							<td>alternating</td>
+							<td>0</td>
+							<td>0</td>
+							<td>None</td>
+						</tr>
+						<tr>
+							<td>6</td>
+							<td>ordinary</td>
+							<td>poor</td>
+							<td>4</td>
+							<td>2</td>
+							<td>5, 8</td>
+						</tr>
+						<tr>
+							<td>6</td>
+							<td>ordinary</td>
+							<td>alternating</td>
+							<td>0</td>
+							<td>0</td>
+							<td>None</td>
+						</tr>
+						<tr>
+							<td>6</td>
+							<td>good</td>
+							<td>poor</td>
+							<td>4</td>
+							<td>2</td>
+							<td>7, 10</td>
+						</tr>
+						<tr>
+							<td>6</td>
+							<td>good</td>
+							<td>alternating</td>
+							<td>0</td>
+							<td>0</td>
+							<td>None</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<h2>What I would and would not trust</h2>
+			<p>
+				The revised QB decisions and duplicate-acquisition restraint are
+				plausible in these fixtures. This caught a real churn bug that the
+				earlier one-step tests missed. It does not establish realistic behavior
+				across full generated leagues. Some unestablished or weaker incumbents
+				still lose their job after one poor game; there is no hard minimum
+				starting stint. The TE fixture waits nine poor games, which may be too
+				patient. Coverage failure cannot be inferred from the currently recorded
+				defensive stats. Position benchmarks are still fixed, with a short-field
+				adjustment; league medians, opponent strength, garbage time, play
+				calling, and changing team records are not modeled by these fixtures.
+			</p>
+			<p>
+				Raw results: <a href="before.json">original model</a> ·
+				<a href="after.json">revised model</a>. Regenerate current results with
+				<code>STARTER_SCORE_REPORT_PATH</code> set to
+				<code>analysis/starter-score/after.json</code> while running
+				<code>starterScoreScenarios.football.test.ts</code>, then run
+				<code>node tools/analysis/renderStarterScoreReport.ts</code>.
+			</p>
+		</main>
+	</body>
+</html>
