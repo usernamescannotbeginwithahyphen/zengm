@@ -42,12 +42,12 @@ const ROSTER_TARGETS: Record<PrimaryPosition, number> = {
 const ROLE_WEIGHTS: Record<PrimaryPosition, number> = {
 	QB: 0.14,
 	RB: 0.065,
-	WR: 0.07,
+	WR: 0.095,
 	TE: 0.05,
-	OL: 0.09,
+	OL: 0.075,
 	DL: 0.1,
 	LB: 0.07,
-	CB: 0.08,
+	CB: 0.065,
 	S: 0.065,
 	K: 0.035,
 	P: 0.025,
@@ -582,6 +582,27 @@ export const prepareFootballRoster = (
 				rank < starters
 					? 1
 					: 0.18 ** (rank - starters + 1) * (rank >= target ? 0.1 : 1);
+			// Being just below the last starter is a competition, not proof that
+			// a rookie will be a backup throughout his contract. Avoid a sudden
+			// talent-value cliff at that boundary. Comparable reserves and surplus
+			// roster slots still reduce the value of another challenger sharply.
+			// QB succession is handled separately; specialists have one fixed job.
+			if (
+				pos !== "QB" &&
+				pos !== "K" &&
+				pos !== "P" &&
+				rank >= starters &&
+				incumbent
+			) {
+				const gap = Math.max(0, incumbent.score - incoming.score);
+				const competingBackups = rank - starters;
+				opportunity = Math.max(
+					opportunity,
+					Math.exp(-gap / 8) *
+						0.5 ** competingBackups *
+						(rank >= target ? 0.1 : 1),
+				);
+			}
 			// A QB prospect can have a real future job without beating a proven
 			// veteran today. Only the first backup gets this succession allowance,
 			// and an existing young prospect closes it. This affects draft priority,

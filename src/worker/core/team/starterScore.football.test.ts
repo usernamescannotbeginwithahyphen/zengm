@@ -532,6 +532,32 @@ describe("position-group decisions from the same score", () => {
 		expect(needed(ol).draftValue).toBeGreaterThan(needed(wr).draftValue);
 	});
 
+	test("a close receiver challenger retains draft value on either side of the starting boundary", () => {
+		const roster = [80, 75, 60].map((ovr) => makePlayer("WR", ovr));
+		const fit = prepareFootballRoster(roster, context);
+		const below = fit(makePlayer("WR", 59, { tid: -2 }));
+		const above = fit(makePlayer("WR", 61, { tid: -2 }));
+		expect(below.starterGain).toBe(0);
+		expect(above.starterGain).toBeGreaterThan(0);
+		expect(below.draftValue).toBeGreaterThan(above.draftValue * 0.65);
+	});
+
+	test("a receiver competition does not justify collecting several comparable reserves", () => {
+		const roster = [80, 75, 60].map((ovr) => makePlayer("WR", ovr));
+		const prospect = makePlayer("WR", 59, { tid: -2 });
+		const open = prepareFootballRoster(roster, context)(prospect);
+		const crowded = prepareFootballRoster(
+			[...roster, makePlayer("WR", 60), makePlayer("WR", 60)],
+			context,
+		)(prospect);
+		const surplus = prepareFootballRoster(
+			[...roster, ...Array.from({ length: 3 }, () => makePlayer("WR", 60))],
+			context,
+		)(prospect);
+		expect(crowded.draftValue).toBeLessThan(open.draftValue / 3);
+		expect(surplus.draftValue).toBeLessThan(crowded.draftValue / 5);
+	});
+
 	test("an aging QB creates draft succession value that a young starter or existing successor does not", () => {
 		const old = makePlayer("QB", 78, { age: 34 });
 		const young = makePlayer("QB", 78, { age: 26 });

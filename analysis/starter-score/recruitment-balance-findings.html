@@ -1,0 +1,681 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width,initial-scale=1" />
+		<title>Recruitment balance: position value and competition</title>
+		<style>
+			body {
+				margin: 0;
+				background: #f2f5f9;
+				color: #182a40;
+				font: 16px/1.55 system-ui;
+			}
+			main {
+				max-width: 1140px;
+				padding: 32px 24px 70px;
+				margin: auto;
+			}
+			h1 {
+				font-size: 2.3rem;
+				line-height: 1.15;
+			}
+			h2 {
+				margin-top: 38px;
+			}
+			p {
+				max-width: 95ch;
+			}
+			.table {
+				overflow: auto;
+			}
+			table {
+				border-collapse: collapse;
+				width: 100%;
+				font-size: 14px;
+				font-variant-numeric: tabular-nums;
+			}
+			td,
+			th {
+				padding: 10px;
+				border-bottom: 1px solid #c6d0dd;
+				text-align: left;
+			}
+			th {
+				background: #e2eaf4;
+			}
+			a {
+				color: #125caa;
+			}
+			.note {
+				padding: 18px;
+				background: white;
+				border-left: 4px solid #366ea6;
+			}
+			li {
+				margin: 8px 0;
+			}
+		</style>
+	</head>
+	<body>
+		<main>
+			<h1>Recruitment balance: position value and competition</h1>
+			<p>
+				Four generated leagues, three seasons each, plus the following opening
+				week. Each version covers 384 first-round picks and all drafted QBs'
+				opening games. “Previous” is revision 782e299a3; “Revised” changes
+				positional weights and draft opportunity for close challengers. These
+				are real game simulations using generated players, not imported NFL
+				rosters.
+			</p>
+			<p class="note">
+				<strong>Assessment:</strong> keep this revision. WR and DL selections
+				increase, and OL and CB selections decrease, in every comparison league.
+				Receiver recruitment also holds up in two fresh-seed leagues. Position
+				balance remains incomplete: OL and CB are still high, DL and RB low, and
+				rookie QB opening starts remain very common. This is evidence of
+				improvement, not a claim of finished NFL calibration.
+			</p>
+			<h2>First-round distribution</h2>
+			<div class="table">
+				<table>
+					<thead>
+						<tr>
+							<th>Role</th>
+							<th>Previous picks</th>
+							<th>Revised picks</th>
+							<th>Previous %</th>
+							<th>Revised %</th>
+							<th>Supplied reference %</th>
+							<th>Previous / revised top-32 ability supply</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>QB</td>
+							<td>38</td>
+							<td>37</td>
+							<td>9.9%</td>
+							<td>9.6%</td>
+							<td>9.1</td>
+							<td>42 / 40</td>
+						</tr>
+						<tr>
+							<td>RB</td>
+							<td>12</td>
+							<td>10</td>
+							<td>3.1%</td>
+							<td>2.6%</td>
+							<td>7</td>
+							<td>32 / 31</td>
+						</tr>
+						<tr>
+							<td>WR</td>
+							<td>18</td>
+							<td>38</td>
+							<td>4.7%</td>
+							<td>9.9%</td>
+							<td>12</td>
+							<td>54 / 55</td>
+						</tr>
+						<tr>
+							<td>TE</td>
+							<td>12</td>
+							<td>11</td>
+							<td>3.1%</td>
+							<td>2.9%</td>
+							<td>3.5</td>
+							<td>8 / 8</td>
+						</tr>
+						<tr>
+							<td>OL</td>
+							<td>99</td>
+							<td>83</td>
+							<td>25.8%</td>
+							<td>21.6%</td>
+							<td>17.2</td>
+							<td>59 / 58</td>
+						</tr>
+						<tr>
+							<td>DL</td>
+							<td>71</td>
+							<td>82</td>
+							<td>18.5%</td>
+							<td>21.4%</td>
+							<td>26.1</td>
+							<td>64 / 65</td>
+						</tr>
+						<tr>
+							<td>LB</td>
+							<td>21</td>
+							<td>20</td>
+							<td>5.5%</td>
+							<td>5.2%</td>
+							<td>6.6</td>
+							<td>17 / 18</td>
+						</tr>
+						<tr>
+							<td>CB</td>
+							<td>82</td>
+							<td>68</td>
+							<td>21.4%</td>
+							<td>17.7%</td>
+							<td>11.9</td>
+							<td>72 / 72</td>
+						</tr>
+						<tr>
+							<td>S</td>
+							<td>29</td>
+							<td>35</td>
+							<td>7.6%</td>
+							<td>9.1%</td>
+							<td>6.6</td>
+							<td>22 / 23</td>
+						</tr>
+						<tr>
+							<td>K</td>
+							<td>2</td>
+							<td>0</td>
+							<td>0.5%</td>
+							<td>0.0%</td>
+							<td>—</td>
+							<td>10 / 10</td>
+						</tr>
+						<tr>
+							<td>P</td>
+							<td>0</td>
+							<td>0</td>
+							<td>0.0%</td>
+							<td>0.0%</td>
+							<td>—</td>
+							<td>4 / 4</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<p>
+				The sum of absolute percentage-point gaps across the nine reference
+				categories changes from 40.1 to 26.5. This is descriptive, not a
+				statistical significance test or optimization objective. The supplied
+				image is an approximate, unverified reference. OL combines OT and IOL;
+				DL groups EDGE and DT imperfectly. The simulator uses different roles,
+				prospect generation and player development.
+			</p>
+			<h2>Separate league results</h2>
+			<div class="table">
+				<table>
+					<thead>
+						<tr>
+							<th>Seed</th>
+							<th>WR previous → revised</th>
+							<th>OL previous → revised</th>
+							<th>DL previous → revised</th>
+							<th>CB previous → revised</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>20261005</td>
+							<td>5 → 12</td>
+							<td>28 → 22</td>
+							<td>16 → 17</td>
+							<td>26 → 22</td>
+						</tr>
+						<tr>
+							<td>20261006</td>
+							<td>3 → 7</td>
+							<td>22 → 19</td>
+							<td>28 → 31</td>
+							<td>18 → 13</td>
+						</tr>
+						<tr>
+							<td>20261007</td>
+							<td>4 → 7</td>
+							<td>25 → 21</td>
+							<td>14 → 18</td>
+							<td>16 → 14</td>
+						</tr>
+						<tr>
+							<td>20261008</td>
+							<td>6 → 12</td>
+							<td>24 → 21</td>
+							<td>13 → 16</td>
+							<td>22 → 19</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<p>
+				Each row includes 96 picks. The starting seeds match, but acquisitions
+				alter later random draws, so later prospect pools and outcomes diverge.
+				The top-32 ability columns help expose that supply variation; they are
+				not an objective best-player list.
+			</p>
+			<h2>Two fresh seeds</h2>
+			<p>
+				After choosing the revision, seeds 20261009 and 20261010 ran three
+				seasons each with no further tuning. These six additional drafts are a
+				check on the revised behavior; they have no old-formula counterpart.
+			</p>
+			<div class="table">
+				<table>
+					<thead>
+						<tr>
+							<th>Role</th>
+							<th>Fresh-seed picks</th>
+							<th>Fresh-seed %</th>
+							<th>All six revised leagues %</th>
+							<th>Reference %</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>QB</td>
+							<td>18</td>
+							<td>9.4%</td>
+							<td>9.5%</td>
+							<td>9.1</td>
+						</tr>
+						<tr>
+							<td>RB</td>
+							<td>7</td>
+							<td>3.6%</td>
+							<td>3.0%</td>
+							<td>7</td>
+						</tr>
+						<tr>
+							<td>WR</td>
+							<td>27</td>
+							<td>14.1%</td>
+							<td>11.3%</td>
+							<td>12</td>
+						</tr>
+						<tr>
+							<td>TE</td>
+							<td>3</td>
+							<td>1.6%</td>
+							<td>2.4%</td>
+							<td>3.5</td>
+						</tr>
+						<tr>
+							<td>OL</td>
+							<td>43</td>
+							<td>22.4%</td>
+							<td>21.9%</td>
+							<td>17.2</td>
+						</tr>
+						<tr>
+							<td>DL</td>
+							<td>38</td>
+							<td>19.8%</td>
+							<td>20.8%</td>
+							<td>26.1</td>
+						</tr>
+						<tr>
+							<td>LB</td>
+							<td>3</td>
+							<td>1.6%</td>
+							<td>4.0%</td>
+							<td>6.6</td>
+						</tr>
+						<tr>
+							<td>CB</td>
+							<td>35</td>
+							<td>18.2%</td>
+							<td>17.9%</td>
+							<td>11.9</td>
+						</tr>
+						<tr>
+							<td>S</td>
+							<td>18</td>
+							<td>9.4%</td>
+							<td>9.2%</td>
+							<td>6.6</td>
+						</tr>
+						<tr>
+							<td>K</td>
+							<td>0</td>
+							<td>0.0%</td>
+							<td>0.0%</td>
+							<td>—</td>
+						</tr>
+						<tr>
+							<td>P</td>
+							<td>0</td>
+							<td>0.0%</td>
+							<td>0.0%</td>
+							<td>—</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<p>
+				Fresh-seed QB openers: 16/18 first-rounders started; 2 were healthy but
+				benched. Healthy QB switches: 14; immediate healthy reversals: 0. MVP
+				retention: 6/6.
+				<a href="league-recruitment-holdout-audit.html"
+					>Inspect fresh-seed picks and alternatives</a
+				>.
+			</p>
+			<p>
+				Supply matters to the remaining gaps. In the comparison leagues, CB
+				accounts for 72/384 (18.8%) top-32 ability slots and 68/384 (17.7%)
+				selections, versus the supplied 11.9% reference. Lowering CB value until
+				picks reach the reference could suppress legitimately strong prospects.
+				Conversely, RB has 31 top-32 ability slots but only 10 picks, so its
+				opportunity and incumbent strength deserve a separate investigation. The
+				fresh-seed classes contain only five top-32-ability LBs and three TEs;
+				their low selection counts should not be attributed to recruitment
+				weights alone.
+			</p>
+			<h2>What caused the bias?</h2>
+			<p>
+				Before changing the game, the diagnostic reevaluated all 384 saved
+				prospect pools and rosters. The old formula reconstructs the recorded
+				draft priorities within 0.001. Starting WRs had about +3.0 performance
+				points, compared with +2.5 for OL. Removing performance memory increased
+				the CB imbalance, so that change was rejected.
+			</p>
+			<div class="table">
+				<table>
+					<thead>
+						<tr>
+							<th>Fixed-input sensitivity experiment</th>
+							<th>WR expected choices</th>
+							<th>OL expected choices</th>
+							<th>DL expected choices</th>
+							<th>CB expected choices</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>current</td>
+							<td>17.1</td>
+							<td>98.8</td>
+							<td>80.3</td>
+							<td>78.7</td>
+						</tr>
+						<tr>
+							<td>without incumbent performance</td>
+							<td>30.0</td>
+							<td>32.4</td>
+							<td>84.2</td>
+							<td>112.0</td>
+						</tr>
+						<tr>
+							<td>position weights only</td>
+							<td>76.6</td>
+							<td>51.4</td>
+							<td>99.4</td>
+							<td>36.7</td>
+						</tr>
+						<tr>
+							<td>smooth competition only</td>
+							<td>18.6</td>
+							<td>98.0</td>
+							<td>83.0</td>
+							<td>83.5</td>
+						</tr>
+						<tr>
+							<td>weights and competition</td>
+							<td>86.3</td>
+							<td>47.8</td>
+							<td>101.8</td>
+							<td>36.6</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<p class="note">
+				These expected counts are separate one-pick calculations against
+				unchanged saved pools, using the production selection probabilities.
+				They are not sequential drafts: a highly valued receiver can be counted
+				repeatedly while still appearing in several saved pools. The actual
+				simulation results are in the first table.
+			</p>
+			<h2>Changes and boundaries</h2>
+			<ul>
+				<li>
+					Recruitment value per unit of roster improvement: WR 0.070 → 0.095, OL
+					0.090 → 0.075, CB 0.080 → 0.065. Other roles keep their weights. These
+					also affect free agency, trade fit and retention.
+				</li>
+				<li>
+					A prospect just below the last starter no longer immediately loses 82%
+					of his extra draft talent value. Opportunity falls gradually with the
+					score gap, halves for each comparable reserve ahead of him, and is
+					sharply discounted beyond the roster target. QB succession and
+					specialists keep their existing rules.
+				</li>
+				<li>
+					The single 0–100 Starter Score, performance memory, rookie investment
+					and lineup inertia are unchanged. A close prospect can be worth
+					drafting while the incumbent still earns the starting job.
+				</li>
+				<li>
+					No position quotas or mandatory rookie starting/benching rules were
+					added.
+				</li>
+			</ul>
+			<h2>QB decisions and continuity</h2>
+			<div class="table">
+				<table>
+					<thead>
+						<tr>
+							<th>Measure</th>
+							<th>Previous</th>
+							<th>Revised</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>First-round QBs</td>
+							<td>38</td>
+							<td>37</td>
+						</tr>
+						<tr>
+							<td>Actual rookie opening starts</td>
+							<td>32</td>
+							<td>36</td>
+						</tr>
+						<tr>
+							<td>Observed rookie openers</td>
+							<td>38</td>
+							<td>37</td>
+						</tr>
+						<tr>
+							<td>Healthy rookie QBs benched in opener</td>
+							<td>6</td>
+							<td>1</td>
+						</tr>
+						<tr>
+							<td>OL picks passing over WR with ≥15 more ability</td>
+							<td>0</td>
+							<td>0</td>
+						</tr>
+						<tr>
+							<td>All picks passing over any prospect with ≥15 more ability</td>
+							<td>50</td>
+							<td>47</td>
+						</tr>
+						<tr>
+							<td>Healthy QB switches</td>
+							<td>18</td>
+							<td>22</td>
+						</tr>
+						<tr>
+							<td>Immediate healthy reversals</td>
+							<td>0</td>
+							<td>0</td>
+						</tr>
+						<tr>
+							<td>Team drafts selecting multiple QBs, all rounds</td>
+							<td>13</td>
+							<td>10</td>
+						</tr>
+						<tr>
+							<td>First-round QBs with productive incumbent flag</td>
+							<td>7</td>
+							<td>1</td>
+						</tr>
+						<tr>
+							<td>MVPs starting next opening snapshot</td>
+							<td>12</td>
+							<td>12</td>
+						</tr>
+						<tr>
+							<td>MVPs observed</td>
+							<td>12</td>
+							<td>12</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<p>
+				A productive-incumbent flag means at least 200 passing attempts and +3
+				performance points. It prompts inspection, not an automatic bad-pick
+				verdict. Healthy switches count actual starting-QB changes within a
+				season while both players were available.
+			</p>
+			<p class="note">
+				The comparison sample's rookie QB opening-start rate rises to 36/37 from
+				32/38, despite unchanged lineup rules. Only three drafted QBs ranked
+				behind an incumbent, versus seven previously. Removing only
+				draft-investment credit still leaves 34/37 leading their preseason
+				group. This implicates which teams select QBs and the other score terms
+				as well; it does not prove the investment bonus is harmless.
+				Cincinnati's 52-ability rookie starts over a 62-ability veteran with
+				nearly neutral performance credit, and the bonus tips that contest.
+				Houston instead benches its 52-ability rookie behind a 68-ability,
+				34-year-old veteran. Both examples remain inspectable in the detailed
+				audit. A blanket rookie penalty is not supported by this
+				position-balance experiment.
+			</p>
+			<h2>Roster coverage after offseasons</h2>
+			<div class="table">
+				<table>
+					<thead>
+						<tr>
+							<th>Role</th>
+							<th>Average roster count previous / revised</th>
+							<th>Underfilled starting groups previous / revised</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>QB</td>
+							<td>2.73 / 2.71</td>
+							<td>0 / 0</td>
+						</tr>
+						<tr>
+							<td>RB</td>
+							<td>4.16 / 4.15</td>
+							<td>0 / 0</td>
+						</tr>
+						<tr>
+							<td>WR</td>
+							<td>6.42 / 6.38</td>
+							<td>0 / 0</td>
+						</tr>
+						<tr>
+							<td>TE</td>
+							<td>3.02 / 3.00</td>
+							<td>0 / 0</td>
+						</tr>
+						<tr>
+							<td>OL</td>
+							<td>9.32 / 9.34</td>
+							<td>0 / 0</td>
+						</tr>
+						<tr>
+							<td>DL</td>
+							<td>9.20 / 9.24</td>
+							<td>0 / 0</td>
+						</tr>
+						<tr>
+							<td>LB</td>
+							<td>6.47 / 6.55</td>
+							<td>0 / 0</td>
+						</tr>
+						<tr>
+							<td>CB</td>
+							<td>5.23 / 5.21</td>
+							<td>1 / 0</td>
+						</tr>
+						<tr>
+							<td>S</td>
+							<td>4.96 / 4.95</td>
+							<td>0 / 0</td>
+						</tr>
+						<tr>
+							<td>K</td>
+							<td>1.13 / 1.11</td>
+							<td>0 / 0</td>
+						</tr>
+						<tr>
+							<td>P</td>
+							<td>1.09 / 1.10</td>
+							<td>1 / 0</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<p>
+				This checks 384 team-opening snapshots per version after recruitment,
+				excluding the initial generated rosters. Counts use primary positions
+				and do not measure contract efficiency or starting quality. It catches
+				shortages but does not establish long-term salary-cap behavior.
+			</p>
+			<h2>Evidence and validation</h2>
+			<p>
+				<a href="league-recruitment-after-audit.html"
+					>Previous: every pick and alternative</a
+				>
+				·
+				<a href="league-recruitment-balanced-audit.html"
+					>Revised: every pick and alternative</a
+				>
+			</p>
+			<p>
+				562 ordinary tests pass, with 13 skipped. Six extended league tests pass
+				independently, covering 5,226 games. Lint, TypeScript and the football
+				production build pass. All league runs assert current decision snapshots
+				and complete final-opening observations. Regression tests cover close
+				receiver competitions, crowded depth, real OL needs, redundant QB
+				investment, specialist discounts and incumbent protection.
+			</p>
+			<details>
+				<summary>Reproduce the evidence</summary>
+				<p>
+					Run <code>node --run test</code> and <code>node --run lint</code>. Set
+					<code>SPORT=football</code> for <code>node --run build</code>. For
+					each seed, set <code>STARTER_SCORE_RECRUITMENT=1</code>,
+					<code>STARTER_SCORE_YEARS=3</code>,
+					<code>STARTER_SCORE_SEED</code> and
+					<code>STARTER_SCORE_LEAGUE_REPORT</code>, then run
+					<code
+						>pnpm exec vitest run --project football
+						src/test/starterScoreLeague.football.test.ts
+						--disableConsoleIntercept</code
+					>.
+				</p>
+				<p>
+					Run <code>tools/analysis/auditStarterScoreRecruitment.ts</code> with
+					the four balanced reports, setting
+					<code
+						>STARTER_SCORE_RECRUITMENT_PREFIX=league-recruitment-balanced</code
+					>
+					and <code>STARTER_SCORE_PACK_RECRUITMENT=1</code>; repeat with the two
+					holdout reports and prefix <code>league-recruitment-holdout</code>.
+					The diagnostic script
+					<code>diagnoseFootballDraftBias.ts</code> accepts the four previous
+					<code>league-recruitment-final-*.json.gz</code> reports. Finally run
+					<code>node tools/analysis/reportFootballRecruitmentBalance.ts</code>.
+					All paths are relative to the repository root. The saved compressed
+					reports retain every pre-pick prospect pool and team roster, enabling
+					inspection without rerunning the game.
+				</p>
+			</details>
+		</main>
+	</body>
+</html>
