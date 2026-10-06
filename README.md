@@ -126,7 +126,8 @@ incumbent keeps a minimum continuity bonus even during poor play. There is no
 hard minimum starting stint. QB rushing, RB receiving, TE blocking, and recorded
 defensive disruptions contribute alongside each role's primary production.
 
-To regenerate the current audit in PowerShell:
+To reproduce the earlier scenario report in PowerShell (this overwrites its
+revised dataset with the current scorer):
 
 ```powershell
 $env:STARTER_SCORE_REPORT_PATH = 'analysis/starter-score/after.json'
@@ -142,6 +143,39 @@ The audit found stable lineups but excessive QB drafting and an MVP award-format
 mismatch. The findings include reproducible commands and compressed evidence.
 This longer integration experiment is opt-in through
 `STARTER_SCORE_LEAGUE_REPORT`; it is skipped by the ordinary test suite.
+
+The [refinement audit](analysis/starter-score/refinement-report.html) and
+[interpretation](analysis/starter-score/refinement-findings.md) compare that
+baseline with a revised scorer. Proven QB performance now carries more early
+season confidence, active injury replacements receive continuity, current-format
+MVP awards are recognized, and redundant draft talent receives diminishing
+returns. OL block-win grades are calibrated to the simulation's individual
+blocking stats; sacks allowed are measured against pass-block opportunities.
+The all-position audit captures scores before sorting, checks for stale
+observations after the trade deadline, and flags both struggling starters and
+productive reserves for review. A flag is not automatically a mistaken lineup.
+
+To regenerate the revised evidence, run the following for each seed (20261005
+and 20261006), then analyze both files:
+
+```powershell
+$env:STARTER_SCORE_SEED = '20261005'
+$env:STARTER_SCORE_YEARS = '3'
+$env:STARTER_SCORE_LEAGUE_REPORT = "analysis/starter-score/league-refined-$env:STARTER_SCORE_SEED.json"
+pnpm exec vitest run --project football src/test/starterScoreLeague.football.test.ts --disableConsoleIntercept
+Remove-Item Env:STARTER_SCORE_LEAGUE_REPORT
+# Repeat with seed 20261006, then:
+$env:STARTER_SCORE_ANALYSIS_PREFIX = 'league-refined'
+node tools/analysis/analyzeStarterScoreLeagues.ts analysis/starter-score/league-refined-20261005.json analysis/starter-score/league-refined-20261006.json
+node tools/analysis/reviewStarterScoreDecisions.ts analysis/starter-score/league-refined-20261005.json analysis/starter-score/league-refined-20261006.json
+Remove-Item Env:STARTER_SCORE_ANALYSIS_PREFIX
+```
+
+Use `STARTER_SCORE_REPORT_PATH=analysis/starter-score/refined-scenarios.json`
+with the scenario test to refresh the matching controlled trajectories. The
+older `before.json`, `after.json`, and original league evidence remain available
+for comparison. Equal seeds do not imply identical later opponents or outcomes
+once different AI decisions change the random stream.
 
 ## Other dev info
 

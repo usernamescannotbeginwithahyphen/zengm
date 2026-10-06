@@ -717,6 +717,11 @@ test("dummy seasons exercise actual depth sorting, score trajectories, and posit
 	for (const row of positions) {
 		expect(row.good.score).toBeGreaterThan(row.poor.score);
 	}
+	// Three sacks allowed per 35 pass blocks is a sustained protection failure,
+	// even after correcting the ordinary block-win baseline.
+	const olBench = positionThresholds.find((row) => row.id === "OL")!.changes[0];
+	expect(olBench).toBeDefined();
+	expect(olBench!.afterGame).toBeLessThanOrEqual(12);
 	const decisions = acquisitions();
 	expect(decisions.preferredFreeAgent).toBe("OL upgrade");
 	expect(decisions.afterSuccessor).toBeLessThan(decisions.beforeSuccessor / 10);
@@ -724,8 +729,13 @@ test("dummy seasons exercise actual depth sorting, score trajectories, and posit
 	expect(decisions.scores[1]!.draftValue).toBeGreaterThan(
 		decisions.scores[0]!.draftValue,
 	);
-	expect(decisions.scores[0]!.draftValue).toBeGreaterThan(
+	// Filling an entirely empty punter slot with a 100-rated punter can beat a
+	// redundant third QB. Both must still trail the needed starting lineman.
+	expect(decisions.scores[0]!.draftValue).toBeLessThan(
 		decisions.scores[2]!.draftValue,
+	);
+	expect(decisions.scores[2]!.draftValue).toBeLessThan(
+		decisions.scores[1]!.draftValue,
 	);
 	for (const result of trajectories) {
 		for (const row of result.trace) {

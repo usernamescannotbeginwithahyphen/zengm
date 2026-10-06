@@ -161,6 +161,79 @@ describe("one bounded Starter Score", () => {
 		expect(score(breakout)).toBeGreaterThan(score(incumbent));
 	});
 
+	test("recognizes the current MVP format, excluding runners-up and expired awards", () => {
+		const p = makePlayer("QB", 68);
+		const award = {
+			season: 2015,
+			name: "League MVP",
+			shortName: "MVP",
+			index: 0,
+			actAs: "mvp" as const,
+			rank: 1,
+		};
+		p.awards = [award];
+		expect(getStarterScore(p, "QB", context).recognition).toBe(6);
+		p.awards[0] = { ...award, rank: 2 };
+		expect(getStarterScore(p, "QB", context).recognition).toBe(0);
+		p.awards[0] = { ...award, season: 2013, rank: 1 };
+		expect(getStarterScore(p, "QB", context).recognition).toBe(0);
+	});
+
+	test("Denver's proven QB keeps the job after the observed opening win", () => {
+		const veteran = makePlayer("QB", 59, { age: 27, amount: 23800 });
+		const backup = makePlayer("QB", 60, {
+			age: 23,
+			pot: 75,
+			amount: 3790,
+			round: 1,
+			yearsSinceDraft: 2,
+		});
+		context.depth.QB = [veteran.pid, backup.pid];
+		context.won = 1;
+		seasonStats(
+			veteran,
+			{
+				pss: 471,
+				pssYds: 3640,
+				pssTD: 20,
+				pssInt: 9,
+				pssSk: 39,
+				pssSkYds: 264,
+				rus: 56,
+				rusYds: 190,
+				fmbLost: 2,
+			},
+			2015,
+		);
+		seasonStats(
+			backup,
+			{
+				pss: 93,
+				pssYds: 673,
+				pssTD: 5,
+				pssInt: 2,
+				pssSk: 4,
+				pssSkYds: 17,
+				rus: 13,
+				rusYds: 22,
+			},
+			2015,
+		);
+		const opener = {
+			pss: 36,
+			pssYds: 255,
+			pssTD: 2,
+			pssInt: 2,
+			pssSk: 4,
+			pssSkYds: 22,
+			rus: 3,
+			rusYds: 6,
+		};
+		seasonStats(veteran, opener);
+		updateFootballForm(veteran, opener, 2016, 100);
+		expect(score(veteran)).toBeGreaterThan(score(backup));
+	});
+
 	test("gives a struggling first-rounder patience without making him irreplaceable", () => {
 		const rookie = makePlayer("QB", 58, {
 			age: 23,
@@ -392,6 +465,53 @@ describe("performance evidence", () => {
 });
 
 describe("position-group decisions from the same score", () => {
+	test("the active injury replacement has continuity against other healthy backups", () => {
+		const injured = makePlayer("QB", 80);
+		const replacement = makePlayer("QB", 60);
+		const third = makePlayer("QB", 61);
+		context.depth.QB = [injured.pid, replacement.pid, third.pid];
+		context.unavailable = [injured.pid];
+		expect(score(replacement)).toBeGreaterThan(score(third));
+		context.unavailable = [];
+		expect(getStarterScore(replacement, "QB", context).continuity).toBe(0);
+		expect(score(injured)).toBeGreaterThan(score(replacement));
+	});
+
+	test("ordinary engine blocking rates are neutral rather than an automatic slump", () => {
+		expect(
+			gradeFootballPerformance({ pba: 60, pbw: 36, rba: 40, rbw: 24 }, "OL")!
+				.score,
+		).toBeCloseTo(0);
+		expect(
+			gradeFootballPerformance(
+				{ pba: 60, pbw: 24, rba: 40, rbw: 16, skAlw: 3 },
+				"OL",
+			)!.score,
+		).toBeLessThan(-8);
+	});
+
+	test("does not spend a talent premium on a third QB behind a young star and successor", () => {
+		const star = makePlayer("QB", 86, { age: 26, amount: 30000 });
+		const successor = makePlayer("QB", 58, {
+			age: 22,
+			pot: 80,
+			round: 1,
+			yearsSinceDraft: 0,
+		});
+		const roster = [
+			star,
+			successor,
+			...Array.from({ length: 6 }, () => makePlayer("OL", 55)),
+		];
+		const qb = makePlayer("QB", 50, { tid: -2, age: 22, pot: 70 });
+		const ol = makePlayer("OL", 56, { tid: -2, age: 22, pot: 65 });
+		const fit = prepareFootballRoster(roster, context);
+		expect(fit(qb).draftValue).toBeLessThan(fit(ol).draftValue / 10);
+		// An exceptional replacement is still allowed to win the same evaluation.
+		expect(
+			fit(makePlayer("QB", 95, { tid: -2, age: 22, pot: 100 })).draftValue,
+		).toBeGreaterThan(fit(ol).draftValue);
+	});
 	test("prefers a needed lineman over another QB behind a productive starter and rookie", () => {
 		const veteran = makePlayer("QB", 73, { amount: 30000 });
 		seasonStats(veteran, goodPassing, 2015);

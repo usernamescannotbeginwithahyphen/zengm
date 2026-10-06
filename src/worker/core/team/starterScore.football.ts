@@ -8,6 +8,10 @@ import type {
 } from "../../../common/types.football.ts";
 import type { PlayerWithoutKey, Team } from "../../../common/types.ts";
 import { last } from "../../../common/utils.ts";
+import {
+	DEFAULT_PLAY_THROUGH_INJURIES,
+	PHASE,
+} from "../../../common/constants.ts";
 import { g } from "../../util/index.ts";
 import { idb } from "../../db/index.ts";
 import fuzzRating from "../player/fuzzRating.ts";
@@ -61,6 +65,7 @@ export type StarterContext = {
 	salaryCap: number;
 	fieldLength: number;
 	depth: Partial<Record<Position, number[]>>;
+	unavailable?: number[];
 };
 
 export const getStarterContext = async (
@@ -68,6 +73,11 @@ export const getStarterContext = async (
 ): Promise<StarterContext> => {
 	const t = await idb.cache.teams.get(tid);
 	const season = g.get("season");
+	const roster = await idb.cache.players.indexGetAll("playersByTid", tid);
+	const playThrough =
+		t && g.get("userTids").includes(tid) && !g.get("spectator")
+			? (t.playThroughInjuries ?? DEFAULT_PLAY_THROUGH_INJURIES)
+			: DEFAULT_PLAY_THROUGH_INJURIES;
 	const ts = await idb.cache.teamSeasons.indexGet("teamSeasonsBySeasonTid", [
 		season,
 		tid,
@@ -83,6 +93,13 @@ export const getStarterContext = async (
 		salaryCap: g.get("salaryCap"),
 		fieldLength: g.get("fieldLength"),
 		depth: (t?.depth ?? {}) as StarterContext["depth"],
+		unavailable: roster
+			.filter(
+				(p) =>
+					p.injury.gamesRemaining >
+					playThrough[g.get("phase") === PHASE.PLAYOFFS ? 1 : 0],
+			)
+			.map((p) => p.pid),
 	};
 };
 
@@ -173,8 +190,12 @@ export const gradeFootballPerformance = (
 			return;
 		}
 		return sample(
-			((n("pbw") + n("rbw")) / attempts - 0.7) * 45 -
-				(35 * n("skAlw")) / attempts,
+			// The engine's individual block wins are not NFL team pass-block
+			// success rates. Generated ordinary starting OL win roughly 60%.
+			((n("pbw") + n("rbw")) / attempts - 0.6) * 45 -
+				// Sacks allowed belong to pass-block opportunities. Dividing them
+				// by run blocks too hid sustained protection failures on run-heavy teams.
+				(70 * n("skAlw")) / Math.max(1, n("pba")),
 			attempts,
 			40,
 		);
@@ -349,7 +370,12 @@ export const getStarterScore = (
 			startsForTeam += row.gs ?? 0;
 		}
 	}
-	const currentWeight = currentSamples / (currentSamples + 4);
+	// An established previous season is stronger evidence than an empty history.
+	// Keep up to eight games of prior confidence, without turning it into immunity
+	// to a sustained slump. Tiny previous-year cameos retain the ordinary prior.
+	const priorConfidence =
+		4 + Math.min(4, previousSamples / 2) * Math.max(0, 1 - currentSamples / 8);
+	const currentWeight = currentSamples / (currentSamples + priorConfidence);
 	const previous =
 		previousSamples > 0
 			? ((previousTotal / previousSamples) * previousSamples) /
@@ -364,7 +390,9 @@ export const getStarterScore = (
 			? form.roles[pos]
 			: undefined;
 	if (recent) {
-		const recentWeight = (0.6 * recent.samples) / (recent.samples + 2);
+		const recentWeight =
+			((0.6 * recent.samples) / (recent.samples + 2)) *
+			Math.min(1, currentSamples / 4);
 		performance =
 			performance * (1 - recentWeight) + recent.score * recentWeight;
 	}
@@ -399,22 +427,38 @@ export const getStarterScore = (
 			: 0;
 	const depthIndex =
 		p.pid === undefined ? -1 : (context.depth[pos] ?? []).indexOf(p.pid);
+	const availableDepthIndex =
+		p.pid === undefined || !context.unavailable
+			? -1
+			: (context.depth[pos] ?? [])
+					.filter((pid) => !context.unavailable!.includes(pid))
+					.indexOf(p.pid);
 	const incumbent =
 		owned &&
-		(depthIndex >= 0
-			? depthIndex < FOOTBALL_STARTERS[pos]
-			: startsForTeam >= 4);
+		((availableDepthIndex >= 0 &&
+			availableDepthIndex < FOOTBALL_STARTERS[pos]) ||
+			(depthIndex >= 0
+				? depthIndex < FOOTBALL_STARTERS[pos]
+				: startsForTeam >= 4));
 	const continuity = incumbent
 		? // Poor play already lowers performance. Removing all continuity as
 			// well caused equally struggling QBs to swap after nearly every game.
-			3 * (1 - rebuild * 0.5) * bound(1 + performance / 10, 1, 1.5)
+			(3 * bound(1 + performance / 10, 1, 1.5) +
+				// Proven QBs retain some trust in last year's success while the
+				// new season is still a small sample. It fades as evidence arrives.
+				(pos === "QB"
+					? Math.min(2, Math.max(0, previous) * 0.75) * (1 - currentWeight)
+					: 0)) *
+			(1 - rebuild * 0.5)
 		: 0;
 	const recentMvp =
 		native &&
 		p.awards.some(
 			(award) =>
-				award.type === "Most Valuable Player" &&
-				award.season >= context.season - 1,
+				(award.type === "Most Valuable Player" ||
+					("actAs" in award && award.actAs === "mvp" && award.rank === 1)) &&
+				award.season >= context.season - 1 &&
+				award.season <= context.season,
 		);
 	const recognition = recentMvp ? 6 * (1 - currentWeight) : 0;
 	// One bounded score drives both playing time and roster construction. Position
@@ -530,9 +574,17 @@ export const prepareFootballRoster = (
 			// A little best-player-available value, still derived from the SAME
 			// Starter Score. Specialists carry much less value in the draft.
 			const draftPositionFactor = pos === "K" ? 0.25 : pos === "P" ? 0.15 : 1;
+			// Talent at a filled role has the same diminishing returns as roster
+			// improvement. An unconditional bonus rewarded redundant first-round
+			// QBs even when they were behind a young star AND a drafted successor.
+			const rank = before.filter((score) => score >= incoming.score).length;
+			const opportunity =
+				rank < starters
+					? 1
+					: 0.18 ** (rank - starters + 1) * (rank >= target ? 0.1 : 1);
 			draftValue = Math.max(
 				draftValue,
-				(roleValue + incoming.score * ROLE_WEIGHTS[pos] * 0.2) *
+				(roleValue + incoming.score * ROLE_WEIGHTS[pos] * 0.2 * opportunity) *
 					draftPositionFactor,
 			);
 			starterGain = Math.max(starterGain, upgrade);

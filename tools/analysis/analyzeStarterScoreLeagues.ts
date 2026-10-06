@@ -78,6 +78,7 @@ type Report = {
 	}[];
 };
 const directory = path.resolve("analysis/starter-score");
+const prefix = process.env.STARTER_SCORE_ANALYSIS_PREFIX ?? "league";
 const files = process.argv.slice(2);
 if (files.length === 0) {
 	throw new Error("Pass league report JSON paths");
@@ -251,7 +252,14 @@ for (const report of reports) {
 			name: names.get(first.tid)!,
 			season: first.season,
 			tid: first.tid,
-			games,
+			// Detailed all-role observations live in the raw evidence and separate
+			// decision review, rather than duplicating them in the QB summary.
+			games: games.map(
+				(game) =>
+					Object.fromEntries(
+						Object.entries(game).filter(([key]) => key !== "decisions"),
+					) as Game,
+			),
 		});
 	}
 	for (const player of report.players) {
@@ -402,11 +410,11 @@ const output = {
 	histories,
 };
 await fs.writeFile(
-	path.join(directory, "league-summary.json"),
+	path.join(directory, `${prefix}-summary.json`),
 	JSON.stringify(output),
 );
 await fs.writeFile(
-	path.join(directory, "league-summary.json.gz"),
+	path.join(directory, `${prefix}-summary.json.gz`),
 	gzipSync(JSON.stringify(output)),
 );
 for (const [index, report] of reports.entries()) {
@@ -501,8 +509,8 @@ const detailed = [...teamRows]
 		)}</details>`;
 	})
 	.join("");
-const html = `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Starter Score — generated league audit</title><style>:root{color-scheme:light dark;font:16px/1.55 system-ui}body{margin:0;background:Canvas;color:CanvasText}main{max-width:1150px;margin:auto;padding:30px 24px 70px}h1{font-size:2rem;line-height:1.2}h2{margin-top:36px}p{max-width:90ch}.table{overflow:auto;margin:18px 0}table{border-collapse:collapse;width:100%;font-size:14px;font-variant-numeric:tabular-nums}td,th{padding:10px;text-align:left;vertical-align:top;border-bottom:1px solid color-mix(in srgb,CanvasText 25%,Canvas)}details{padding:14px 0;border-top:1px solid color-mix(in srgb,CanvasText 25%,Canvas)}summary{cursor:pointer;font-weight:650}a{color:light-dark(#145db4,#82baff)}.metrics{display:flex;gap:28px;flex-wrap:wrap}.metric strong{display:block;font-size:2rem}code{font-size:.9em}</style></head><body><main><h1>Starter Score in generated football leagues</h1><p>Two independent 32-team leagues, three seasons each, using the game's random roster generator, game engine, injuries, aging, retirements, trades, drafts, re-signing and free agency. All teams are AI-controlled. These are generated fictional players, not imported NFL rosters. Field length: ${esc(reports.map((r) => r.fieldLength).join(" / "))} yards.</p><div class="metrics"><div class="metric"><strong>${aggregate.teamSeasons}</strong>team-seasons</div><div class="metric"><strong>${aggregate.games}</strong>games, including playoffs</div><div class="metric"><strong>${aggregate.healthyChanges}</strong>healthy QB changes</div><div class="metric"><strong>${aggregate.rapidReversals}</strong>one-game healthy reversals</div></div>
-<p><strong>Assessment of this run: lineup stability is encouraging, but redundant QB drafting remains a substantial failure.</strong> The six-draft sample includes 44 first-round QBs and 12 team-draft instances selecting multiple QBs. The intended MVP bonus also misses the current award record format. See the <a href="league-findings.md">findings and concrete examples</a> for the interpretation and remaining problems.</p>
+const html = `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Starter Score — generated league audit</title><style>:root{color-scheme:light dark;font:16px/1.55 system-ui}body{margin:0;background:Canvas;color:CanvasText}main{max-width:1150px;margin:auto;padding:30px 24px 70px}h1{font-size:2rem;line-height:1.2}h2{margin-top:36px}p{max-width:90ch}.table{overflow:auto;margin:18px 0}table{border-collapse:collapse;width:100%;font-size:14px;font-variant-numeric:tabular-nums}td,th{padding:10px;text-align:left;vertical-align:top;border-bottom:1px solid color-mix(in srgb,CanvasText 25%,Canvas)}details{padding:14px 0;border-top:1px solid color-mix(in srgb,CanvasText 25%,Canvas)}summary{cursor:pointer;font-weight:650}a{color:light-dark(#145db4,#82baff)}.metrics{display:flex;gap:28px;flex-wrap:wrap}.metric strong{display:block;font-size:2rem}code{font-size:.9em}</style></head><body><main><h1>Starter Score in generated football leagues</h1><p>${reports.length} independent leagues spanning ${aggregate.seasons} seasons, using the game's random roster generator, game engine, injuries, aging, retirements, trades, drafts, re-signing and free agency. All teams are AI-controlled. These are generated fictional players, not imported NFL rosters. Field length: ${esc(reports.map((r) => r.fieldLength).join(" / "))} yards.</p><div class="metrics"><div class="metric"><strong>${aggregate.teamSeasons}</strong>team-seasons</div><div class="metric"><strong>${aggregate.games}</strong>games, including playoffs</div><div class="metric"><strong>${aggregate.healthyChanges}</strong>healthy QB changes</div><div class="metric"><strong>${aggregate.rapidReversals}</strong>one-game healthy reversals</div></div>
+<p>This report records observed decisions. Compare the original and revised runs in <a href="refinement-report.html">the refinement audit</a>.</p>
 <h2>Quarterback stability</h2>${table(
 	["Measure", "Observed"],
 	[
@@ -545,7 +553,7 @@ const html = `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta n
 		r.stillStarting ? "Yes" : "No",
 	]),
 )}
-<h2>First-round drafting</h2>${table(["Position", "Selections"], Object.entries(aggregate.firstRoundPositions))}<p>These are actual selections over six drafts, not candidate weights. A first-round quarterback behind a productive veteran is a flag for inspection, not automatically a mistake: age, contract expiry, successor quality and later roster choices matter.</p>${table(
+<h2>First-round drafting</h2>${table(["Position", "Selections"], Object.entries(aggregate.firstRoundPositions))}<p>These are actual selections over ${aggregate.seasons} drafts, not candidate weights. A first-round quarterback behind a productive veteran is a flag for inspection, not automatically a mistake: age, contract expiry, successor quality and later roster choices matter.</p>${table(
 	[
 		"Seed / season",
 		"Team / record",
@@ -580,5 +588,5 @@ const html = `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta n
 	]),
 )}<p>This measures membership in each role's starting depth-chart slots, not every on-field substitution. Reordering WR1 and WR2 does not count. The non-injury column can include trades and signings. Multi-position players and varying formations mean these counts should not be compared as if every position had one starter.</p>
 <h2>Every team's weekly QB decisions</h2><p>Sorted by healthy changes, then total changes. Expand any row to inspect the actual scores, injury availability and game results.</p>${detailed}
-<h2>Method and limits</h2><p>${esc(reports[0]!.methodology)}</p><p>Seeds: ${reports.map((r) => r.seed).join(", ")}. The standard test environment substitutes placeholder names; the report uses player IDs to distinguish them. Ratings, development and game outcomes are generated by the normal game code. Starts are identified from the opening-unit GS records in the game engine. These runs assess this branch's behavior; there is no paired stock-AI control. Two leagues do not establish a population-wide frequency, and three seasons cannot establish long-term dynasty or salary-cap balance. The initial generated league has no played-season history, so later seasons are particularly useful for judging performance memory.</p><p>Reproduce with the opt-in <code>src/test/starterScoreLeague.football.test.ts</code> runner, setting <code>STARTER_SCORE_LEAGUE_REPORT</code>, <code>STARTER_SCORE_SEED</code>, and <code>STARTER_SCORE_YEARS=3</code>. Analyze both outputs with <code>node tools/analysis/analyzeStarterScoreLeagues.ts</code> followed by the two JSON paths.</p><p><a href="report.html">Earlier controlled scenario audit</a> · <a href="league-summary.json.gz">Full derived data (gzip)</a></p></main></body></html>`;
-await fs.writeFile(path.join(directory, "league-report.html"), html);
+<h2>Method and limits</h2><p>${esc(reports[0]!.methodology)}</p><p>Seeds: ${reports.map((r) => r.seed).join(", ")}. The standard test environment substitutes placeholder names; the report uses player IDs to distinguish them. Ratings, development and game outcomes are generated by the normal game code. Starts are identified from the opening-unit GS records in the game engine. These runs assess this branch's behavior; there is no paired stock-AI control. Two leagues do not establish a population-wide frequency, and three seasons cannot establish long-term dynasty or salary-cap balance. The initial generated league has no played-season history, so later seasons are particularly useful for judging performance memory.</p><p>Reproduce with the opt-in <code>src/test/starterScoreLeague.football.test.ts</code> runner, setting <code>STARTER_SCORE_LEAGUE_REPORT</code>, <code>STARTER_SCORE_SEED</code>, and <code>STARTER_SCORE_YEARS=3</code>. Analyze both outputs with <code>node tools/analysis/analyzeStarterScoreLeagues.ts</code> followed by the two JSON paths.</p><p><a href="report.html">Earlier controlled scenario audit</a> · <a href="${prefix}-summary.json.gz">Full derived data (gzip)</a></p></main></body></html>`;
+await fs.writeFile(path.join(directory, `${prefix}-report.html`), html);

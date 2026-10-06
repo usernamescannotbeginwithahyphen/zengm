@@ -9,12 +9,14 @@ import { last } from "../common/utils.ts";
 import { defaultGameAttributes } from "../common/defaultGameAttributes.ts";
 import type { Player, TeamSeason } from "../common/types.ts";
 import { league } from "../worker/core/index.ts";
+import * as depthSorter from "../worker/core/team/rosterAutoSort.football.ts";
 import GameSim from "../worker/core/GameSim.football/index.ts";
 import { startAutoPlay } from "../worker/core/league/autoPlay.ts";
 import {
 	FOOTBALL_STARTERS,
 	getStarterContext,
 	getStarterScore,
+	gradeFootballPerformance,
 	type StarterContext,
 } from "../worker/core/team/starterScore.football.ts";
 import { idb } from "../worker/db/index.ts";
@@ -87,6 +89,85 @@ test.skipIf(!enabled)(
 		};
 		const games: unknown[] = [];
 		const checkpoints: unknown[] = [];
+		// Observe the scores BEFORE sorting transfers continuity to a new starter.
+		const decisions = new Map<number, unknown>();
+		const decisionGames = new Map<number, number>();
+		let staleDecisions = 0;
+		const autoSort = depthSorter.default;
+		const observeSort = vi
+			.spyOn(depthSorter, "default")
+			.mockImplementation(async (...args) => {
+				if (
+					g.get("phase") === PHASE.REGULAR_SEASON ||
+					g.get("phase") === PHASE.AFTER_TRADE_DEADLINE
+				) {
+					const ctx = await getStarterContext(args[0]);
+					decisionGames.set(args[0], ctx.won + ctx.lost + ctx.tied);
+					const roster = await idb.cache.players.indexGetAll(
+						"playersByTid",
+						args[0],
+					);
+					decisions.set(
+						args[0],
+						Object.fromEntries(
+							POSITIONS.map((pos) => {
+								const ranked = roster
+									.map((p) => ({ p, score: getStarterScore(p, pos, ctx) }))
+									.sort((a, b) => b.score.score - a.score.score);
+								return [
+									pos,
+									{
+										before: ctx.depth[pos]?.slice(0, FOOTBALL_STARTERS[pos]),
+										candidates: ranked
+											.filter(
+												({ p }, index) =>
+													last(p.ratings).pos === pos ||
+													index < FOOTBALL_STARTERS[pos] + 2 ||
+													ctx.depth[pos]
+														?.slice(0, FOOTBALL_STARTERS[pos])
+														.includes(p.pid),
+											)
+											.map(({ p, score }) => {
+												const row = p.stats.findLast(
+													(row) =>
+														row.season === ctx.season &&
+														!row.playoffs &&
+														row.tid === p.tid,
+												);
+												return {
+													pid: p.pid,
+													pos: last(p.ratings).pos,
+													age: ctx.season - p.born.year,
+													ovr: last(p.ratings).ovr,
+													pot: last(p.ratings).pot,
+													unavailable: p.injury.gamesRemaining > 0,
+													score,
+													grade: row
+														? gradeFootballPerformance(
+																row as unknown as Record<string, number>,
+																pos,
+																ctx.fieldLength,
+															)
+														: undefined,
+													stats: row
+														? Object.fromEntries(
+																Object.entries(row).filter(
+																	([, value]) =>
+																		typeof value === "number" && value !== 0,
+																),
+															)
+														: {},
+												};
+											}),
+									},
+								];
+							}),
+						),
+					);
+				}
+				await autoSort(...args);
+				observeSort.mockClear();
+			});
 		const gameRun = GameSim.prototype.run;
 		let gameCount = 0;
 		const observe = vi
@@ -111,7 +192,14 @@ test.skipIf(!enabled)(
 						salaryCap: g.get("salaryCap"),
 						fieldLength: g.get("fieldLength"),
 						depth: team.depth,
+						unavailable: t.player.filter((p) => p.injured).map((p) => p.id),
 					};
+					if (
+						g.get("phase") !== PHASE.PLAYOFFS &&
+						decisionGames.get(t.id) !== ctx.won + ctx.lost + ctx.tied
+					) {
+						staleDecisions++;
+					}
 					const qbs = t.player
 						.filter((p) => p.pos === "QB")
 						.map((p) => ({
@@ -133,6 +221,7 @@ test.skipIf(!enabled)(
 						starter: starter?.id,
 						depthQB: team.depth.QB.slice(0, 3),
 						qbs,
+						decisions: decisions.get(t.id),
 						roles: Object.fromEntries(
 							POSITIONS.map((pos) => [
 								pos,
@@ -288,7 +377,10 @@ test.skipIf(!enabled)(
 			expect(g.get("season")).toBe(2026 + years);
 			expect(gameCount).toBeGreaterThan(years * 250);
 			expect(games).toHaveLength(gameCount * 2);
+			expect(decisions.size).toBe(32);
+			expect(staleDecisions).toBe(0);
 		} finally {
+			observeSort.mockRestore();
 			observe.mockRestore();
 			Math.random = originalRandom;
 			if (g.get("lid") === seed) {
