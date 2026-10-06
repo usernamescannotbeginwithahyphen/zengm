@@ -1,0 +1,681 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width,initial-scale=1" />
+		<title>Two recruitment experiments: defensive line and secondary</title>
+		<style>
+			body {
+				margin: 0;
+				background: #f2f5f9;
+				color: #182a40;
+				font: 16px/1.55 system-ui;
+			}
+			main {
+				max-width: 1140px;
+				padding: 32px 24px 70px;
+				margin: auto;
+			}
+			h1 {
+				font-size: 2.3rem;
+				line-height: 1.15;
+			}
+			h2 {
+				margin-top: 38px;
+			}
+			p {
+				max-width: 95ch;
+			}
+			.table {
+				overflow: auto;
+			}
+			table {
+				border-collapse: collapse;
+				width: 100%;
+				font-size: 14px;
+				font-variant-numeric: tabular-nums;
+			}
+			td,
+			th {
+				padding: 10px;
+				border-bottom: 1px solid #c6d0dd;
+				text-align: left;
+			}
+			th {
+				background: #e2eaf4;
+			}
+			a {
+				color: #125caa;
+			}
+			.note {
+				padding: 18px;
+				background: white;
+				border-left: 4px solid #366ea6;
+			}
+			li {
+				margin: 8px 0;
+			}
+			code {
+				overflow-wrap: anywhere;
+			}
+		</style>
+	</head>
+	<body>
+		<main>
+			<h1>Two recruitment experiments: defensive line and secondary</h1>
+			<p class="note">
+				<strong>Decision: retain the previous production weights.</strong> The
+				stronger trial improved DL and safety shares but introduced an
+				unattractive first-overall DL-over-CB choice. The conservative trial
+				protected that talent preference while shifting more selections toward
+				OL and CB. Neither established a clear overall improvement. The new
+				regression scenario and audit support for traded rookies are retained;
+				both simulation variants remain available for inspection.
+			</p>
+			<p>
+				Six generated leagues per version, three full seasons each plus the
+				following opening week: 18 drafts, 576 first-round picks and 5,226 games
+				in each version. Previous is revision 5f8b9151d. The seed set is
+				identical, but acquisitions alter later random draws and prospect pools.
+				These are fictional game-generated rosters using the normal football
+				simulation on 100-yard fields.
+			</p>
+			<h2>First-round selections</h2>
+			<div class="table">
+				<table>
+					<thead>
+						<tr>
+							<th>Position</th>
+							<th>Previous %</th>
+							<th>Stronger trial %</th>
+							<th>Conservative trial %</th>
+							<th>Conservative trial picks</th>
+							<th>Supplied reference %</th>
+							<th>Top-32 ability supply previous / revised</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>QB</td>
+							<td>9.5%</td>
+							<td>9.7%</td>
+							<td>9.4%</td>
+							<td>54</td>
+							<td>9.1</td>
+							<td>58 / 58</td>
+						</tr>
+						<tr>
+							<td>RB</td>
+							<td>3.0%</td>
+							<td>2.8%</td>
+							<td>2.4%</td>
+							<td>14</td>
+							<td>7</td>
+							<td>48 / 50</td>
+						</tr>
+						<tr>
+							<td>WR</td>
+							<td>11.3%</td>
+							<td>10.6%</td>
+							<td>10.9%</td>
+							<td>63</td>
+							<td>12</td>
+							<td>84 / 84</td>
+						</tr>
+						<tr>
+							<td>TE</td>
+							<td>2.4%</td>
+							<td>2.1%</td>
+							<td>2.3%</td>
+							<td>13</td>
+							<td>3.5</td>
+							<td>11 / 11</td>
+						</tr>
+						<tr>
+							<td>OL</td>
+							<td>21.9%</td>
+							<td>22.9%</td>
+							<td>23.4%</td>
+							<td>135</td>
+							<td>17.2</td>
+							<td>88 / 90</td>
+						</tr>
+						<tr>
+							<td>DL</td>
+							<td>20.8%</td>
+							<td>23.3%</td>
+							<td>21.2%</td>
+							<td>122</td>
+							<td>26.1</td>
+							<td>96 / 92</td>
+						</tr>
+						<tr>
+							<td>LB</td>
+							<td>4.0%</td>
+							<td>4.2%</td>
+							<td>3.6%</td>
+							<td>21</td>
+							<td>6.6</td>
+							<td>23 / 23</td>
+						</tr>
+						<tr>
+							<td>CB</td>
+							<td>17.9%</td>
+							<td>17.7%</td>
+							<td>19.3%</td>
+							<td>111</td>
+							<td>11.9</td>
+							<td>110 / 110</td>
+						</tr>
+						<tr>
+							<td>S</td>
+							<td>9.2%</td>
+							<td>6.8%</td>
+							<td>7.3%</td>
+							<td>42</td>
+							<td>6.6</td>
+							<td>41 / 41</td>
+						</tr>
+						<tr>
+							<td>K</td>
+							<td>0.0%</td>
+							<td>0.0%</td>
+							<td>0.2%</td>
+							<td>1</td>
+							<td>—</td>
+							<td>12 / 12</td>
+						</tr>
+						<tr>
+							<td>P</td>
+							<td>0.0%</td>
+							<td>0.0%</td>
+							<td>0.0%</td>
+							<td>0</td>
+							<td>—</td>
+							<td>5 / 5</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<p>
+				The summed absolute gap from the nine supplied position percentages is
+				27.4 for the previous version, 24.6 for the stronger trial, and 29.3 for
+				the conservative trial. This describes the result; it is not a
+				significance test or an objective used to optimize the weights. The
+				supplied reference is approximate and unverified; grouping OT/IOL as OL
+				and EDGE/DT as DL is imperfect. RB share and rookie QB starts are
+				secondary checks for this round, following the user's priorities. Below,
+				“revised” refers to the conservative experiment, not the retained
+				production settings.
+			</p>
+			<h2>What changed</h2>
+			<ul>
+				<li>
+					The conservative trial increased DL recruitment weight from 0.100 to
+					0.105 and decreased safety from 0.065 to 0.055. CB remains at 0.065
+					and OL at 0.075.
+				</li>
+				<li>
+					The stronger trial used DL 0.115 and CB 0.060. It barely reduced CB
+					share and produced Phoenix's first-overall DL selection at 57 ability
+					/ 79 potential over an available CB at 74 / 91 who also offered a
+					larger starting-score improvement. On those exact saved inputs,
+					restoring CB and moderating DL changes draft priorities from DL 4.086
+					vs CB 3.690 to DL 3.731 vs CB 3.998. This is a fixed-input
+					recalculation, not the later simulated outcome.
+				</li>
+				<li>
+					An OL reduction to 0.070 failed the existing severe-hole regression
+					case. A new controlled scenario inspired by Phoenix also rejected DL
+					0.110 with CB 0.065; DL 0.105 preserves that exceptional-CB
+					preference. No universal rating-gap rule was added.
+				</li>
+				<li>
+					The weights apply to roster acquisition and retention. The single
+					0–100 Starter Score, performance memory, lineup inertia, rookie
+					investment, QB succession and close-challenger draft opportunity
+					retain their existing formulas.
+				</li>
+			</ul>
+			<h2>Results by league</h2>
+			<div class="table">
+				<table>
+					<thead>
+						<tr>
+							<th>Seed</th>
+							<th>WR previous → revised</th>
+							<th>OL previous → revised</th>
+							<th>DL previous → revised</th>
+							<th>CB previous → revised</th>
+							<th>S previous → revised</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>20261005</td>
+							<td>12 → 11</td>
+							<td>22 → 24</td>
+							<td>17 → 18</td>
+							<td>22 → 25</td>
+							<td>7 → 5</td>
+						</tr>
+						<tr>
+							<td>20261006</td>
+							<td>7 → 6</td>
+							<td>19 → 19</td>
+							<td>31 → 31</td>
+							<td>13 → 14</td>
+							<td>8 → 8</td>
+						</tr>
+						<tr>
+							<td>20261007</td>
+							<td>7 → 9</td>
+							<td>21 → 21</td>
+							<td>18 → 20</td>
+							<td>14 → 16</td>
+							<td>13 → 6</td>
+						</tr>
+						<tr>
+							<td>20261008</td>
+							<td>12 → 9</td>
+							<td>21 → 26</td>
+							<td>16 → 17</td>
+							<td>19 → 21</td>
+							<td>7 → 6</td>
+						</tr>
+						<tr>
+							<td>20261009</td>
+							<td>14 → 15</td>
+							<td>20 → 20</td>
+							<td>20 → 17</td>
+							<td>15 → 16</td>
+							<td>9 → 10</td>
+						</tr>
+						<tr>
+							<td>20261010</td>
+							<td>13 → 13</td>
+							<td>23 → 25</td>
+							<td>18 → 19</td>
+							<td>20 → 19</td>
+							<td>9 → 7</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<p>
+				Each row covers 96 picks. These six seeds were used for the diagnostic
+				and simulations; they are a comparison sample, not an independent
+				holdout.
+			</p>
+			<p>
+				The remaining CB share is partly a supply question: the prior version's
+				classes contain 110 CBs among 576 top-32-ability slots (19.1%), compared
+				with 103 CB selections (17.9%). OL is different: 88 top-32-ability slots
+				(15.3%) yield 126 selections (21.9%). Those controls suggest examining
+				prospect generation and weak starting slots separately; lowering both
+				positions' recruitment weights did not reliably solve the distribution.
+			</p>
+			<h2>Talent and need checks</h2>
+			<div class="table">
+				<table>
+					<thead>
+						<tr>
+							<th>Position</th>
+							<th>Average selected ability previous / revised</th>
+							<th>Average starting-score gain previous / revised</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>QB</td>
+							<td>56.7 / 56.6</td>
+							<td>5.9 / 6.3</td>
+						</tr>
+						<tr>
+							<td>RB</td>
+							<td>61.2 / 62.6</td>
+							<td>9.9 / 8.0</td>
+						</tr>
+						<tr>
+							<td>WR</td>
+							<td>56.9 / 57.1</td>
+							<td>6.2 / 6.1</td>
+						</tr>
+						<tr>
+							<td>TE</td>
+							<td>52.2 / 53.4</td>
+							<td>21.5 / 19.1</td>
+						</tr>
+						<tr>
+							<td>OL</td>
+							<td>53.4 / 53.0</td>
+							<td>11.8 / 11.3</td>
+						</tr>
+						<tr>
+							<td>DL</td>
+							<td>53.3 / 53.2</td>
+							<td>5.8 / 5.8</td>
+						</tr>
+						<tr>
+							<td>LB</td>
+							<td>54.7 / 55.2</td>
+							<td>7.1 / 7.7</td>
+						</tr>
+						<tr>
+							<td>CB</td>
+							<td>59.0 / 58.3</td>
+							<td>15.5 / 15.1</td>
+						</tr>
+						<tr>
+							<td>S</td>
+							<td>53.8 / 54.7</td>
+							<td>12.0 / 10.8</td>
+						</tr>
+						<tr>
+							<td>K</td>
+							<td>— / 56.0</td>
+							<td>— / 59.3</td>
+						</tr>
+						<tr>
+							<td>P</td>
+							<td>— / —</td>
+							<td>— / —</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<p>
+				Choices passing over a non-specialist with at least 15 more ability
+				points AND a larger immediate starting-score gain: 2 previous, 1
+				revised. Of these, DL selections account for 0 and 0. This is a review
+				screen, not a rule that defines good or bad drafting; positional value,
+				potential and depth still matter. Every revised flag is listed below.
+			</p>
+			<div class="table">
+				<table>
+					<thead>
+						<tr>
+							<th>Team / draft / seed</th>
+							<th>Pick</th>
+							<th>Chosen role / ability / potential</th>
+							<th>Alternative role / ability / potential</th>
+							<th>Starting-score gain chosen / alternative</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>Washington Monuments 2026 (20261007)</td>
+							<td>1</td>
+							<td>QB / 61 / 83</td>
+							<td>CB / 81 / 100</td>
+							<td>14.4 / 36.5</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<h2>Roster coverage and continuity</h2>
+			<div class="table">
+				<table>
+					<thead>
+						<tr>
+							<th>Role</th>
+							<th>Average roster count previous / revised</th>
+							<th>Underfilled starting groups previous / revised</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>QB</td>
+							<td>2.67 / 2.67</td>
+							<td>0 / 0</td>
+						</tr>
+						<tr>
+							<td>RB</td>
+							<td>4.14 / 4.17</td>
+							<td>0 / 0</td>
+						</tr>
+						<tr>
+							<td>WR</td>
+							<td>6.39 / 6.46</td>
+							<td>0 / 0</td>
+						</tr>
+						<tr>
+							<td>TE</td>
+							<td>3.01 / 3.04</td>
+							<td>0 / 0</td>
+						</tr>
+						<tr>
+							<td>OL</td>
+							<td>9.37 / 9.41</td>
+							<td>0 / 0</td>
+						</tr>
+						<tr>
+							<td>DL</td>
+							<td>9.24 / 9.20</td>
+							<td>0 / 0</td>
+						</tr>
+						<tr>
+							<td>LB</td>
+							<td>6.58 / 6.48</td>
+							<td>0 / 0</td>
+						</tr>
+						<tr>
+							<td>CB</td>
+							<td>5.22 / 5.24</td>
+							<td>0 / 0</td>
+						</tr>
+						<tr>
+							<td>S</td>
+							<td>4.96 / 4.93</td>
+							<td>0 / 0</td>
+						</tr>
+						<tr>
+							<td>K</td>
+							<td>1.10 / 1.09</td>
+							<td>0 / 0</td>
+						</tr>
+						<tr>
+							<td>P</td>
+							<td>1.07 / 1.07</td>
+							<td>2 / 0</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<p>
+				Coverage uses 576 post-recruitment team-opening snapshots per version,
+				excluding initial generated rosters. Counts use primary positions. They
+				catch shortages but do not establish contract efficiency or long-term
+				cap health.
+			</p>
+			<div class="table">
+				<table>
+					<thead>
+						<tr>
+							<th>Check</th>
+							<th>Previous</th>
+							<th>Revised</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>First-round QBs</td>
+							<td>55</td>
+							<td>54</td>
+						</tr>
+						<tr>
+							<td>Rookie QBs starting their opener</td>
+							<td>52</td>
+							<td>45</td>
+						</tr>
+						<tr>
+							<td>Observed rookie QB openers</td>
+							<td>55</td>
+							<td>54</td>
+						</tr>
+						<tr>
+							<td>Healthy rookie QBs benched in opener</td>
+							<td>3</td>
+							<td>9</td>
+						</tr>
+						<tr>
+							<td>OL picks passing over a WR with ≥15 more ability</td>
+							<td>0</td>
+							<td>0</td>
+						</tr>
+						<tr>
+							<td>Healthy QB changes</td>
+							<td>36</td>
+							<td>29</td>
+						</tr>
+						<tr>
+							<td>Immediate healthy QB reversals</td>
+							<td>0</td>
+							<td>1</td>
+						</tr>
+						<tr>
+							<td>Team drafts selecting multiple QBs, all rounds</td>
+							<td>12</td>
+							<td>15</td>
+						</tr>
+						<tr>
+							<td>First-round QBs behind productive incumbents</td>
+							<td>3</td>
+							<td>5</td>
+						</tr>
+						<tr>
+							<td>MVPs still starting next opening snapshot</td>
+							<td>18</td>
+							<td>18</td>
+						</tr>
+						<tr>
+							<td>MVPs observed</td>
+							<td>18</td>
+							<td>18</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<p>
+				A productive-incumbent flag requires at least 200 passing attempts and
+				+3 performance credit. It is an inspection aid, not a verdict. Immediate
+				reversals measure actual QB starts, not every position's rotation.
+			</p>
+			<p>
+				In revised team drafts with multiple QBs, the second QB was selected in
+				these rounds: round 4: 1 drafts; round 5: 3 drafts; round 6: 5 drafts;
+				round 7: 6 drafts. The stronger trial had 19 such drafts versus 12
+				previously; its extra QB picks all came in round four or later.
+			</p>
+			<details>
+				<summary>Fixed-input sensitivity checks</summary>
+				<p>
+					Fixed-input sensitivity check on saved pre-pick pools. Probabilities
+					use exponent 40. These are not sequential drafts: prospects remain in
+					later saved pools even if a variant would take them earlier. Ratios
+					change only positional weights; source priorities are rounded to three
+					decimals.
+				</p>
+				<div class="table">
+					<table>
+						<thead>
+							<tr>
+								<th>Experiment</th>
+								<th>Expected OL choices</th>
+								<th>Expected DL choices</th>
+								<th>Expected CB choices</th>
+								<th>Expected S choices</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>Current</td>
+								<td>123.0</td>
+								<td>117.9</td>
+								<td>103.3</td>
+								<td>53.4</td>
+							</tr>
+							<tr>
+								<td>DL only</td>
+								<td>106.3</td>
+								<td>184.3</td>
+								<td>85.8</td>
+								<td>45.3</td>
+							</tr>
+							<tr>
+								<td>OL and CB only</td>
+								<td>101.5</td>
+								<td>133.3</td>
+								<td>78.9</td>
+								<td>60.0</td>
+							</tr>
+							<tr>
+								<td>Safety only</td>
+								<td>127.4</td>
+								<td>125.6</td>
+								<td>110.0</td>
+								<td>25.3</td>
+							</tr>
+							<tr>
+								<td>Combined</td>
+								<td>117.5</td>
+								<td>200.5</td>
+								<td>61.8</td>
+								<td>24.4</td>
+							</tr>
+							<tr>
+								<td>Conservative trial</td>
+								<td>121.4</td>
+								<td>146.4</td>
+								<td>104.5</td>
+								<td>23.9</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<p>
+					The “OL and CB only” experiment includes the rejected OL weight.
+					“Combined” is the stronger trial; “Conservative trial” matches the
+					conservative trial. Both ran through six complete three-season
+					leagues.
+				</p>
+			</details>
+			<h2>Evidence and reproduction</h2>
+			<p>
+				<a href="league-recruitment-balanced-audit.html"
+					>Previous seeds 05–08</a
+				>
+				·
+				<a href="league-recruitment-holdout-audit.html">Previous seeds 09–10</a>
+				· <a href="league-recruitment-front-audit.html">Stronger trial</a> ·
+				<a href="league-recruitment-front-final-audit.html"
+					>All conservative trial decisions and alternatives</a
+				>
+			</p>
+			<p>
+				563 ordinary tests pass, with 13 skipped. Both experiments passed all
+				six extended league tests, totaling 10,452 simulated games. Lint,
+				TypeScript and the football build pass. The traded-rookie fix follows
+				Philadelphia's 2027 pick 4 to Nashville's actual opening game; missing
+				roster evidence is recorded separately from benching.
+			</p>
+			<p>
+				Run the opt-in
+				<code>src/test/starterScoreLeague.football.test.ts</code> with
+				<code>STARTER_SCORE_RECRUITMENT=1</code>,
+				<code>STARTER_SCORE_YEARS=3</code>, each seed and a report path. Analyze
+				the six conservative-trial reports with
+				<code>tools/analysis/auditStarterScoreRecruitment.ts</code>, prefix
+				<code>league-recruitment-front-final</code>, and packing enabled.
+				<code>node tools/analysis/reportFootballFrontBalance.ts</code>
+				regenerates this comparison from the saved compressed evidence. Run
+				<code>node --run lint</code>, <code>node --run test</code>, and
+				<code>SPORT=football node --run build</code> (set the variable
+				separately in PowerShell) for validation. Production retains the
+				baseline weights, so reproducing either experiment's simulations
+				requires temporarily applying its listed weights; analyzing the saved
+				evidence does not.
+			</p>
+		</main>
+	</body>
+</html>

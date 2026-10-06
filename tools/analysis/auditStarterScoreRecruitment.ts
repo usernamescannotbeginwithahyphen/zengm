@@ -219,19 +219,27 @@ const rookieQBs = reports.flatMap((r) =>
 	r.draftDecisions
 		.filter((d) => d.candidates.find((p) => p.pid === d.pid)?.pos === "QB")
 		.map((d) => {
-			const opening = r.checkpoints
-				.find(
-					(c) =>
-						c.season === d.season + 1 &&
-						(c.label === "opening" || c.label === "final-opening"),
-				)!
-				.teams.find((t) => t.tid === d.tid)!;
-			const rookie = opening.qbs.find((p) => p.pid === d.pid)!;
+			const checkpoint = r.checkpoints.find(
+				(c) =>
+					c.season === d.season + 1 &&
+					(c.label === "opening" || c.label === "final-opening"),
+			)!;
+			const draftingTeam = checkpoint.teams.find((t) => t.tid === d.tid)!;
+			// A rookie can be traded before his first opener. Follow the player,
+			// and keep missing roster evidence distinct from being benched.
+			const opening =
+				checkpoint.teams.find((t) => t.qbs.some((p) => p.pid === d.pid)) ??
+				draftingTeam;
+			const rookie = opening.qbs.find((p) => p.pid === d.pid);
 			const rivals = opening.qbs.filter((p) => p.pid !== d.pid);
 			const best = rivals.toSorted((a, b) => b.score.score - a.score.score)[0];
-			const firstGame = r.games.find(
-				(g) => !g.playoffs && g.season === d.season + 1 && g.tid === d.tid,
+			const teamOpener = r.games.find(
+				(g) =>
+					!g.playoffs && g.season === d.season + 1 && g.tid === opening.tid,
 			);
+			const firstGame = teamOpener?.qbs.some((p) => p.pid === d.pid)
+				? teamOpener
+				: undefined;
 			const decision = decisions.find(
 				(row) =>
 					row.seed === r.seed && row.season === d.season && row.pick === d.pick,
@@ -239,36 +247,42 @@ const rookieQBs = reports.flatMap((r) =>
 			return {
 				seed: r.seed,
 				season: d.season,
-				team: opening.name,
+				team: draftingTeam.name,
+				openingTeam: rookie ? opening.name : null,
+				changedTeams: rookie ? opening.tid !== d.tid : null,
+				openingRosterObserved: Boolean(rookie),
 				pick: d.pick,
 				rookie,
 				best,
-				starter: opening.depth.QB?.[0] === d.pid,
+				starter: rookie ? opening.depth.QB?.[0] === d.pid : null,
 				actualOpenerStart: firstGame ? firstGame.starter === d.pid : null,
 				unavailableInOpener:
 					firstGame?.qbs.find((p) => p.pid === d.pid)?.unavailable ?? null,
-				abilityLead:
-					rookie.score.ability -
-					Math.max(0, ...rivals.map((p) => p.score.ability)),
-				noRunwayLead:
-					rookie.score.score -
-					rookie.score.runway -
-					Math.max(0, ...rivals.map((p) => p.score.score - p.score.runway)),
-				noDevelopmentLead:
-					rookie.score.score -
-					rookie.score.runway -
-					rookie.score.future -
-					rookie.score.continuity -
-					Math.max(
-						0,
-						...rivals.map(
-							(p) =>
-								p.score.score -
-								p.score.runway -
-								p.score.future -
-								p.score.continuity,
-						),
-					),
+				abilityLead: rookie
+					? rookie.score.ability -
+						Math.max(0, ...rivals.map((p) => p.score.ability))
+					: null,
+				noRunwayLead: rookie
+					? rookie.score.score -
+						rookie.score.runway -
+						Math.max(0, ...rivals.map((p) => p.score.score - p.score.runway))
+					: null,
+				noDevelopmentLead: rookie
+					? rookie.score.score -
+						rookie.score.runway -
+						rookie.score.future -
+						rookie.score.continuity -
+						Math.max(
+							0,
+							...rivals.map(
+								(p) =>
+									p.score.score -
+									p.score.runway -
+									p.score.future -
+									p.score.continuity,
+							),
+						)
+					: null,
 				draftRank: decision.chosenRole.rank,
 				draftAbility: decision.chosen.score.ability,
 			};
@@ -310,10 +324,18 @@ const aggregate = {
 	).length,
 	rookieQBs: rookieQBs.length,
 	rookieStarters: rookieQBs.filter((q) => q.starter).length,
-	rookieAbilityLeaders: rookieQBs.filter((q) => q.abilityLead > 0).length,
-	startersWithoutRunway: rookieQBs.filter((q) => q.noRunwayLead > 0).length,
+	rookieAbilityLeaders: rookieQBs.filter(
+		(q) => q.abilityLead !== null && q.abilityLead > 0,
+	).length,
+	startersWithoutRunway: rookieQBs.filter(
+		(q) => q.noRunwayLead !== null && q.noRunwayLead > 0,
+	).length,
 	startersWithoutDevelopmentOrContinuity: rookieQBs.filter(
-		(q) => q.noDevelopmentLead > 0,
+		(q) => q.noDevelopmentLead !== null && q.noDevelopmentLead > 0,
+	).length,
+	rookieQBsChangingTeams: rookieQBs.filter((q) => q.changedTeams).length,
+	rookieQBsMissingOpeningRoster: rookieQBs.filter(
+		(q) => !q.openingRosterObserved,
 	).length,
 	draftedBackupQBs: rookieQBs.filter((q) => q.draftRank > 1).length,
 	observedRookieOpeners: rookieQBs.filter((q) => q.actualOpenerStart !== null)
@@ -495,6 +517,7 @@ const html = `<!doctype html><html><head><meta charset="utf-8"><meta name="viewp
 )}<p>The user-supplied reference is approximate and unverified. OL combines tackles, guards and centers; DL combines edge and interior, although game role definitions do not map perfectly. No quotas were applied.</p><h2>First-round QB opening decisions</h2><p>Removing components from saved scores is a sensitivity check, not a replay: development, acquisitions and earlier depth decisions remain fixed. “No development” removes runway, future and continuity from every QB.</p>${table(
 	[
 		"Team / draft",
+		"Opening team",
 		"Pick",
 		"Preseason depth leader",
 		"Actual opener start",
@@ -507,10 +530,11 @@ const html = `<!doctype html><html><head><meta charset="utf-8"><meta name="viewp
 	],
 	rookieQBs.map((q) => [
 		`${q.team} ${q.season} (${q.seed})`,
+		q.openingTeam ?? "Not on a recorded QB roster",
 		q.pick,
 		q.starter,
-		q.actualOpenerStart ?? "Not simulated",
-		q.unavailableInOpener ?? "Not simulated",
+		q.actualOpenerStart ?? "Not observed",
+		q.unavailableInOpener ?? "Not observed",
 		q.draftRank,
 		q.draftAbility,
 		q.abilityLead,

@@ -532,6 +532,21 @@ describe("position-group decisions from the same score", () => {
 		expect(needed(ol).draftValue).toBeGreaterThan(needed(wr).draftValue);
 	});
 
+	test("an exceptional corner prospect can outweigh DL value when both positions need an upgrade", () => {
+		context.won = 0;
+		context.lost = 17;
+		context.strategy = "rebuilding";
+		const roster = [
+			...[80, 70, 60, 48, 30].map((ovr) => makePlayer("DL", ovr)),
+			...[80, 70, 56, 30].map((ovr) => makePlayer("CB", ovr)),
+		];
+		const fit = prepareFootballRoster(roster, context);
+		const dl = fit(makePlayer("DL", 57, { tid: -2, age: 22, pot: 79 }));
+		const cb = fit(makePlayer("CB", 74, { tid: -2, age: 22, pot: 91 }));
+		expect(cb.starterGain).toBeGreaterThan(dl.starterGain);
+		expect(cb.draftValue).toBeGreaterThan(dl.draftValue);
+	});
+
 	test("a close receiver challenger retains draft value on either side of the starting boundary", () => {
 		const roster = [80, 75, 60].map((ovr) => makePlayer("WR", ovr));
 		const fit = prepareFootballRoster(roster, context);
