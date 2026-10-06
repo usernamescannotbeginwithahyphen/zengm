@@ -119,6 +119,28 @@ beforeEach(() => {
 });
 
 describe("one bounded Starter Score", () => {
+	test("a first-round QB can learn behind a productive veteran without a forced starting rule", () => {
+		const veteran = makePlayer("QB", 75, { age: 33, amount: 25000 });
+		seasonStats(veteran, goodPassing, 2015);
+		const rookie = makePlayer("QB", 58, {
+			age: 22,
+			pot: 88,
+			round: 1,
+			yearsSinceDraft: 0,
+			amount: 12000,
+		});
+		context.depth.QB = [veteran.pid, rookie.pid];
+		expect(score(veteran)).toBeGreaterThan(score(rookie));
+		// Being drafted early is not a requirement to sit, either.
+		const ready = makePlayer("QB", 85, {
+			age: 22,
+			pot: 95,
+			round: 1,
+			yearsSinceDraft: 0,
+			amount: 12000,
+		});
+		expect(score(ready)).toBeGreaterThan(score(veteran));
+	});
 	test("stays within 0–100 even at extreme ability and performance", () => {
 		const star = makePlayer("QB", 100, {
 			age: 22,
@@ -488,6 +510,55 @@ describe("position-group decisions from the same score", () => {
 				"OL",
 			)!.score,
 		).toBeLessThan(-8);
+	});
+
+	test("a much stronger receiver beats a slightly larger improvement at the fifth OL slot", () => {
+		context.strategy = "rebuilding";
+		const roster = [
+			...[85, 72, 70, 53, 45, 44, 43].map((ovr) => makePlayer("OL", ovr)),
+			...[80, 70, 62, 55].map((ovr) => makePlayer("WR", ovr)),
+		];
+		const fit = prepareFootballRoster(roster, context);
+		const ol = makePlayer("OL", 53, { tid: -2, age: 22, pot: 72 });
+		const wr = makePlayer("WR", 70, { tid: -2, age: 22, pot: 87 });
+		expect(fit(ol).starterGain).toBeGreaterThan(fit(wr).starterGain);
+		expect(fit(wr).draftValue).toBeGreaterThan(fit(ol).draftValue);
+		// A major hole can still outweigh the same superior receiver.
+		const depleted = [
+			...roster.filter((p) => p.ratings[0].pos !== "OL"),
+			...[60, 55, 50, 40, 15].map((ovr) => makePlayer("OL", ovr)),
+		];
+		const needed = prepareFootballRoster(depleted, context);
+		expect(needed(ol).draftValue).toBeGreaterThan(needed(wr).draftValue);
+	});
+
+	test("an aging QB creates draft succession value that a young starter or existing successor does not", () => {
+		const old = makePlayer("QB", 78, { age: 34 });
+		const young = makePlayer("QB", 78, { age: 26 });
+		const backup = makePlayer("QB", 45, { age: 30 });
+		const prospect = makePlayer("QB", 60, { tid: -2, age: 22, pot: 85 });
+		const oldFit = prepareFootballRoster([old, backup], context)(prospect);
+		const youngFit = prepareFootballRoster([young, backup], context)(prospect);
+		expect(oldFit.starterGain).toBe(0);
+		expect(oldFit.draftValue).toBeGreaterThan(youngFit.draftValue * 1.5);
+		const successor = makePlayer("QB", 59, {
+			age: 22,
+			pot: 85,
+			round: 1,
+			yearsSinceDraft: 0,
+		});
+		const covered = prepareFootballRoster(
+			[old, successor, backup],
+			context,
+		)(prospect);
+		expect(covered.draftValue).toBeLessThan(oldFit.draftValue / 4);
+		// This changes recruiting priority, not the rookie's lineup score.
+		prospect.tid = 1;
+		prospect.draft.tid = 1;
+		prospect.draft.year = 2016;
+		prospect.draft.round = 1;
+		context.depth.QB = [old.pid, prospect.pid];
+		expect(score(old)).toBeGreaterThan(score(prospect));
 	});
 
 	test("does not spend a talent premium on a third QB behind a young star and successor", () => {

@@ -177,6 +177,55 @@ older `before.json`, `after.json`, and original league evidence remain available
 for comparison. Equal seeds do not imply identical later opponents or outcomes
 once different AI decisions change the random stream.
 
+### Recruitment audit, October 6, 2026
+
+The [recruitment findings](analysis/starter-score/recruitment-findings.html)
+compare four generated leagues and 12 drafts per version. Every first-round
+pick records all available prospects and the current roster, so position
+distribution can be compared with the talent actually generated. The supplied
+real-world position percentages are an approximate reference, not draft quotas.
+
+Draft priority now gives exceptional Starter Scores more talent value relative
+to modest improvements at weak positions. Blocked backups retain the previous
+ceiling on their talent premium. A young QB can receive additional draft
+opportunity behind an aging starter when no comparable young successor exists.
+This changes recruitment; the underlying Starter Score and lineup rules remain
+unchanged. Regression tests cover a stronger WR versus a smaller OL need,
+major holes that still justify need-based drafting, succession without duplicate
+investment, and a first-round QB sitting behind a productive veteran.
+
+The revised runs observe the following opening week too: six of 38 first-round
+QBs were healthy backups in their actual opener. The baseline has actual games
+for only the first two drafted cohorts, so its actual-start percentage is not a
+matched comparison. The report distinguishes preseason charts from starts.
+WR remains underselected (18 of 384 picks) and multiple-QB drafts increased
+from nine to 13, all with the second QB in round three or later. This is a
+partial improvement, not a claim of finished position or salary-cap balance.
+
+To reproduce the current version, run the following for each seed 20261005
+through 20261008. The baseline used production scorer commit `376be7167`.
+
+```powershell
+$env:STARTER_SCORE_RECRUITMENT = '1'
+$env:STARTER_SCORE_SEED = '20261005'
+$env:STARTER_SCORE_YEARS = '3'
+$env:STARTER_SCORE_LEAGUE_REPORT = "analysis/starter-score/league-recruitment-final-$env:STARTER_SCORE_SEED.json"
+pnpm exec vitest run --project football src/test/starterScoreLeague.football.test.ts --disableConsoleIntercept
+Remove-Item Env:STARTER_SCORE_LEAGUE_REPORT, Env:STARTER_SCORE_RECRUITMENT
+# After all four seeds:
+$env:STARTER_SCORE_RECRUITMENT_PREFIX = 'league-recruitment-after'
+$env:STARTER_SCORE_PACK_RECRUITMENT = '1'
+node tools/analysis/auditStarterScoreRecruitment.ts analysis/starter-score/league-recruitment-final-20261005.json analysis/starter-score/league-recruitment-final-20261006.json analysis/starter-score/league-recruitment-final-20261007.json analysis/starter-score/league-recruitment-final-20261008.json
+Remove-Item Env:STARTER_SCORE_PACK_RECRUITMENT, Env:STARTER_SCORE_RECRUITMENT_PREFIX
+node tools/analysis/compareStarterScoreRecruitment.ts
+```
+
+The audit also accepts the checked-in `.json.gz` evidence. These compressed
+recruitment files preserve candidate pools, roster checkpoints, QB starts,
+draft records and awards; unrelated box-score fields are omitted. They feed
+`auditStarterScoreRecruitment.ts`, not the earlier weekly all-position analyzer.
+The `league-recruitment-before-*` files preserve the unchanged baseline.
+
 ## Other dev info
 
 ### Tests

@@ -578,13 +578,47 @@ export const prepareFootballRoster = (
 			// improvement. An unconditional bonus rewarded redundant first-round
 			// QBs even when they were behind a young star AND a drafted successor.
 			const rank = before.filter((score) => score >= incoming.score).length;
-			const opportunity =
+			let opportunity =
 				rank < starters
 					? 1
 					: 0.18 ** (rank - starters + 1) * (rank >= target ? 0.1 : 1);
+			// A QB prospect can have a real future job without beating a proven
+			// veteran today. Only the first backup gets this succession allowance,
+			// and an existing young prospect closes it. This affects draft priority,
+			// not the same player's Starter Score or his place in the lineup.
+			const starterAge = incumbent ? context.season - incumbent.p.born.year : 0;
+			if (
+				pos === "QB" &&
+				rank === 1 &&
+				starterAge >= 31 &&
+				context.season - candidate.born.year <= 24 &&
+				!incumbents
+					.slice(1)
+					.some(
+						(row) =>
+							context.season - row.p.born.year <= 25 &&
+							row.score >= incoming.score - 5,
+					)
+			) {
+				opportunity = Math.max(
+					opportunity,
+					Math.min(0.8, 0.5 + (starterAge - 31) * 0.1),
+				);
+			}
+			// A linear talent premium let a small improvement at a weak OL slot
+			// routinely outweigh a much stronger WR who also improved a starter.
+			// Reward exceptional scores more than ordinary depth, retaining both
+			// positional value and diminishing returns at already-covered roles.
+			const talentCurve = Math.max(0, incoming.score - 30) ** 2 / 80;
+			// Extra upside needs a starting or succession opportunity; do not bring
+			// back the old talent premium for players blocked by a filled roster.
+			const talentPremium =
+				opportunity > 0.18
+					? talentCurve
+					: Math.min(talentCurve, incoming.score * 0.2);
 			draftValue = Math.max(
 				draftValue,
-				(roleValue + incoming.score * ROLE_WEIGHTS[pos] * 0.2 * opportunity) *
+				(roleValue + talentPremium * ROLE_WEIGHTS[pos] * opportunity) *
 					draftPositionFactor,
 			);
 			starterGain = Math.max(starterGain, upgrade);

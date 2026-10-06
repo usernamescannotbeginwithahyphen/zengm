@@ -3,13 +3,15 @@ import { expect, test, vi } from "vitest";
 import fs from "node:fs/promises";
 // @ts-expect-error Node APIs are available in this opt-in test runner.
 import process from "node:process";
-import { LEAGUE_DATABASE_VERSION, PHASE } from "../common/constants.ts";
+import { LEAGUE_DATABASE_VERSION, PHASE, PLAYER } from "../common/constants.ts";
 import { POSITIONS } from "../common/constants.football.ts";
 import { last } from "../common/utils.ts";
 import { defaultGameAttributes } from "../common/defaultGameAttributes.ts";
 import type { Player, TeamSeason } from "../common/types.ts";
-import { league } from "../worker/core/index.ts";
+import type { Position } from "../common/types.football.ts";
+import { game, league } from "../worker/core/index.ts";
 import * as depthSorter from "../worker/core/team/rosterAutoSort.football.ts";
+import * as draftSelector from "../worker/core/draft/selectPlayer.ts";
 import GameSim from "../worker/core/GameSim.football/index.ts";
 import { startAutoPlay } from "../worker/core/league/autoPlay.ts";
 import {
@@ -17,6 +19,7 @@ import {
 	getStarterContext,
 	getStarterScore,
 	gradeFootballPerformance,
+	prepareFootballRoster,
 	type StarterContext,
 } from "../worker/core/team/starterScore.football.ts";
 import { idb } from "../worker/db/index.ts";
@@ -89,10 +92,73 @@ test.skipIf(!enabled)(
 		};
 		const games: unknown[] = [];
 		const checkpoints: unknown[] = [];
+		const draftDecisions: unknown[] = [];
+		const selectPlayer = draftSelector.default;
+		const observeDraft = vi
+			.spyOn(draftSelector, "default")
+			.mockImplementation(async (dp, pid) => {
+				if (
+					process.env.STARTER_SCORE_RECRUITMENT &&
+					dp.round === 1 &&
+					g.get("phase") === PHASE.DRAFT
+				) {
+					const ctx = await getStarterContext(dp.tid);
+					const roster = await idb.cache.players.indexGetAll(
+						"playersByTid",
+						dp.tid,
+					);
+					const available = (
+						await idb.cache.players.indexGetAll(
+							"playersByTid",
+							PLAYER.UNDRAFTED,
+						)
+					).filter((p) => p.draft.year === ctx.season);
+					const fit = prepareFootballRoster(roster, ctx);
+					const candidates = available
+						.map((p) => {
+							const pos = last(p.ratings).pos as Position;
+							return {
+								pid: p.pid,
+								pos,
+								ovr: last(p.ratings).ovr,
+								pot: last(p.ratings).pot,
+								marketValue: p.value,
+								score: getStarterScore(p, pos, ctx),
+								fit: fit(p),
+							};
+						})
+						.sort((a, b) => b.fit.draftValue - a.fit.draftValue);
+					draftDecisions.push(
+						structuredClone({
+							season: ctx.season,
+							tid: dp.tid,
+							pick: dp.pick,
+							pid,
+							strategy: ctx.strategy,
+							record: [ctx.won, ctx.lost, ctx.tied],
+							candidates,
+							roster: roster.map((p) => {
+								const pos = last(p.ratings).pos as Position;
+								return {
+									pid: p.pid,
+									pos,
+									age: ctx.season - p.born.year,
+									score: getStarterScore(p, pos, ctx),
+									contract: p.contract,
+									draft: p.draft,
+								};
+							}),
+						}),
+					);
+				}
+				await selectPlayer(dp, pid);
+				observeDraft.mockClear();
+			});
 		// Observe the scores BEFORE sorting transfers continuity to a new starter.
 		const decisions = new Map<number, unknown>();
 		const decisionGames = new Map<number, number>();
 		let staleDecisions = 0;
+		const finalOpeningTeams = new Set<number>();
 		const autoSort = depthSorter.default;
 		const observeSort = vi
 			.spyOn(depthSorter, "default")
@@ -194,6 +260,9 @@ test.skipIf(!enabled)(
 						depth: team.depth,
 						unavailable: t.player.filter((p) => p.injured).map((p) => p.id),
 					};
+					if (ctx.season === 2026 + years) {
+						finalOpeningTeams.add(t.id);
+					}
 					if (
 						g.get("phase") !== PHASE.PLAYOFFS &&
 						decisionGames.get(t.id) !== ctx.won + ctx.lost + ctx.tied
@@ -331,6 +400,14 @@ test.skipIf(!enabled)(
 			}
 			await startAutoPlay(2026 + years, PHASE.REGULAR_SEASON, {});
 			await snapshot("final-opening");
+			if (process.env.STARTER_SCORE_RECRUITMENT) {
+				// A preseason depth list can change before the first actual start.
+				// Observe the final drafted cohort too, allowing an opening bye.
+				for (let week = 0; week < 3 && finalOpeningTeams.size < 32; week++) {
+					await game.play(1, {});
+				}
+				expect(finalOpeningTeams.size).toBe(32);
+			}
 			await idb.cache.flush();
 			const players = await idb.league.getAll("players");
 			const awards = await idb.league.getAll("awards");
@@ -345,6 +422,7 @@ test.skipIf(!enabled)(
 					"Production random league creation and full autoplay, all teams AI-controlled. Default settings except spectator and specified field length. Seeded Math.random; in-memory IndexedDB; UI notifications disabled by standard test environment. Observers delegate to unmodified game simulation. No ratings, player outcomes or transactions injected. Pregame depth-chart membership is distinct from actual QB starts and injury availability.",
 				gameCount,
 				checkpoints,
+				draftDecisions,
 				games,
 				awards,
 				events,
@@ -379,7 +457,11 @@ test.skipIf(!enabled)(
 			expect(games).toHaveLength(gameCount * 2);
 			expect(decisions.size).toBe(32);
 			expect(staleDecisions).toBe(0);
+			if (process.env.STARTER_SCORE_RECRUITMENT) {
+				expect(draftDecisions).toHaveLength(years * 32);
+			}
 		} finally {
+			observeDraft.mockRestore();
 			observeSort.mockRestore();
 			observe.mockRestore();
 			Math.random = originalRandom;
