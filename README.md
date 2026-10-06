@@ -135,6 +135,14 @@ Remove-Item Env:STARTER_SCORE_REPORT_PATH
 node tools/analysis/renderStarterScoreReport.ts
 ```
 
+The [generated-league findings](analysis/starter-score/league-findings.md) and
+[full league report](analysis/starter-score/league-report.html) exercise the
+normal roster generator and autoplay for two independent three-season leagues.
+The audit found stable lineups but excessive QB drafting and an MVP award-format
+mismatch. The findings include reproducible commands and compressed evidence.
+This longer integration experiment is opt-in through
+`STARTER_SCORE_LEAGUE_REPORT`; it is skipped by the ordinary test suite.
+
 ## Other dev info
 
 ### Tests
